@@ -5,19 +5,17 @@ namespace AppForSEII2526.API.Models
     public class  BonosComprados
     {
         
-        public BonosComprados(string bonoId, string compraId, int cantidad, float precioBono, BonoBocadillo bonoBocadillo, CompraBono compraBono)
+        public BonosComprados(BonoBocadillo bonoBocadillo, CompraBono compraBono , int cantidad, float precioBono)
         {
-            this.bonoId = bonoId;
-            this.compraId = compraId;
             this.cantidad = cantidad;
             this.precioBono = precioBono;
             this.bonoBocadillo = bonoBocadillo;
             this.compraBono = compraBono;
+            this.bonoId = bonoBocadillo.bonoID;
+            this.compraId = compraBono.compraBonoId;
         }
 
-        [Key]
         public string bonoId { get; set; }
-        [Key]
         public string compraId { get; set; }
         [Required, Range(1, int.MaxValue, ErrorMessage = "No se puede tener cantidad 0")]
         public int cantidad { get; set; }
