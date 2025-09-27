@@ -1,4 +1,5 @@
 ﻿using NuGet.Versioning;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AppForSEII2526.API.Models
 {
@@ -24,6 +25,7 @@ namespace AppForSEII2526.API.Models
         [Required]
         public string apellido1Cliente { get; set; }
 
+        [AllowNull]
         public string apellido2Cliente { get; set; }
 
         [Required]
