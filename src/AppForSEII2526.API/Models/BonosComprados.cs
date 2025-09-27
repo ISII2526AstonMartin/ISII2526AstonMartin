@@ -20,7 +20,7 @@ namespace AppForSEII2526.API.Models
         [Required, Range(1, int.MaxValue, ErrorMessage = "No se puede tener cantidad 0")]
         public int cantidad { get; set; }
         [Required]
-        public float precioBono { get; set; }
+        public float precioBono { get; set; } //ver si puedo cambiarlo a int (float no es preciso por la coma flotante)
         [Required, ForeignKey("bonoId")]
         public BonoBocadillo bonoBocadillo { get; set; }
 

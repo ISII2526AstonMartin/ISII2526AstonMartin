@@ -5,7 +5,7 @@ namespace AppForSEII2526.API.Models
 {
     public class  CompraBono
     {
-        public CompraBono(string compraBonoId, string nombreCliente, string apellido1Cliente, string? apellido2Cliente, DateTime fechaCompraBono, int nBono, string precioTotalBono, MetodosDePago metodoPago)
+        public CompraBono(string compraBonoId, string nombreCliente, string apellido1Cliente, string? apellido2Cliente, DateTime fechaCompraBono, int nBono, float precioTotalBono, MetodosDePago metodoPago)
         {
             this.compraBonoId = compraBonoId;
             this.nombreCliente = nombreCliente;
@@ -35,7 +35,7 @@ namespace AppForSEII2526.API.Models
         public int nBono { get; set; }
 
         [Required]
-        public string precioTotalBono { get; set; }
+        public float precioTotalBono { get; set; } //ver si puedo cambiarlo a int (float no es preciso por la coma flotante)
 
         [Required]
         public MetodosDePago metodoPago { get; set; }

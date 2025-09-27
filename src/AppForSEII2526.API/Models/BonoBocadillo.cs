@@ -25,7 +25,7 @@ namespace AppForSEII2526.API.Models
         [Required]
         public string nombre { get; set; }
         [Required]
-        public float pvp { get; set; } //ver si puedo cambiarlo a int
+        public float pvp { get; set; } //ver si puedo cambiarlo a int (float no es preciso por la coma flotante)
 
         public override bool Equals(object? other)
         {
