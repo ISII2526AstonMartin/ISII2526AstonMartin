@@ -3,20 +3,21 @@
   <Class Name="AppForSEII2526.API.Models.Bocadillo">
     <Position X="3.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAABAAAACAAIAAAAAAIAAAAIAAAAAAAAAQAAg=</HashCode>
+      <HashCode>AAACACAAAAAAgAAQAAAAgAAAgAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>Models\Bocadillo.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="tipoPan" />
+      <Property Name="TipoPan" />
+      <Property Name="Tamanyo" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="resenyaBocadillo" />
+      <Property Name="ResenyaBocadillo" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.TipoPan">
     <Position X="0.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACAAAAAEAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
       <FileName>Models\TipoPan.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -26,25 +27,35 @@
   <Class Name="AppForSEII2526.API.Models.ResenyaBocadillo">
     <Position X="6.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAABAgIAAEAA=</HashCode>
+      <HashCode>AAAQAAAAAIAAAAAAAAAAAAAAAAAAAAAAgAAAAQAAQAA=</HashCode>
       <FileName>Models\ResenyaBocadillo.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="bocadillo" />
-      <Property Name="resenya" />
+      <Property Name="Bocadillo" />
+      <Property Name="Resenya" />
     </ShowAsAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.Resenya">
     <Position X="9.75" Y="1.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="AppForSEII2526.API.Models.Resenya.Valoracion_General">
+        <TypeIdentifier>
+          <NewMemberFileName>Models\Resenya.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAEAAAAgAAAAAAAAAAAAEICAAAg=</HashCode>
+      <HashCode>AAACACAAAAIAAAAAAAAAAAABAAAAAAAAAIAAAAAAABA=</HashCode>
       <FileName>Models\Resenya.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="resenyaBocadillo" />
+      <Property Name="ResenyaBocadillo" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Enum Name="AppForSEII2526.API.Models.Tamanyo" Collapsed="true">
+  <Enum Name="AppForSEII2526.API.Models.Tamanyo">
     <Position X="3.75" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAQAAAAAAAAAAAAA=</HashCode>

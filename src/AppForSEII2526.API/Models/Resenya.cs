@@ -2,14 +2,21 @@
 {
     public class Resenya
     {
-        public string descripcion { get; set; }
-        public DateTime fechaPublicacion { get; set; }
+        public string Descripcion { get; set; }
+        public DateTime FechaPublicacion { get; set; }
         public int Id { get; set; }
-        public string nombreUsuario { get; set; }
-        public string titulo { get; set; }
+        public string NombreUsuario { get; set; }
+        public string Titulo { get; set; }
 
-        [Range(1, 5)]
-        public int valoracionGeneral { get; set; }
-        public List<ResenyaBocadillo> resenyaBocadillo { get; set; }
+        public IList<ResenyaBocadillo> ResenyaBocadillo { get; set; }
+
+        public enum Valoracion_General
+        {
+            Uno,
+            Dos,
+            Tres,
+            Cuatro,
+            Cinco
+        }
     }
 }

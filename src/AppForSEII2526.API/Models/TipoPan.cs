@@ -5,8 +5,8 @@
         [Key]
         public int PanId { get; set; }
         [Required]
-        public string nombre { get; set; }
+        public string Nombre { get; set; }
         
-        public List<Bocadillo> Bocadillos { get; set; }
+        public IList<Bocadillo> Bocadillos { get; set; }
     }
 }

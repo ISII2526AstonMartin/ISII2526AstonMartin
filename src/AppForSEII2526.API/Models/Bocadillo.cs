@@ -3,15 +3,14 @@
     public class Bocadillo
     {
         public int Id { get; set; }
-        public string nombre { get; set; }
-        public float pvp { get; set; }
-        public int stock { get; set; }
-        //public List<CompraBocadillo> comprasDelBocadillo { get; set; }
+        public string Nombre { get; set; }
+        public float PVP { get; set; }
+        public int Stock { get; set; }
 
-        public TipoPan tipoPan { get; set; }
+        public TipoPan TipoPan { get; set; }
 
-        public Tamanyo tamanyo { get; set; }
-        public List<ResenyaBocadillo> resenyaBocadillo { get; set; }
+        public Tamanyo Tamanyo { get; set; }
+        public IList<ResenyaBocadillo> ResenyaBocadillo { get; set; }
 
 
 

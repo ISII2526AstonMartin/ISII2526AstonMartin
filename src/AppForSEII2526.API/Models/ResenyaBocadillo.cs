@@ -1,17 +1,17 @@
 ﻿namespace AppForSEII2526.API.Models
 {
-    [PrimaryKey(nameof(bocadilloId), nameof(resenyaId))]
+    [PrimaryKey(nameof(BocadilloId), nameof(ResenyaId))]
     public class ResenyaBocadillo
     {
 
-        public Bocadillo bocadillo { get; set; }
-        public int bocadilloId{get; set; }
+        public Bocadillo Bocadillo { get; set; }
+        public int BocadilloId{get; set; }
 
         [Range(1, 5)]
-        public int puntuacion { get; set; }
+        public int Puntuacion { get; set; }
 
-        public Resenya resenya { get; set; }
-        public int resenyaId{get; set; }
+        public Resenya Resenya { get; set; }
+        public int ResenyaId{get; set; }
 
 
 
