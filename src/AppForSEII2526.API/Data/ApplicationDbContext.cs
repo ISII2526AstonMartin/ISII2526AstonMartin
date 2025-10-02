@@ -10,4 +10,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Compra> Compra { get; set; }
     public DbSet<CompraBocadillo> CompraBocadillo { get; set; }
 
+
+    
 }

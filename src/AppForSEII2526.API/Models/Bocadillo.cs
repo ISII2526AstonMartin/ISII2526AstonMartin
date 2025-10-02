@@ -4,7 +4,7 @@ namespace AppForSEII2526.API.Models
 {
     public class Bocadillo
     {
-        public int BocadilloId { get; set; }
+        public int Id { get; set; }
         public string Nombre { get; set; }
         public float PVP { get; set; }
         public TipoPan TipoPan { get; set; }
