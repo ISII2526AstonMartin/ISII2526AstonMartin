@@ -9,10 +9,5 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<TipoProducto> TiposProductos { get; set; }
     public DbSet<Compra_Producto> Compras { get; set; }
     public DbSet<Producto_Compra> Productos_Compras { get; set; }
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        base.OnModelCreating(builder);
-        builder.Entity<Producto_Compra>().HasKey(pc => new { pc.ProductoID, pc.CompraID });
-        builder.Entity<Producto>().HasKey(p => p.ProductoID);
-    }
+    
 }
