@@ -4,18 +4,14 @@ namespace AppForSEII2526.API.Models
 {
     public class Bocadillo
     {
-        public int bocadilloId { get; set; }
-        public string nombre { get; set; }
-        public float pvp { get; set; }
-        public TipoPan tipoPan { get; set; }
-        public ResenyaBocadillo reseña { get; set; }
-
-        public List<CompraBocadillo> compraBocadillo {get; set;}
-        public int stock { get; set; }
-
-        public Tamanyo tamanyo { get; set; }
-
+        public int BocadilloId { get; set; }
+        public string Nombre { get; set; }
+        public float PVP { get; set; }
+        public TipoPan TipoPan { get; set; }
         
+
+        public IList<CompraBocadillo> CompraBocadillo {get; set;}
+        public int Stock { get; set; }
 
 
     }
