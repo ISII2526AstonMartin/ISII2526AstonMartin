@@ -10,5 +10,6 @@
 
         [Range(1, 5)]
         public int valoracionGeneral { get; set; }
+        public List<ResenyaBocadillo> resenyaBocadillo { get; set; }
     }
 }
