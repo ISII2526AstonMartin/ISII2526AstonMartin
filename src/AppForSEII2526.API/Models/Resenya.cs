@@ -14,7 +14,7 @@
         public IList<ResenyaBocadillo> ResenyaBocadillo { get; set; }
 
         [Required]
-        public string ValoracionGeneral { get; set; }
+        public Valoracion_General ValoracionGeneral { get; set; }
         public enum Valoracion_General
         {
             Uno,

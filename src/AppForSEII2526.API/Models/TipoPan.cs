@@ -2,11 +2,11 @@
 {
     public class TipoPan
     {
-        [Key]
-        public int PanId { get; set; }
+
+        public int Id { get; set; }
+        public List<Bocadillo> Bocadillos { get; set; }
         [Required]
         public string Nombre { get; set; }
-        
-        public IList<Bocadillo> Bocadillos { get; set; }
+
     }
 }

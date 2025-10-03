@@ -1,4 +1,6 @@
-﻿namespace AppForSEII2526.API.Models
+﻿using NuGet.Versioning;
+
+namespace AppForSEII2526.API.Models
 {
     public class Bocadillo
     {
@@ -16,6 +18,7 @@
         public Tamanyo Tamanyo { get; set; }
         public IList<ResenyaBocadillo> ResenyaBocadillo { get; set; }
 
+        public List<CompraBocadillo> CompraBocadillo {get; set;}
 
 
     }
