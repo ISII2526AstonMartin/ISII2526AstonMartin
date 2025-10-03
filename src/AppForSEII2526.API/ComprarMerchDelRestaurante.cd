@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+	<Class Name="AppForSEII2526.API.Models.TipoProducto">
+		<Position X="2" Y="0.75" Width="1.5" />
+		<TypeIdentifier>
+			<HashCode>AAAAAAAAAAAEAAAAQAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+			<FileName>Models\TipoProducto.cs</FileName>
+		</TypeIdentifier>
+		<ShowAsCollectionAssociation>
+			<Property Name="Productos" />
+		</ShowAsCollectionAssociation>
+	</Class>
+	<Class Name="AppForSEII2526.API.Models.Producto">
+		<Position X="6" Y="1" Width="1.5" />
+		<TypeIdentifier>
+			<HashCode>AAAAAAAAAAAEAAAAAAAAgAAAgAAAgAAAAAAQAAACAAA=</HashCode>
+			<FileName>Models\Producto.cs</FileName>
+		</TypeIdentifier>
+		<ShowAsAssociation>
+			<Property Name="Tipo_Producto" />
+		</ShowAsAssociation>
+		<ShowAsCollectionAssociation>
+			<Property Name="Productos_Compras" />
+		</ShowAsCollectionAssociation>
+	</Class>
+	<Class Name="AppForSEII2526.API.Models.Producto_Compra">
+		<Position X="10.25" Y="1" Width="1.5" />
+		<AssociationLine Name="Compra" Type="AppForSEII2526.API.Models.Compra_Producto" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+			<Path>
+				<Point X="11.75" Y="1.562" />
+				<Point X="12.492" Y="1.562" />
+				<Point X="12.492" Y="1.518" />
+				<Point X="14" Y="1.518" />
+			</Path>
+		</AssociationLine>
+		<TypeIdentifier>
+			<HashCode>AAAAAAEAAAAEAAAAQAAAAAAIAAAAAAAAAAAUAAAAAAA=</HashCode>
+			<FileName>Models\Producto_Compra.cs</FileName>
+		</TypeIdentifier>
+		<ShowAsAssociation>
+			<Property Name="Producto" />
+			<Property Name="Compra" />
+		</ShowAsAssociation>
+	</Class>
+	<Class Name="AppForSEII2526.API.Models.Compra_Producto">
+		<Position X="14" Y="1" Width="1.5" />
+		<AssociationLine Name="Productos_Compras" Type="AppForSEII2526.API.Models.Producto_Compra" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+			<Path>
+				<Point X="14" Y="2.325" />
+				<Point X="11.995" Y="2.325" />
+				<Point X="11.995" Y="2.438" />
+				<Point X="11.75" Y="2.438" />
+			</Path>
+			<MemberNameLabel ManuallyPlaced="true">
+				<Position X="0.11" Y="0.05" />
+			</MemberNameLabel>
+		</AssociationLine>
+		<TypeIdentifier>
+			<HashCode>AAAAAAAAAAAAAAAFAAAAgAAKAAABAAAAAAAAAAACAAA=</HashCode>
+			<FileName>Models\Compra_Producto.cs</FileName>
+		</TypeIdentifier>
+		<ShowAsCollectionAssociation>
+			<Property Name="Productos_Compras" />
+		</ShowAsCollectionAssociation>
+	</Class>
+	<Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

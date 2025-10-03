@@ -7,7 +7,8 @@
         public Bocadillo Bocadillo { get; set; }
         public int BocadilloId{get; set; }
 
-        [Range(1, 5)]
+        [Required]
+        [Range(1, 10)]
         public int Puntuacion { get; set; }
 
         public Resenya Resenya { get; set; }
