@@ -5,7 +5,8 @@ namespace AppForSEII2526.API.Models
 {
     public class  CompraBono
     {
-        public CompraBono(string compraBonoId, string nombreCliente, string apellido1Cliente, string? apellido2Cliente, DateTime fechaCompraBono, int nBono, float precioTotalBono, MetodosDePago metodoPago)
+        /*
+        public CompraBono(string compraBonoId, string nombreCliente, string apellido1Cliente, string? apellido2Cliente, DateTime fechaCompraBono, int nBono, float precioTotalBono)
         {
             this.compraBonoId = compraBonoId;
             this.nombreCliente = nombreCliente;
@@ -14,32 +15,35 @@ namespace AppForSEII2526.API.Models
             this.fechaCompraBono = fechaCompraBono;
             this.nBono = nBono;
             this.precioTotalBono = precioTotalBono;
-            this.metodoPago = metodoPago;
         }
+        */
+
         [Key]
-        public string compraBonoId { get; set; }
+        public string CompraBonoId { get; set; }
 
         [Required]
-        public string nombreCliente { get; set; }
+        public string NombreCliente { get; set; }
 
         [Required]
-        public string apellido1Cliente { get; set; }
+        public string Apellido1Cliente { get; set; }
 
         [AllowNull]
-        public string apellido2Cliente { get; set; }
+        public string Apellido2Cliente { get; set; }
 
         [Required]
-        public DateTime fechaCompraBono { get; set; }
+        public DateTime FechaCompraBono { get; set; }
 
         [Required]
-        public int nBono { get; set; }
+        public int NBono { get; set; }
 
         [Required]
-        public float precioTotalBono { get; set; } //ver si puedo cambiarlo a int (float no es preciso por la coma flotante)
+        public float PrecioTotalBono { get; set; } 
 
-        [Required]
-        public MetodosDePago metodoPago { get; set; }
+        public MetodoPago MetodoPagoUsuario { get; set; }
 
+        public List<BonosComprados> ListaBonosComprados { get; set; }
+
+        /*
         public override bool Equals(object? obj)
         {
             return obj is CompraBono bono && compraBonoId == bono.compraBonoId;
@@ -47,13 +51,13 @@ namespace AppForSEII2526.API.Models
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(compraBonoId, nombreCliente, apellido1Cliente, apellido2Cliente, fechaCompraBono, nBono, precioTotalBono, metodoPago);
+            return HashCode.Combine(compraBonoId, nombreCliente, apellido1Cliente, apellido2Cliente, fechaCompraBono, nBono, precioTotalBono);
         }
-
-        public enum MetodosDePago
+        */
+        public enum MetodoPago
         {
-            Tarjeta,
             Paypal,
+            Bizum,
             GooglePay
         }
     }
