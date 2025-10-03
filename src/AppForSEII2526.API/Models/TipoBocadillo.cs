@@ -18,7 +18,7 @@ namespace AppForSEII2526.API.Models
         [Required]
         public string NombreTipo { get; set; }
 
-        public List<BonoBocadillo> ListaBonosBocadillos { get; set; }
+        public List<BonoBocadillo> ListaBonoBocadillos { get; set; }
 
         /*
         public override bool Equals(object? other)

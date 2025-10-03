@@ -16,11 +16,11 @@
   <Class Name="AppForSEII2526.API.Models.TipoBocadillo">
     <Position X="1" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAQAAAAAAAAAAIAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <HashCode>BAAAAAAAAAQAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\TipoBocadillo.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="ListaBonosBocadillos" />
+      <Property Name="ListaBonoBocadillos" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.BonosComprados">
@@ -30,8 +30,8 @@
       <FileName>Models\BonosComprados.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
-      <Property Name="Comprabono" />
       <Property Name="BonoBocadillo" />
+      <Property Name="Comprabono" />
     </ShowAsAssociation>
   </Class>
   <Class Name="AppForSEII2526.API.Models.CompraBono">

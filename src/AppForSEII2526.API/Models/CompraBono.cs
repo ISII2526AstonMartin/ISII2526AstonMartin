@@ -37,7 +37,7 @@ namespace AppForSEII2526.API.Models
         public int NBono { get; set; }
 
         [Required]
-        public float PrecioTotalBono { get; set; } 
+        public float PrecioTotalBono { get; set; }
 
         public MetodoPago MetodoPagoUsuario { get; set; }
 
