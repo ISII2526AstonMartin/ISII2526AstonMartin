@@ -30,4 +30,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     
 
 
+
+    public DbSet<Resenya> Resenyas { get; set; }
+    public DbSet<ResenyaBocadillo> ResenyaBocadillos { get; set; }
+
 }

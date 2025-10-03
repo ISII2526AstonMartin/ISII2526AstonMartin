@@ -39,20 +39,23 @@
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
-    <NestedTypes>
-      <Enum Name="AppForSEII2526.API.Models.CompraBono.MetodoPago">
-        <TypeIdentifier>
-          <NewMemberFileName>Models\CompraBono.cs</NewMemberFileName>
-        </TypeIdentifier>
-      </Enum>
-    </NestedTypes>
     <TypeIdentifier>
       <HashCode>ACAABAAAAgAAAAAAACEAAAAAAAAEAAAAAAAgAAAAEAA=</HashCode>
       <FileName>Models\CompraBono.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MetodoPagoUsuario" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="ListaBonosComprados" />
     </ShowAsCollectionAssociation>
   </Class>
+  <Enum Name="AppForSEII2526.API.Models.MetodoPago">
+    <Position X="11.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAEAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Compra.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
