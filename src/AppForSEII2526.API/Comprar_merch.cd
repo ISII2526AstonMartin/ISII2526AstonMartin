@@ -29,8 +29,8 @@
       <Path>
         <Point X="11.75" Y="1.562" />
         <Point X="12.492" Y="1.562" />
-        <Point X="12.492" Y="1.518" />
-        <Point X="14" Y="1.518" />
+        <Point X="12.492" Y="1.477" />
+        <Point X="14" Y="1.477" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
@@ -46,9 +46,9 @@
     <Position X="14" Y="1" Width="1.5" />
     <AssociationLine Name="Productos_Compras" Type="AppForSEII2526.API.Models.Producto_Compra" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="14" Y="2.325" />
-        <Point X="11.995" Y="2.325" />
-        <Point X="11.995" Y="2.438" />
+        <Point X="14" Y="2.221" />
+        <Point X="13.625" Y="2.221" />
+        <Point X="13.625" Y="2.438" />
         <Point X="11.75" Y="2.438" />
       </Path>
       <MemberNameLabel ManuallyPlaced="true">
@@ -56,12 +56,22 @@
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAFAAAAgAAKAAABAAAAAAAAAAACAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAFAAAAhAAKAAABAAAAAAAAAAACAAA=</HashCode>
       <FileName>Models\Compra_Producto.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Metodo_Pago" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="Productos_Compras" />
     </ShowAsCollectionAssociation>
   </Class>
+  <Enum Name="AppForSEII2526.API.Models.MetodoPago">
+    <Position X="17.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAEAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Compra_Producto.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
