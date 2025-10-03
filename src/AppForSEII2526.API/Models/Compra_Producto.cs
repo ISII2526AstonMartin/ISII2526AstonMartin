@@ -19,11 +19,6 @@
         //Relaciones
         public List<Producto_Compra> Productos_Compras { get; set; }
     }
-    public enum MetodoPago
-    {
-        Tarjeta_Credito,
-        PayPal,
-        Gpay
-    }
+    
 
 }

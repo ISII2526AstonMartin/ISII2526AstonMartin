@@ -20,5 +20,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         base.OnModelCreating(builder);
         builder.Entity<BonosComprados>().HasKey(bc => new { bc.BonoId, bc.CompraId });
+        builder.Entity<CompraBocadillo>().HasKey(cb => new { cb.BocadilloId, cb.CompraId });
     }
+    public DbSet <Bocadillo> Bocadillo { get; set; }
+    public DbSet<TipoPan> TipoPan { get; set; }
+    public DbSet<Compra> Compra { get; set; }
+    public DbSet<CompraBocadillo> CompraBocadillo { get; set; }
+
+    
+
+
 }

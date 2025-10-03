@@ -54,11 +54,6 @@ namespace AppForSEII2526.API.Models
             return HashCode.Combine(compraBonoId, nombreCliente, apellido1Cliente, apellido2Cliente, fechaCompraBono, nBono, precioTotalBono);
         }
         */
-        public enum MetodoPago
-        {
-            Paypal,
-            Bizum,
-            GooglePay
-        }
+        
     }
 }
