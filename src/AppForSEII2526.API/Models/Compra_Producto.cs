@@ -12,7 +12,7 @@
         public string Direccion_Envio { get; set; }
         public DateTime FechaCompra { get; set; }
         [Required]
-        public string Metodo_Pago { get; set; }
+        public MetodoPago Metodo_Pago { get; set; }
         [Required]
         public string Nombre { get; set; }
         public float PrecioFinal { get; set; }
