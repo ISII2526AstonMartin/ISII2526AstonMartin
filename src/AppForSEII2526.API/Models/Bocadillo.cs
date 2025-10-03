@@ -10,7 +10,7 @@ namespace AppForSEII2526.API.Models
         public TipoPan TipoPan { get; set; }
         
 
-        public IList<CompraBocadillo> CompraBocadillo {get; set;}
+        public List<CompraBocadillo> CompraBocadillo {get; set;}
         public int Stock { get; set; }
 
 

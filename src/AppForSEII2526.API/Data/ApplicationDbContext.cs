@@ -10,6 +10,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Compra> Compra { get; set; }
     public DbSet<CompraBocadillo> CompraBocadillo { get; set; }
 
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+        builder.Entity<CompraBocadillo>().HasKey(cb => new { cb.BocadilloId, cb.CompraId });
 
-    
+
+        
+    }
+
+
 }

@@ -2,10 +2,12 @@
 {
     public class TipoPan
     {
-        public IList<Bocadillo> Bocadillos { get; set; }
+
+        public int Id { get; set; }
+        public List<Bocadillo> Bocadillos { get; set; }
         public string Nombre { get; set; }
 
-        public int PanId { get; set; }
+        
 
         
 

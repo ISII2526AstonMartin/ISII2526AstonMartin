@@ -6,7 +6,7 @@
         public DateTime FechaCompra {  get; set; }
         public int nBocadillo { get; set; }
 
-        public IList<CompraBocadillo> CompraBocadillos { get; set; }
+        public List<CompraBocadillo> CompraBocadillos { get; set; }
 
         public string NombreCliente { get; set; }
         public float PrecioTotal { get; set; }
