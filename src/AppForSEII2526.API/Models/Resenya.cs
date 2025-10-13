@@ -7,7 +7,7 @@
         public string Descripcion { get; set; }
         public DateTime FechaPublicacion { get; set; }
         public int Id { get; set; }
-        public string NombreUsuario { get; set; }
+        public string? NombreUsuario { get; set; }
         [Required]
         public string Titulo { get; set; }
 
