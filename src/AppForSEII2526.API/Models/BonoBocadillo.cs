@@ -18,21 +18,13 @@ namespace AppForSEII2526.API.Models
 
         [Key]
         public string BonoID { get; set; }
-        /*
-        [Required, ForeignKey("idTipo")]
-        public TipoBocadillo TipoBocadillo { get; set; }
-        */
         
-        [Required]
         public int CantidadDisponible { get; set; }
         
-        [Required]
         public int NBocadillos { get; set; }
         
-        [Required]
-        public string NombreBocadillo { get; set; }
+        public string NombreBono { get; set; }
         
-        [Required]
         public float PVP { get; set; }
 
         public TipoBocadillo Tipo { get; set; }

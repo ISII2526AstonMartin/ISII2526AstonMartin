@@ -21,24 +21,13 @@ namespace AppForSEII2526.API.Models
         [Key]
         public string CompraBonoId { get; set; }
 
-        [Required]
-        public string NombreCliente { get; set; }
-
-        [Required]
-        public string Apellido1Cliente { get; set; }
-
-        [AllowNull]
-        public string Apellido2Cliente { get; set; }
-
-        [Required]
         public DateTime FechaCompraBono { get; set; }
 
-        [Required]
         public int NBono { get; set; }
 
-        [Required]
         public float PrecioTotalBono { get; set; }
 
+        [Required]
         public MetodoPago MetodoPagoUsuario { get; set; }
 
         public List<BonosComprados> ListaBonosComprados { get; set; }
