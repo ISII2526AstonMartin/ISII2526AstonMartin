@@ -4,8 +4,7 @@
     {
         // Atributos
         [Required]
-        public string Apellido1 { get; set; }
-        public string Apellido2 { get; set; }
+        public ApplicationUser Usuario { get; set; }
         [Key]
         public string CompraID { get; set; }
         [Required]
@@ -13,8 +12,6 @@
         public DateTime FechaCompra { get; set; }
         [Required]
         public MetodoPago Metodo_Pago { get; set; }
-        [Required]
-        public string Nombre { get; set; }
         public float PrecioFinal { get; set; }
         //Relaciones
         public List<Producto_Compra> Productos_Compras { get; set; }
