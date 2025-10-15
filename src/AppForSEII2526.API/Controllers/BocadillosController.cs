@@ -6,12 +6,12 @@ namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BocadilloController : ControllerBase
+    public class BocadillosController : ControllerBase
     {
 
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<BocadilloController> _logger;
-        public BocadilloController(ApplicationDbContext context, ILogger<BocadilloController> logger)
+        private readonly ILogger<BocadillosController> _logger;
+        public BocadillosController(ApplicationDbContext context, ILogger<BocadillosController> logger)
         {
             _context = context;
             _logger = logger;
