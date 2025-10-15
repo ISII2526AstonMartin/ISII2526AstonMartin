@@ -2,6 +2,20 @@
 {
     public class Resenya
     {
+        /*
+        public Resenya(int id, string titulo, string descripcion, DateTime fechaPublicacion, string? nombreUsuario, 
+            IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
+        {
+            Id = id;
+            Titulo = titulo;
+            Descripcion = descripcion;
+            FechaPublicacion = fechaPublicacion;
+            NombreUsuario = nombreUsuario;
+            ResenyaBocadillo = resenyaBocadillo;
+            ValoracionGeneral = valoracionGeneral;
+        }
+        */
+
         public int Id { get; set; }
 
         [Required]
