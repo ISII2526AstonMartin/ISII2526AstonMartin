@@ -127,7 +127,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasIndex("TipoPanId");
 
-                    b.ToTable("Bocadillo");
+                    b.ToTable("Bocadillo", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.BonoBocadillo", b =>
@@ -156,7 +156,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasIndex("TipoIdTipo");
 
-                    b.ToTable("BonoBocadillos");
+                    b.ToTable("BonoBocadillos", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.BonosComprados", b =>
@@ -180,7 +180,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasIndex("CompraBonoId");
 
-                    b.ToTable("BonosComprados");
+                    b.ToTable("BonosComprados", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Compra", b =>
@@ -217,7 +217,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasKey("CompraID");
 
-                    b.ToTable("Compra");
+                    b.ToTable("Compra", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.CompraBocadillo", b =>
@@ -246,7 +246,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasIndex("CompraId");
 
-                    b.ToTable("CompraBocadillo");
+                    b.ToTable("CompraBocadillo", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.CompraBono", b =>
@@ -280,7 +280,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasKey("CompraBonoId");
 
-                    b.ToTable("ComprasBono");
+                    b.ToTable("ComprasBono", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Compra_Producto", b =>
@@ -315,7 +315,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasKey("CompraID");
 
-                    b.ToTable("Compras");
+                    b.ToTable("Compras", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Producto", b =>
@@ -341,7 +341,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasIndex("Tipo_ProductoProductoID");
 
-                    b.ToTable("Productos");
+                    b.ToTable("Productos", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Producto_Compra", b =>
@@ -362,7 +362,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasIndex("ProductoID");
 
-                    b.ToTable("Productos_Compras");
+                    b.ToTable("Productos_Compras", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Resenya", b =>
@@ -393,7 +393,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Resenyas");
+                    b.ToTable("Resenyas", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.ResenyaBocadillo", b =>
@@ -411,7 +411,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasIndex("ResenyaId");
 
-                    b.ToTable("ResenyaBocadillos");
+                    b.ToTable("ResenyaBocadillos", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.TipoBocadillo", b =>
@@ -425,7 +425,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasKey("IdTipo");
 
-                    b.ToTable("TiposBocadillos");
+                    b.ToTable("TiposBocadillos", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.TipoPan", b =>
@@ -442,7 +442,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TipoPan");
+                    b.ToTable("TipoPan", (string)null);
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.TipoProducto", b =>
@@ -456,7 +456,7 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasKey("ProductoID");
 
-                    b.ToTable("TiposProductos");
+                    b.ToTable("TiposProductos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

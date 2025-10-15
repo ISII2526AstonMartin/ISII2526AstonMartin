@@ -40,7 +40,7 @@
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>ACAABAAAAgAAAAAAACEAAAAAAAAEAAAAAAAgAAAAEAA=</HashCode>
+      <HashCode>AAAABAAAAgAAAAAAACEAAAAAAAAEAAAAAAAgAAAAAAA=</HashCode>
       <FileName>Models\CompraBono.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -51,7 +51,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Enum Name="AppForSEII2526.API.Models.MetodoPago">
-    <Position X="11.25" Y="1.25" Width="1.5" />
+    <Position X="8.75" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAACAAAAEAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Compra.cs</FileName>

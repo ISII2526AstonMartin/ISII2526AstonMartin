@@ -8,5 +8,5 @@ public class ApplicationUser : IdentityUser {
     public string Nombre { get; set; }
     [Required]
     public string Apellido1 { get; set; }
-    public string Apellido2 { get; set; }
+    public string? Apellido2 { get; set; }
 }
