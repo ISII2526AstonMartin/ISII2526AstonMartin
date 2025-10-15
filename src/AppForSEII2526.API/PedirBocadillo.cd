@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AppForSEII2526.API.Models.Bocadillo">
+    <Position X="3" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACACAAAAAAgAAQAAAQgAAAgAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Models\Bocadillo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TipoPan" />
+      <Property Name="Tamanyo" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="CompraBocadillo" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.Compra">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAABAAAAAKAAgAAAIAAAAAAAEAEAA=</HashCode>
+      <FileName>Models\Compra.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MetodoPago" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="CompraBocadillos" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.CompraBocadillo">
+    <Position X="6" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAwAAEAAIAAAAAQAAAAAAAQAAAAAAAAAAAEAAIAAAA=</HashCode>
+      <FileName>Models\CompraBocadillo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Bocadillo" />
+      <Property Name="Compra" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.TipoPan">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAgAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Models\TipoPan.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Bocadillos" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Enum Name="AppForSEII2526.API.Models.MetodoPago">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAEAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Compra.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AppForSEII2526.API.Models.Tamanyo">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Bocadillo.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
