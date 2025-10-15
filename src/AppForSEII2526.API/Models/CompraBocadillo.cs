@@ -14,12 +14,11 @@
 
         [Required]
         public int Cantidad {  get; set; }
-        [Required]
+        
         public float Precio { get; set; }
 
-        [Required]
         public string TipoPan { get; set; }
-        [Required]
+        
         public string NombreBocadillo { get; set; }
 
         
