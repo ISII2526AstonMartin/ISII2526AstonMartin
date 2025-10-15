@@ -11,21 +11,34 @@ namespace AppForSEII2526.API.Controllers
 
         private readonly ApplicationDbContext _context;
         private readonly ILogger<BocadillosController> _logger;
+
         public BocadillosController(ApplicationDbContext context, ILogger<BocadillosController> logger)
         {
             _context = context;
             _logger = logger;
         }
+       
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(List<Bocadillo>), (int)HttpStatusCode.OK)]
+            public async Task<IActionResult> GetBocadillosParaPedir()
+        {
+            IList<Bocadillo > bocadillos = await _context.Bocadillo
+                .ToListAsync();
+                return Ok(bocadillos);  
+        }
 
 
         [HttpGet]
         [Route("[action]")]
-        [ProducesResponseType(typeof(IList<Bocadillo>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetBocadillosforResenya()
+        [ProducesResponseType(typeof(List<Bocadillo>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetBocadillosResenya()
         {
             IList<Bocadillo> bocadillos = await _context.Bocadillo
                 .ToListAsync();
             return Ok(bocadillos);
         }
+
     }
 }
