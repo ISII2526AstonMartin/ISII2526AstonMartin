@@ -9,4 +9,5 @@ public class ApplicationUser : IdentityUser {
     [Required]
     public string Apellido1 { get; set; }
     public string? Apellido2 { get; set; }
+    public string? NombreUsuario { get; set; }
 }

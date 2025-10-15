@@ -10,7 +10,7 @@
         public string Descripcion { get; set; }
         public DateTime FechaPublicacion { get; set; }
 
-        public string? NombreUsuario { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
 
 
         public IList<ResenyaBocadillo> ResenyaBocadillo { get; set; }
