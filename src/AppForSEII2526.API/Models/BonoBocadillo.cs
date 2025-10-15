@@ -30,6 +30,8 @@ namespace AppForSEII2526.API.Models
         public TipoBocadillo Tipo { get; set; }
         
         public List<BonosComprados> ListaBonosComprados { get; set; }
+
+        public ApplicationUser applicationuser {  get; set; }
         /*
         public override bool Equals(object? other)
         {
