@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppForSEII2526.API.Controllers
 {
@@ -7,15 +8,17 @@ namespace AppForSEII2526.API.Controllers
     [ApiController]
     public class BocadillosController : ControllerBase
     {
+
         private readonly ApplicationDbContext _context;
         private readonly ILogger<BocadillosController> _logger;
 
         public BocadillosController(ApplicationDbContext context, ILogger<BocadillosController> logger)
         {
-            this._context = context;
-            this._logger = logger;
+            _context = context;
+            _logger = logger;
         }
        
+
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(List<Bocadillo>), (int)HttpStatusCode.OK)]
@@ -24,6 +27,17 @@ namespace AppForSEII2526.API.Controllers
             IList<Bocadillo > bocadillos = await _context.Bocadillo
                 .ToListAsync();
                 return Ok(bocadillos);  
+        }
+
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(List<Bocadillo>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetBocadillosResenya()
+        {
+            IList<Bocadillo> bocadillos = await _context.Bocadillo
+                .ToListAsync();
+            return Ok(bocadillos);
         }
 
     }
