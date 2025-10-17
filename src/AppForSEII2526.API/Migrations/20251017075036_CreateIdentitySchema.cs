@@ -411,14 +411,13 @@ namespace AppForSEII2526.API.Migrations
                 columns: table => new
                 {
                     BonoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CompraId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CompraBonoId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CompraBonoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     PrecioBono = table.Column<float>(type: "real", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BonosComprados", x => new { x.BonoId, x.CompraId });
+                    table.PrimaryKey("PK_BonosComprados", x => new { x.BonoId, x.CompraBonoId });
                     table.ForeignKey(
                         name: "FK_BonosComprados_BonoBocadillos_BonoId",
                         column: x => x.BonoId,
@@ -429,7 +428,8 @@ namespace AppForSEII2526.API.Migrations
                         name: "FK_BonosComprados_ComprasBono_CompraBonoId",
                         column: x => x.CompraBonoId,
                         principalTable: "ComprasBono",
-                        principalColumn: "CompraBonoId");
+                        principalColumn: "CompraBonoId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
