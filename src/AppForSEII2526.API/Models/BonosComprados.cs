@@ -5,17 +5,16 @@ namespace AppForSEII2526.API.Models
     [PrimaryKey(nameof(BonoId), nameof(CompraId))]
     public class  BonosComprados
     {
-        /*
-        public BonosComprados(BonoBocadillo bonoBocadillo, CompraBono compraBono , int cantidad, float precioBono)
+        public BonosComprados(BonoBocadillo bonoBocadillo, CompraBono comprabono, int cantidad, float precioBono)
         {
-            this.cantidad = cantidad;
-            this.precioBono = precioBono;
-            this.bonoBocadillo = bonoBocadillo;
-            this.compraBono = compraBono;
-            this.bonoId = bonoBocadillo.bonoID;
-            this.compraId = compraBono.compraBonoId;
+            BonoBocadillo = bonoBocadillo;
+            Comprabono = comprabono;
+            Cantidad = cantidad;
+            PrecioBono = precioBono;
+            this.BonoId = BonoBocadillo.BonoID;
+            this.CompraId = comprabono.CompraBonoId;
         }
-        */
+
         public BonoBocadillo BonoBocadillo { get; set; }
 
         public string BonoId { get; set; }
@@ -28,16 +27,21 @@ namespace AppForSEII2526.API.Models
         public int Cantidad { get; set; }
 
         public float PrecioBono { get; set; }
-        /*
-        public override bool Equals(object? other)
+
+        public override bool Equals(object? obj)
         {
-            return other is BonosComprados bono && bonoId == bono.bonoId && compraId == bono.compraId;
+            return obj is BonosComprados comprados &&
+                   EqualityComparer<BonoBocadillo>.Default.Equals(BonoBocadillo, comprados.BonoBocadillo) &&
+                   BonoId == comprados.BonoId &&
+                   EqualityComparer<CompraBono>.Default.Equals(Comprabono, comprados.Comprabono) &&
+                   CompraId == comprados.CompraId &&
+                   Cantidad == comprados.Cantidad &&
+                   PrecioBono == comprados.PrecioBono;
         }
-        
+
         public override int GetHashCode()
         {
-            return HashCode.Combine(bonoId, compraId, cantidad, precioBono, bonoBocadillo, compraBono);
+            return HashCode.Combine(BonoBocadillo, BonoId, Comprabono, CompraId, Cantidad, PrecioBono);
         }
-        */
     }
 }
