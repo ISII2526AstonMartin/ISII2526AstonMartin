@@ -28,7 +28,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.Entity<BonosComprados>().HasKey(bc => new { bc.BonoId, bc.CompraId });
+        builder.Entity<BonosComprados>().HasKey(bc => new { bc.BonoId, bc.CompraBonoId });
         builder.Entity<CompraBocadillo>().HasKey(cb => new { cb.BocadilloId, cb.CompraId });
 
 
