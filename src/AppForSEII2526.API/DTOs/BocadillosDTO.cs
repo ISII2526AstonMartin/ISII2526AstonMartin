@@ -1,7 +1,7 @@
 ﻿
 namespace AppForSEII2526.API.DTOs
 {
-    public class BocadillosParaPedirDTO
+    public class BocadillosDTO
     {
 
         public string Nombre { get; set; }
@@ -9,12 +9,12 @@ namespace AppForSEII2526.API.DTOs
         public TipoPan TipoPan { get; set; }
         public float Precio { get; set; }
 
-        public BocadillosParaPedirDTO()
+        public BocadillosDTO()
         {
 
         }  
 
-        public BocadillosParaPedirDTO(string nombre, Tamanyo tamanyo, TipoPan tipoPan, float precio)
+        public BocadillosDTO(string nombre, Tamanyo tamanyo, TipoPan tipoPan, float precio)
         {
             Nombre = nombre;
             Tamanyo = tamanyo;
@@ -25,7 +25,7 @@ namespace AppForSEII2526.API.DTOs
 
         public override bool Equals(object? obj)
         {
-            return obj is BocadillosParaPedirDTO dTO &&
+            return obj is BocadillosDTO dTO &&
                    Nombre == dTO.Nombre &&
                    Tamanyo == dTO.Tamanyo &&
                    EqualityComparer<TipoPan>.Default.Equals(TipoPan, dTO.TipoPan) &&
