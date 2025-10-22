@@ -39,16 +39,5 @@ namespace AppForSEII2526.API.Controllers
                 .ToListAsync();
             return Ok(bocadillos);
         }
-
-        [HttpGet]
-        [Route("[action]")]
-        [ProducesResponseType(typeof(List<Bocadillo>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetBonos()
-        {
-            IList<BonoBocadillo> bonobocadillos = await _context.BonoBocadillos
-                .ToListAsync();
-            return Ok(bonobocadillos);
-        }
-
     }
 }
