@@ -1,8 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AppForSEII2526.API.Controllers
 {
-    public class BonosController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class BonosController : ControllerBase
     {
 
         private readonly ApplicationDbContext _context;
