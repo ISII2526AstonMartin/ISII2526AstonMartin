@@ -5,6 +5,10 @@ namespace AppForSEII2526.API.Models
     [PrimaryKey(nameof(BonoId), nameof(CompraBonoId))]
     public class  BonosComprados
     {
+        public BonosComprados()
+        {
+        }
+
         public BonosComprados(BonoBocadillo bonoBocadillo, CompraBono comprabono, int cantidad, float precioBono)
         {
             BonoBocadillo = bonoBocadillo;
@@ -12,7 +16,7 @@ namespace AppForSEII2526.API.Models
             Cantidad = cantidad;
             PrecioBono = precioBono;
             this.BonoId = BonoBocadillo.BonoID;
-            this.CompraId = comprabono.CompraBonoId;
+            this.CompraBonoId = comprabono.CompraBonoId;
         }
 
         public BonoBocadillo BonoBocadillo { get; set; }
@@ -34,14 +38,14 @@ namespace AppForSEII2526.API.Models
                    EqualityComparer<BonoBocadillo>.Default.Equals(BonoBocadillo, comprados.BonoBocadillo) &&
                    BonoId == comprados.BonoId &&
                    EqualityComparer<CompraBono>.Default.Equals(Comprabono, comprados.Comprabono) &&
-                   CompraId == comprados.CompraId &&
+                   CompraBonoId == comprados.CompraBonoId &&
                    Cantidad == comprados.Cantidad &&
                    PrecioBono == comprados.PrecioBono;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(BonoBocadillo, BonoId, Comprabono, CompraId, Cantidad, PrecioBono);
+            return HashCode.Combine(BonoBocadillo, BonoId, Comprabono, CompraBonoId, Cantidad, PrecioBono);
         }
     }
 }

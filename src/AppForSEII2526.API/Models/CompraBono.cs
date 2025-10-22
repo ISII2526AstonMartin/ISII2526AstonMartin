@@ -5,13 +5,19 @@ namespace AppForSEII2526.API.Models
 {
     public class CompraBono
     {
-        public CompraBono(string compraBonoId, DateTime fechaCompraBono, int nBono, float precioTotalBono, MetodoPago metodoPagoUsuario)
+        public CompraBono()
+        {
+        }
+
+        public CompraBono(string compraBonoId, DateTime fechaCompraBono, int nBono, float precioTotalBono, MetodoPago metodoPagoUsuario, List<BonosComprados> listaBonosComprados, ApplicationUser applicationuser)
         {
             CompraBonoId = compraBonoId;
             FechaCompraBono = fechaCompraBono;
             NBono = nBono;
             PrecioTotalBono = precioTotalBono;
             MetodoPagoUsuario = metodoPagoUsuario;
+            ListaBonosComprados = listaBonosComprados;
+            this.applicationuser = applicationuser;
         }
 
         [Key]
@@ -28,6 +34,8 @@ namespace AppForSEII2526.API.Models
 
         public List<BonosComprados> ListaBonosComprados { get; set; }
 
+        public ApplicationUser applicationuser { get; set; }
+
         public override bool Equals(object? obj)
         {
             return obj is CompraBono bono &&
@@ -36,12 +44,13 @@ namespace AppForSEII2526.API.Models
                    NBono == bono.NBono &&
                    PrecioTotalBono == bono.PrecioTotalBono &&
                    MetodoPagoUsuario == bono.MetodoPagoUsuario &&
-                   EqualityComparer<List<BonosComprados>>.Default.Equals(ListaBonosComprados, bono.ListaBonosComprados);
+                   EqualityComparer<List<BonosComprados>>.Default.Equals(ListaBonosComprados, bono.ListaBonosComprados) &&
+                   EqualityComparer<ApplicationUser>.Default.Equals(applicationuser, bono.applicationuser);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(CompraBonoId, FechaCompraBono, NBono, PrecioTotalBono, MetodoPagoUsuario, ListaBonosComprados);
+            return HashCode.Combine(CompraBonoId, FechaCompraBono, NBono, PrecioTotalBono, MetodoPagoUsuario, ListaBonosComprados, applicationuser);
         }
     }
 }
