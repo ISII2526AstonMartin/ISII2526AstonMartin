@@ -2,7 +2,7 @@
 
 namespace AppForSEII2526.API.Models
 {
-    [PrimaryKey(nameof(BonoId), nameof(CompraId))]
+    [PrimaryKey(nameof(BonoId), nameof(CompraBonoId))]
     public class  BonosComprados
     {
         public BonosComprados(BonoBocadillo bonoBocadillo, CompraBono comprabono, int cantidad, float precioBono)
@@ -21,7 +21,7 @@ namespace AppForSEII2526.API.Models
 
         public CompraBono Comprabono { get; set; }
 
-        public string CompraId { get; set; }
+        public string CompraBonoId { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "No se puede tener cantidad 0")]
         public int Cantidad { get; set; }
