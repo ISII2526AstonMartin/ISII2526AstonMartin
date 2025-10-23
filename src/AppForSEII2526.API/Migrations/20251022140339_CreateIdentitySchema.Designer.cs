@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII2526.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251015145632_CreateIdentitySchema")]
+    [Migration("20251022140339_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -175,19 +175,16 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<string>("BonoId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("CompraId")
+                    b.Property<string>("CompraBonoId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
-                    b.Property<string>("CompraBonoId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<float>("PrecioBono")
                         .HasColumnType("real");
 
-                    b.HasKey("BonoId", "CompraId");
+                    b.HasKey("BonoId", "CompraBonoId");
 
                     b.HasIndex("CompraBonoId");
 
@@ -621,7 +618,9 @@ namespace AppForSEII2526.API.Migrations
 
                     b.HasOne("AppForSEII2526.API.Models.CompraBono", "Comprabono")
                         .WithMany("ListaBonosComprados")
-                        .HasForeignKey("CompraBonoId");
+                        .HasForeignKey("CompraBonoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("BonoBocadillo");
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AppForSEII2526.API.DTOs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,26 +20,33 @@ namespace AppForSEII2526.API.Controllers
         }
        
 
-        [HttpGet]
-        [Route("[action]")]
-        [ProducesResponseType(typeof(List<Bocadillo>), (int)HttpStatusCode.OK)]
-            public async Task<IActionResult> GetBocadillosParaPedir()
-        {
-            IList<Bocadillo > bocadillos = await _context.Bocadillo
-                .ToListAsync();
-                return Ok(bocadillos);  
-        }
 
 
         [HttpGet]
         [Route("[action]")]
-        [ProducesResponseType(typeof(List<Bocadillo>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetBocadillosResenya()
+        [ProducesResponseType(typeof(List<BocadillosDTO>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetBocadillosResenya(string? nombre, Tamanyo? tamanyo, string? tipoPan, float? PVP)
         {
-            IList<Bocadillo> bocadillos = await _context.Bocadillo
+            IList<BocadillosDTO> bocadillos = await _context.Bocadillo
+                .Include(b => b.TipoPan)
+                .Where(b =>
+                    (nombre == null || b.Nombre.Contains(nombre)) &&
+                    ((!tamanyo.HasValue || b.Tamanyo == tamanyo.Value)) &&
+                    (tipoPan == null || b.TipoPan.Nombre.Contains(tipoPan)) &&
+                    (!PVP.HasValue || b.PVP <= PVP.Value)
+                )
+                .Select(b => new BocadillosDTO
+                {
+                    Nombre = b.Nombre,
+                    Tamanyo = b.Tamanyo,
+                    TipoPan = b.TipoPan.Nombre,
+                    PVP = b.PVP
+                })
+
+
+
                 .ToListAsync();
             return Ok(bocadillos);
         }
-
     }
 }
