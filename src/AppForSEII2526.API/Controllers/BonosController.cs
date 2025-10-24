@@ -10,8 +10,8 @@ namespace AppForSEII2526.API.Controllers
     {
 
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<BocadillosController> _logger;
-        public BonosController(ApplicationDbContext context, ILogger<BocadillosController> logger)
+        private readonly ILogger<BonosController> _logger;
+        public BonosController(ApplicationDbContext context, ILogger<BonosController> logger)
         {
             _context = context;
             _logger = logger;
@@ -19,11 +19,22 @@ namespace AppForSEII2526.API.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        [ProducesResponseType(typeof(List<Bocadillo>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetBonos()
+        [ProducesResponseType(typeof(List<BonoBocadillo>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType ((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> GetBonos(string? nombre, string? nombretipo)
         {
-            IList<BonoBocadillo> bonobocadillos = await _context.BonoBocadillos
+            List<BonoBocadillo> bonobocadillos = await _context.BonoBocadillos
+                .Where(bb=>
+                (nombre==null || bb.NombreBono.Contains(nombre)) && 
+                (nombretipo==null || bb.Tipo.NombreTipo.Contains(nombretipo)))
+                .OrderBy(bb=>bb.NombreBono)
                 .ToListAsync();
+
+            if (bonobocadillos.Count() == 0)
+            {
+                return NotFound("No hay bocadillos con esos filtros");
+            }
+
             return Ok(bonobocadillos);
         }
     }
