@@ -18,9 +18,38 @@ namespace AppForSEII2526.API.Controllers
             _context = context;
             _logger = logger;
         }
-       
 
 
+
+
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(List<BocadillosDTO>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetBocadillosParaPedir(Tamanyo? tamanyo, string? tipoPan)
+        {
+            IList<BocadillosDTO> bocadillos = await _context.Bocadillo
+                .Include(b => b.TipoPan)
+                .Where(b =>
+
+                tipoPan == null || b.TipoPan.Nombre.Contains(tipoPan)
+
+
+                && tamanyo == null || b.Tamanyo == tamanyo)
+
+
+                .Select(b => new BocadillosDTO
+                {
+                    Id = b.Id,
+                    Nombre = b.Nombre,
+                    Tamanyo = b.Tamanyo,
+                    TipoPan = b.TipoPan.Nombre,
+                    PVP = b.PVP,
+                })
+
+            .ToListAsync();
+            return Ok(bocadillos);
+
+        }
 
         [HttpGet]
         [Route("[action]")]
@@ -46,7 +75,10 @@ namespace AppForSEII2526.API.Controllers
 
 
                 .ToListAsync();
-            return Ok(bocadillos);
+                return Ok(bocadillos);  
         }
+
+
+        
     }
 }
