@@ -4,17 +4,20 @@ namespace AppForSEII2526.API.Models
 {
     public class BonoBocadillo
     {
-        /*
-        public BonoBocadillo(string bonoID, int cantidad, int nBoc, string name, float precio)
+        public BonoBocadillo()
         {
-            this.bonoID = bonoID;
-            //this.TipoBocadillo = tipo;
-            this.cantidadDisponible = cantidad;
-            this.nBocadillos = nBoc;
-            this.nombre = name;
-            this.pvp = precio;
         }
-        */
+
+        public BonoBocadillo(string bonoID, int cantidadDisponible, int nBocadillos, string nombreBono, float pVP, TipoBocadillo tipo, List<BonosComprados> listaBonosComprados)
+        {
+            BonoID = bonoID;
+            CantidadDisponible = cantidadDisponible;
+            NBocadillos = nBocadillos;
+            NombreBono = nombreBono;
+            PVP = pVP;
+            Tipo = tipo;
+            ListaBonosComprados = listaBonosComprados;
+        }
 
         [Key]
         public string BonoID { get; set; }
@@ -31,17 +34,22 @@ namespace AppForSEII2526.API.Models
         
         public List<BonosComprados> ListaBonosComprados { get; set; }
 
-        public ApplicationUser applicationuser {  get; set; }
-        /*
-        public override bool Equals(object? other)
+
+        public override bool Equals(object? obj)
         {
-            return other is BonoBocadillo bono && bonoID == bono.bonoID;
+            return obj is BonoBocadillo bocadillo &&
+                   BonoID == bocadillo.BonoID &&
+                   CantidadDisponible == bocadillo.CantidadDisponible &&
+                   NBocadillos == bocadillo.NBocadillos &&
+                   NombreBono == bocadillo.NombreBono &&
+                   PVP == bocadillo.PVP &&
+                   EqualityComparer<TipoBocadillo>.Default.Equals(Tipo, bocadillo.Tipo) &&
+                   EqualityComparer<List<BonosComprados>>.Default.Equals(ListaBonosComprados, bocadillo.ListaBonosComprados);
         }
-        
+
         public override int GetHashCode()
         {
-            return HashCode.Combine(bonoID, TipoBocadillo, cantidadDisponible, nBocadillos, nombre, pvp);
+            return HashCode.Combine(BonoID, CantidadDisponible, NBocadillos, NombreBono, PVP, Tipo, ListaBonosComprados);
         }
-        */
     }
 }

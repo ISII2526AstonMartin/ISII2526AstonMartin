@@ -14,13 +14,13 @@ namespace AppForSEII2526.API.DTOs
 
         }  
 
-        public BocadillosDTO(int id,string nombre, Tamanyo tamanyo, string tipoPan, float precio)
+        public BocadillosDTO(int id, string nombre, Tamanyo tamanyo, string tipoPan, float PVP)
         {
             Id = id;
             Nombre = nombre;
             Tamanyo = tamanyo;
             TipoPan = tipoPan;
-            PVP = precio;
+            this.PVP = PVP;
 
         }
 

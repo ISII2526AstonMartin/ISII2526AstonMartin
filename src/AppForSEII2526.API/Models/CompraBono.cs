@@ -3,20 +3,22 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AppForSEII2526.API.Models
 {
-    public class  CompraBono
+    public class CompraBono
     {
-        /*
-        public CompraBono(string compraBonoId, string nombreCliente, string apellido1Cliente, string? apellido2Cliente, DateTime fechaCompraBono, int nBono, float precioTotalBono)
+        public CompraBono()
         {
-            this.compraBonoId = compraBonoId;
-            this.nombreCliente = nombreCliente;
-            this.apellido1Cliente = apellido1Cliente;
-            this.apellido2Cliente = apellido2Cliente;
-            this.fechaCompraBono = fechaCompraBono;
-            this.nBono = nBono;
-            this.precioTotalBono = precioTotalBono;
         }
-        */
+
+        public CompraBono(string compraBonoId, DateTime fechaCompraBono, int nBono, float precioTotalBono, MetodoPago metodoPagoUsuario, List<BonosComprados> listaBonosComprados, ApplicationUser applicationuser)
+        {
+            CompraBonoId = compraBonoId;
+            FechaCompraBono = fechaCompraBono;
+            NBono = nBono;
+            PrecioTotalBono = precioTotalBono;
+            MetodoPagoUsuario = metodoPagoUsuario;
+            ListaBonosComprados = listaBonosComprados;
+            this.applicationuser = applicationuser;
+        }
 
         [Key]
         public string CompraBonoId { get; set; }
@@ -32,17 +34,23 @@ namespace AppForSEII2526.API.Models
 
         public List<BonosComprados> ListaBonosComprados { get; set; }
 
-        /*
+        public ApplicationUser applicationuser { get; set; }
+
         public override bool Equals(object? obj)
         {
-            return obj is CompraBono bono && compraBonoId == bono.compraBonoId;
+            return obj is CompraBono bono &&
+                   CompraBonoId == bono.CompraBonoId &&
+                   FechaCompraBono == bono.FechaCompraBono &&
+                   NBono == bono.NBono &&
+                   PrecioTotalBono == bono.PrecioTotalBono &&
+                   MetodoPagoUsuario == bono.MetodoPagoUsuario &&
+                   EqualityComparer<List<BonosComprados>>.Default.Equals(ListaBonosComprados, bono.ListaBonosComprados) &&
+                   EqualityComparer<ApplicationUser>.Default.Equals(applicationuser, bono.applicationuser);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(compraBonoId, nombreCliente, apellido1Cliente, apellido2Cliente, fechaCompraBono, nBono, precioTotalBono);
+            return HashCode.Combine(CompraBonoId, FechaCompraBono, NBono, PrecioTotalBono, MetodoPagoUsuario, ListaBonosComprados, applicationuser);
         }
-        */
-        
     }
 }
