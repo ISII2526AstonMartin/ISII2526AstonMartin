@@ -6,20 +6,20 @@ namespace AppForSEII2526.API.DTOs
 
         public string Nombre { get; set; }
         public Tamanyo Tamanyo { get; set; }
-        public TipoPan TipoPan { get; set; }
-        public float Precio { get; set; }
+        public string TipoPan { get; set; }
+        public float PVP { get; set; }
 
         public BocadillosDTO()
         {
 
         }  
 
-        public BocadillosDTO(string nombre, Tamanyo tamanyo, TipoPan tipoPan, float precio)
+        public BocadillosDTO(int id, string nombre, Tamanyo tamanyo, string tipoPan, float PVP)
         {
             Nombre = nombre;
             Tamanyo = tamanyo;
             TipoPan = tipoPan;
-            Precio = precio;
+            this.PVP = PVP;
 
         }
 
@@ -28,13 +28,13 @@ namespace AppForSEII2526.API.DTOs
             return obj is BocadillosDTO dTO &&
                    Nombre == dTO.Nombre &&
                    Tamanyo == dTO.Tamanyo &&
-                   EqualityComparer<TipoPan>.Default.Equals(TipoPan, dTO.TipoPan) &&
-                   Precio == dTO.Precio;
+                   TipoPan == dTO.TipoPan &&
+                   PVP == dTO.PVP;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Nombre, Tamanyo, TipoPan, Precio);
+            return HashCode.Combine(Nombre, Tamanyo, TipoPan, PVP);
         }
     }
 }
