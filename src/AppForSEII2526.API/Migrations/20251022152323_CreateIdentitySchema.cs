@@ -55,21 +55,6 @@ namespace AppForSEII2526.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ComprasBono",
-                columns: table => new
-                {
-                    CompraBonoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FechaCompraBono = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    NBono = table.Column<int>(type: "int", nullable: false),
-                    PrecioTotalBono = table.Column<float>(type: "real", nullable: false),
-                    MetodoPagoUsuario = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ComprasBono", x => x.CompraBonoId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TipoPan",
                 columns: table => new
                 {
@@ -258,6 +243,28 @@ namespace AppForSEII2526.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ComprasBono",
+                columns: table => new
+                {
+                    CompraBonoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FechaCompraBono = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NBono = table.Column<int>(type: "int", nullable: false),
+                    PrecioTotalBono = table.Column<float>(type: "real", nullable: false),
+                    MetodoPagoUsuario = table.Column<int>(type: "int", nullable: false),
+                    applicationuserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ComprasBono", x => x.CompraBonoId);
+                    table.ForeignKey(
+                        name: "FK_ComprasBono_AspNetUsers_applicationuserId",
+                        column: x => x.applicationuserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Resenyas",
                 columns: table => new
                 {
@@ -312,18 +319,11 @@ namespace AppForSEII2526.API.Migrations
                     NBocadillos = table.Column<int>(type: "int", nullable: false),
                     NombreBono = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PVP = table.Column<float>(type: "real", nullable: false),
-                    TipoIdTipo = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    applicationuserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    TipoIdTipo = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BonoBocadillos", x => x.BonoID);
-                    table.ForeignKey(
-                        name: "FK_BonoBocadillos_AspNetUsers_applicationuserId",
-                        column: x => x.applicationuserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BonoBocadillos_TiposBocadillos_TipoIdTipo",
                         column: x => x.TipoIdTipo,
@@ -503,11 +503,6 @@ namespace AppForSEII2526.API.Migrations
                 column: "TipoPanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BonoBocadillos_applicationuserId",
-                table: "BonoBocadillos",
-                column: "applicationuserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_BonoBocadillos_TipoIdTipo",
                 table: "BonoBocadillos",
                 column: "TipoIdTipo");
@@ -531,6 +526,11 @@ namespace AppForSEII2526.API.Migrations
                 name: "IX_Compras_UsuarioId",
                 table: "Compras",
                 column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ComprasBono_applicationuserId",
+                table: "ComprasBono",
+                column: "applicationuserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Productos_Tipo_ProductoProductoID",
