@@ -4,10 +4,13 @@ namespace AppForSEII2526.API.Models
 {
     public class  TipoBocadillo
     {
-        public TipoBocadillo(string idTipo, string nombreTipo)
+        public TipoBocadillo() { }
+
+        public TipoBocadillo(string idTipo, string nombreTipo, List<BonoBocadillo> lbb)
         {
             IdTipo = idTipo;
             NombreTipo = nombreTipo;
+            ListaBonoBocadillos = lbb;
         }
 
         [Key]
