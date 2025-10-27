@@ -4,14 +4,15 @@ namespace AppForSEII2526.API.Models
 {
     public class  TipoBocadillo
     {
-        /*
-        public TipoBocadillo(string idTipo, string nombreTipo)
+        public TipoBocadillo() { }
+
+        public TipoBocadillo(string idTipo, string nombreTipo, List<BonoBocadillo> lbb)
         {
-            this.idTipo = idTipo;
-            this.nombreTipo = nombreTipo;
+            IdTipo = idTipo;
+            NombreTipo = nombreTipo;
+            ListaBonoBocadillos = lbb;
         }
-        */
-        
+
         [Key]
         public string IdTipo { get; set; }
         
@@ -19,16 +20,17 @@ namespace AppForSEII2526.API.Models
 
         public List<BonoBocadillo> ListaBonoBocadillos { get; set; }
 
-        /*
-        public override bool Equals(object? other)
+        public override bool Equals(object? obj)
         {
-            return other is TipoBocadillo tipo && idTipo == tipo.idTipo;
+            return obj is TipoBocadillo bocadillo &&
+                   IdTipo == bocadillo.IdTipo &&
+                   NombreTipo == bocadillo.NombreTipo &&
+                   EqualityComparer<List<BonoBocadillo>>.Default.Equals(ListaBonoBocadillos, bocadillo.ListaBonoBocadillos);
         }
-        
+
         public override int GetHashCode()
         {
-            return HashCode.Combine(idTipo, nombreTipo);
+            return HashCode.Combine(IdTipo, NombreTipo, ListaBonoBocadillos);
         }
-        */
     }
 }

@@ -35,9 +35,12 @@ namespace AppForSEII2526.API.DTOs
                    PVP == dTO.PVP;
         }
 
+
         public override int GetHashCode()
         {
             return HashCode.Combine(Id, Nombre, Tamanyo, TipoPan, PVP);
         }
+
+        
     }
 }

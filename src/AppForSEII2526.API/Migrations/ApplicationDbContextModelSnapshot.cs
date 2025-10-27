@@ -154,15 +154,9 @@ namespace AppForSEII2526.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("applicationuserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("BonoID");
 
                     b.HasIndex("TipoIdTipo");
-
-                    b.HasIndex("applicationuserId");
 
                     b.ToTable("BonoBocadillos");
                 });
@@ -265,7 +259,13 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<float>("PrecioTotalBono")
                         .HasColumnType("real");
 
+                    b.Property<string>("applicationuserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("CompraBonoId");
+
+                    b.HasIndex("applicationuserId");
 
                     b.ToTable("ComprasBono");
                 });
@@ -594,15 +594,7 @@ namespace AppForSEII2526.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "applicationuser")
-                        .WithMany()
-                        .HasForeignKey("applicationuserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Tipo");
-
-                    b.Navigation("applicationuser");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.BonosComprados", b =>
@@ -652,6 +644,17 @@ namespace AppForSEII2526.API.Migrations
                     b.Navigation("Bocadillo");
 
                     b.Navigation("Compra");
+                });
+
+            modelBuilder.Entity("AppForSEII2526.API.Models.CompraBono", b =>
+                {
+                    b.HasOne("AppForSEII2526.API.Models.ApplicationUser", "applicationuser")
+                        .WithMany()
+                        .HasForeignKey("applicationuserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("applicationuser");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Compra_Producto", b =>

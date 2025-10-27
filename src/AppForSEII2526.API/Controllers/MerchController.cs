@@ -1,4 +1,5 @@
-﻿using AppForSEII2526.API.Models;
+﻿using AppForSEII2526.API.DTOs;
+using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,11 +20,28 @@ namespace AppForSEII2526.API.Controllers
         }
         [HttpGet]
         [Route("[action]")]
-        [ProducesResponseType(typeof(List<Producto>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetProductos()
+        [ProducesResponseType(typeof(List<MerchDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<IActionResult> GetProductos(TipoProducto? tipo, float? precio)
         {
-            IList<Producto> productos = await _context.Productos
+            IList<MerchDTO> productos = await _context.Productos
+                .Include(p => p.Tipo_Producto)
+                .Where(p =>
+                (tipo == null || p.Tipo_Producto.Nombre.Contains(tipo.Nombre))
+                && (precio == null || p.PVP <= precio))
+                .Select(p => new MerchDTO
+                {
+                    Nombre = p.Nombre,
+                    Precio = p.PVP,
+                    Stock = p.Stock,
+                    Tipo = p.Tipo_Producto
+                })
                 .ToListAsync();
+            if (productos.Count() == 0)
+            {
+                return NotFound("No hay Productos con esos filtros");
+            }
+
             return Ok(productos);
         }
     }
