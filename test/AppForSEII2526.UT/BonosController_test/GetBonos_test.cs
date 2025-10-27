@@ -65,7 +65,7 @@ namespace AppForSEII2526.UT.BonosController_test
             //arrange
             List<BonoBocadillosDTO> expectedbonos = new List<BonoBocadillosDTO>()
             {
-                new BonoBocadillosDTO("1",5,5,"Bono1",14.4f,"Vegano")
+                new BonoBocadillosDTO("1",5,5,"Bono1",14.4f, "Vegano")
             };
 
             var mock = new Mock<ILogger<BonosController>>();
