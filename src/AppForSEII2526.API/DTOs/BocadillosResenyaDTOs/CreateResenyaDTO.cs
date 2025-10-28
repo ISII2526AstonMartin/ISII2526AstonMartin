@@ -3,7 +3,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosResenyaDTOs
 {
     public class CreateResenyaDTO
     {
-        public CreateResenyaDTO(string? nombreUsuario, string titulo, string descripcion, Valoracion_general valoracion_General, List<ItemResenyaDTO> items)
+        public CreateResenyaDTO(string? nombreUsuario, string titulo, string descripcion, Valoracion_General valoracion_General, List<ItemResenyaDTO> items)
         {
             NombreUsuario = nombreUsuario;
             Titulo = titulo;
@@ -33,7 +33,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosResenyaDTOs
 
         [Required]
         [Display(Name = "Valoración General")]
-        public Valoracion_general valoracion_General { get; set; }
+        public Valoracion_General valoracion_General { get; set; }
 
         [Required(ErrorMessage = "Debe incluir al menos un bocadillo")]
         [MinLength(1, ErrorMessage = "Debe incluir al menos un bocadillo")]
@@ -54,7 +54,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosResenyaDTOs
             return HashCode.Combine(NombreUsuario, Titulo, descripcion, valoracion_General, items);
         }
 
-        public enum Valoracion_general
+        public enum Valoracion_General
         {
             Uno,
             Dos,
