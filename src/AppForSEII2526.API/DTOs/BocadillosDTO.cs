@@ -9,6 +9,7 @@ namespace AppForSEII2526.API.DTOs
         public string TipoPan { get; set; }
         public float PVP { get; set; }
         public int Id { get; set; }
+
         public BocadillosDTO()
         {
 
@@ -37,7 +38,7 @@ namespace AppForSEII2526.API.DTOs
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Nombre, Tamanyo, TipoPan, PVP,Id);
+            return HashCode.Combine(Id, Nombre, Tamanyo, TipoPan, PVP);
         }
 
         

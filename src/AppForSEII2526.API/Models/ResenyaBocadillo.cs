@@ -5,6 +5,12 @@
 
     public class ResenyaBocadillo
     {
+        public ResenyaBocadillo(Bocadillo bocadillo, int puntuacion, Resenya resenya)
+        {
+            Bocadillo = bocadillo;
+            Puntuacion = puntuacion;
+            Resenya = resenya;
+        }
 
         public Bocadillo Bocadillo { get; set; }
         public int BocadilloId { get; set; }
