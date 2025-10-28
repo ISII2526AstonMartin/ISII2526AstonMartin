@@ -2,6 +2,22 @@
 {
     public class Compra_Producto
     {
+        public Compra_Producto()
+        {
+        }
+
+        public Compra_Producto(ApplicationUser usuario, string compraID, string direccion_Envio, DateTime fechaCompra, MetodoPago metodo_Pago, float precioFinal, List<Producto_Compra> productos_Compras)
+        {
+            Usuario = usuario;
+            CompraID = compraID;
+            Direccion_Envio = direccion_Envio;
+            FechaCompra = fechaCompra;
+            Metodo_Pago = metodo_Pago;
+            PrecioFinal = precioFinal;
+            Productos_Compras = productos_Compras;
+        }
+
+
         // Atributos
         [Required]
         public ApplicationUser Usuario { get; set; }
@@ -15,7 +31,22 @@
         public float PrecioFinal { get; set; }
         //Relaciones
         public List<Producto_Compra> Productos_Compras { get; set; }
-    }
-    
 
+        public override bool Equals(object? obj)
+        {
+            return obj is Compra_Producto producto &&
+                   EqualityComparer<ApplicationUser>.Default.Equals(Usuario, producto.Usuario) &&
+                   CompraID == producto.CompraID &&
+                   Direccion_Envio == producto.Direccion_Envio &&
+                   FechaCompra == producto.FechaCompra &&
+                   Metodo_Pago == producto.Metodo_Pago &&
+                   PrecioFinal == producto.PrecioFinal &&
+                   EqualityComparer<List<Producto_Compra>>.Default.Equals(Productos_Compras, producto.Productos_Compras);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Usuario, CompraID, Direccion_Envio, FechaCompra, Metodo_Pago, PrecioFinal, Productos_Compras);
+        }
+    }
 }

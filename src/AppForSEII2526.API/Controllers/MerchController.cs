@@ -10,10 +10,10 @@ namespace AppForSEII2526.API.Controllers
     public class MerchController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<BocadillosController> _logger;
+        private readonly ILogger<MerchController> _logger;
 
 
-        public MerchController(ApplicationDbContext context, ILogger<BocadillosController> logger)
+        public MerchController(ApplicationDbContext context, ILogger<MerchController> logger)
         {
             this._context = context;
             this._logger = logger;
@@ -22,20 +22,16 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(List<MerchDTO>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetProductos(TipoProducto? tipo, float? precio)
+        public async Task<IActionResult> GetProductos(string? tipo, float? precio)
         {
             IList<MerchDTO> productos = await _context.Productos
                 .Include(p => p.Tipo_Producto)
                 .Where(p =>
-                (tipo == null || p.Tipo_Producto.Nombre.Contains(tipo.Nombre))
+                (tipo == null || p.Tipo_Producto.Nombre.Contains(tipo))
                 && (precio == null || p.PVP <= precio))
-                .Select(p => new MerchDTO
-                {
-                    Nombre = p.Nombre,
-                    Precio = p.PVP,
-                    Stock = p.Stock,
-                    Tipo = p.Tipo_Producto
-                })
+                .Select(p => 
+                new MerchDTO(p.Nombre, p.PVP, p.Tipo_Producto, p.Stock)
+                )
                 .ToListAsync();
             if (productos.Count() == 0)
             {
