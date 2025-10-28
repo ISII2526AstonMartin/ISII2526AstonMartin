@@ -2,7 +2,16 @@
 {
     public class Compra
     {
-        
+        public Compra(DateTime fechaCompra, List<CompraBocadillo> compraBocadillos, MetodoPago metodoPago, ApplicationUser usuario)
+        {
+
+            FechaCompra = fechaCompra;
+
+            CompraBocadillos = compraBocadillos;
+
+            MetodoPago = metodoPago;
+            this.usuario = usuario;
+        }
         public int CompraID { get; set; }
         [Required]
         public DateTime FechaCompra {  get; set; }
