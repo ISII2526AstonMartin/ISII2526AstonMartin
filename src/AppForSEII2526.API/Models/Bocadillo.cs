@@ -4,6 +4,15 @@ namespace AppForSEII2526.API.Models
 {
     public class Bocadillo
     {
+        public Bocadillo(string nombre, float pVP, int stock, TipoPan tipoPan, Tamanyo tamanyo)
+        {
+            Nombre = nombre;
+            PVP = pVP;
+            Stock = stock;
+            TipoPan = tipoPan;
+            Tamanyo = tamanyo;
+        }
+
         public int Id { get; set; }
         
         public string Nombre { get; set; }
@@ -21,6 +30,22 @@ namespace AppForSEII2526.API.Models
         public List<CompraBocadillo> CompraBocadillo {get; set;}
 
 
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Bocadillo bocadillo &&
+                   Id == bocadillo.Id &&
+                   Nombre == bocadillo.Nombre &&
+                   PVP == bocadillo.PVP &&
+                   Stock == bocadillo.Stock &&
+                   EqualityComparer<TipoPan>.Default.Equals(TipoPan, bocadillo.TipoPan) &&
+                   Tamanyo == bocadillo.Tamanyo;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Nombre, PVP, Stock, TipoPan, Tamanyo);
+        }
     }
     public enum Tamanyo
     {
