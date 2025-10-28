@@ -13,6 +13,15 @@ namespace AppForSEII2526.API.Models
             ValoracionGeneral = valoracionGeneral;
         }
 
+        public Resenya(string titulo, string descripcion, DateTime fechaPublicacion, IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
+        {
+            Titulo = titulo;
+            Descripcion = descripcion;
+            FechaPublicacion = fechaPublicacion;
+            ResenyaBocadillo = resenyaBocadillo;
+            ValoracionGeneral = valoracionGeneral;
+        }
+
         public int Id { get; set; }
 
         [Required]
