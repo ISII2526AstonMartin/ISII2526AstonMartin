@@ -7,7 +7,7 @@ using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 using AppForSEII2526.API.Controllers;
-using AppForSEII2526.API.DTOs.BonosDTOs;
+using AppForSEII2526.API.DTOs;
 
 namespace AppForSEII2526.UT.BonosController_test
 {

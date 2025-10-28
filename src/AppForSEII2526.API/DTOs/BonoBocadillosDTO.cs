@@ -1,4 +1,4 @@
-﻿namespace AppForSEII2526.API.DTOs.BonosDTOs
+﻿namespace AppForSEII2526.API.DTOs
 {
     public class BonoBocadillosDTO
     {
