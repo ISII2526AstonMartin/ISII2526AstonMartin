@@ -10,6 +10,7 @@
         public int PVP { get; set; }
         public string TipoPan { get; set; }
 
+
         public ItemPedidoDTO(string nombreBocadillo, int cantidad, int pVP, string tipoPan)
         {
             this.nombreBocadillo = nombreBocadillo;
