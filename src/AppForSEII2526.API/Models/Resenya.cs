@@ -2,7 +2,7 @@
 {
     public class Resenya
     {
-        
+        /*
         public Resenya(string titulo, string descripcion, DateTime fechaPublicacion, ApplicationUser applicationUser, IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
         {
             Titulo = titulo;
@@ -23,6 +23,7 @@
             ResenyaBocadillo = resenyaBocadillo;
             ValoracionGeneral = valoracionGeneral;
         }
+        */
 
         public int Id { get; set; }
 
