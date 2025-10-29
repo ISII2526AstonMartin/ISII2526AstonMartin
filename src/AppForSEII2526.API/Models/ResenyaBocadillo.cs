@@ -8,9 +8,10 @@
         /*
         public ResenyaBocadillo(Bocadillo bocadillo, int puntuacion, Resenya resenya)
         {
-            Bocadillo = bocadillo;
             Puntuacion = puntuacion;
             Resenya = resenya;
+            BocadilloId = bocadilloId;
+            ResenyaId = resenya.Id;
         }
         */
         public Bocadillo Bocadillo { get; set; }
