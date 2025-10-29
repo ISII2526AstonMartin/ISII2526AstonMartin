@@ -8,7 +8,15 @@ namespace AppForSEII2526.API.Models
         public BonosComprados()
         {
         }
-
+        public BonosComprados(BonoBocadillo bb, CompraBono cb, int cantidad, float precioBono)
+        {
+            Comprabono = cb;
+            BonoBocadillo = bb;
+            Cantidad = cantidad;
+            PrecioBono = precioBono;
+            BonoId = bb.BonoID;
+            CompraBonoId = cb.CompraBonoId;
+        }
         public BonosComprados(string bonoid, string comprabonoid, int cantidad, float precioBono)
         {
             

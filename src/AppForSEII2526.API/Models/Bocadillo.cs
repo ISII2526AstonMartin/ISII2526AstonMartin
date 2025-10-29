@@ -4,6 +4,10 @@ namespace AppForSEII2526.API.Models
 {
     public class Bocadillo
     {
+        public Bocadillo()
+        {
+        }
+
         public Bocadillo(string nombre, float pVP, int stock, TipoPan tipoPan, Tamanyo tamanyo)
         {
             Nombre = nombre;
