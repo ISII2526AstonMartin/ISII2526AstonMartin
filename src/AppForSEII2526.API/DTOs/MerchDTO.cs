@@ -1,4 +1,5 @@
-﻿namespace AppForSEII2526.API.DTOs
+﻿
+namespace AppForSEII2526.API.DTOs
 {
     public class MerchDTO
     {
@@ -7,7 +8,7 @@
         public TipoProducto Tipo { get; set; }
         public int Stock { get; set; }
    
-    public MerchDTO()
+        public MerchDTO()
         {
 
         }
@@ -18,6 +19,9 @@
             Tipo = tipo;
             Stock = stock;
         }
+
+    
+
         public override bool Equals(object? obj)
         {
             return obj is MerchDTO dTO &&
@@ -26,6 +30,7 @@
                    EqualityComparer<TipoProducto>.Default.Equals(Tipo, dTO.Tipo) &&
                    Stock == dTO.Stock;
         }
+
         public override int GetHashCode()
         {
             return HashCode.Combine(Nombre, Precio, Tipo, Stock);
