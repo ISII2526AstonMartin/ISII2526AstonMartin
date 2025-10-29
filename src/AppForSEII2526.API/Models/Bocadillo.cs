@@ -4,13 +4,14 @@ namespace AppForSEII2526.API.Models
 {
     public class Bocadillo
     {
-        public Bocadillo(string nombre, float pVP, int stock, TipoPan tipoPan, Tamanyo tamanyo)
+        public Bocadillo(string nombre, float pVP, int stock, Tamanyo tamanyo)
         {
             Nombre = nombre;
             PVP = pVP;
             Stock = stock;
-            TipoPan = tipoPan;
             Tamanyo = tamanyo;
+            ResenyaBocadillo = new List<ResenyaBocadillo>();
+            CompraBocadillo = new List<CompraBocadillo>();
         }
 
         public int Id { get; set; }

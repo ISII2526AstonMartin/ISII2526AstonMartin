@@ -2,8 +2,15 @@
 {
     public class DetailResenyaDTO : CreateResenyaDTO
     {
-        public DetailResenyaDTO(int id, string nombreUsuario, string titulo, string descripcion, DateTime fechaPublicacion,
+        public DetailResenyaDTO(int id,string nombreUsuario, string titulo, string descripcion, DateTime fechaPublicacion,
             Valoracion_General valoracion_General, List<ItemResenyaDTO> itemResenyas) : base(nombreUsuario, titulo, descripcion, valoracion_General, itemResenyas)
+        {
+            Id = id;
+            FechaPublicacion = fechaPublicacion;
+        }
+
+        public DetailResenyaDTO(int id, string titulo, string descripcion, DateTime fechaPublicacion,
+            Valoracion_General valoracion_General, List<ItemResenyaDTO> itemResenyas) : base(null, titulo, descripcion, valoracion_General, itemResenyas)
         {
             Id = id;
             FechaPublicacion = fechaPublicacion;

@@ -10,4 +10,17 @@ public class ApplicationUser : IdentityUser {
     public string Apellido1 { get; set; }
     public string? Apellido2 { get; set; }
     public string? NombreUsuario { get; set; }
+
+    public ApplicationUser()
+    {
+
+    }
+
+    public ApplicationUser(string nombre, string apellido1, string? apellido2, string? nombreUsuario)
+    {
+        Nombre = nombre;
+        Apellido1 = apellido1;
+        Apellido2 = apellido2;
+        NombreUsuario = nombreUsuario;
+    }
 }
