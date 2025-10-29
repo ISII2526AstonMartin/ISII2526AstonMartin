@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Client;
+﻿using AppForSEII2526.API.DTOs.BocadillosResenyaDTOs;
+using RabbitMQ.Client;
 
 namespace AppForSEII2526.API.DTOs.BocadillosParaPedirDTOs
 {
@@ -42,12 +43,14 @@ namespace AppForSEII2526.API.DTOs.BocadillosParaPedirDTOs
                    MetodoPago == dTO.MetodoPago &&
                    Apellido1 == dTO.Apellido1 &&
                    Apellido2 == dTO.Apellido2 &&
-                  ItemPedido.SequenceEqual(dTO.ItemPedido);
+                   EqualityComparer<IList<ItemPedidoDTO>>.Default.Equals(ItemPedido, dTO.ItemPedido);
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(Nombre, MetodoPago, Apellido1, Apellido2, ItemPedido);
         }
+
+        
     }
 }
