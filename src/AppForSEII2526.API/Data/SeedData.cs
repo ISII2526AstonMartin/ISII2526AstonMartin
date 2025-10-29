@@ -1,4 +1,4 @@
-﻿/*using AppForSEII2526.API.Models;
+﻿using AppForSEII2526.API.Models;
 
 namespace AppForSEII2526.API.Data
 {
@@ -52,9 +52,9 @@ namespace AppForSEII2526.API.Data
         public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles)
         {
             //first, it checks the user does not already exist in the DB
-            if (userManager.FindByNameAsync("elena@uclm.es").Result == null)
+            if (userManager.FindByNameAsync("antonio@uclm.es").Result == null)
             {
-                ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es", "Avda. España 2, Albacete");
+                ApplicationUser user = new ApplicationUser("Antonio", "Garcia de la Reina","Aguilar" ,"antonio@uclm.es");
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "Password1234%");
@@ -69,7 +69,7 @@ namespace AppForSEII2526.API.Data
 
             if (userManager.FindByNameAsync("gregorio@uclm.es").Result == null)
             {
-                ApplicationUser user = new ApplicationUser("2", "Gregorio", "Diaz Descalzo", "gregorio@uclm.es", "Avda. España 25, Ciudad Real");
+                ApplicationUser user = new ApplicationUser( "Gregorio", "Diaz", "Descalzo", "gregorio@uclm.es");
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "APassword1234%");
@@ -85,7 +85,7 @@ namespace AppForSEII2526.API.Data
             if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
             {
                 //A customer class has been defined because it has different attributes (purchase, rental, etc.)
-                ApplicationUser user = new ApplicationUser("3", "Peter", "Jackson", "peter@uclm.es", "Avda. España 75, London");
+                ApplicationUser user = new ApplicationUser("Peter", "Jackson", "Rodriguez", "peter@uclm.es");
                 user.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(user, "OtherPass12$");
@@ -103,4 +103,3 @@ namespace AppForSEII2526.API.Data
         }
     }
 }
-*/
