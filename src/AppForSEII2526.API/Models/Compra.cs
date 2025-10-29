@@ -2,6 +2,10 @@
 {
     public class Compra
     {
+        public Compra()
+        {
+
+        }
         public Compra(DateTime fechaCompra, List<CompraBocadillo> compraBocadillos, MetodoPago metodoPago, ApplicationUser usuario)
         {
 

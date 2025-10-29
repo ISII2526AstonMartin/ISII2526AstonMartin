@@ -10,7 +10,10 @@
         public float PVP { get; set; }
         public string TipoPan { get; set; }
 
-
+        public ItemPedidoDTO()
+        {
+            
+        }
         public ItemPedidoDTO(int id, string nombreBocadillo, int cantidad, int pVP, string tipoPan)
         {
             Id = id;

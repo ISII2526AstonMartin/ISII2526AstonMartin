@@ -3,6 +3,13 @@
     [PrimaryKey(nameof(BocadilloId),nameof(CompraId))]
     public class CompraBocadillo
     {
+        public CompraBocadillo()
+        {
+            NombreBocadillo = string.Empty;
+            TipoPan = string.Empty;
+        }
+
+
         public CompraBocadillo(Bocadillo bocadillo, Compra compra, int cantidad)
         {
             Bocadillo = bocadillo;
@@ -12,9 +19,9 @@
             Cantidad = cantidad;
             Precio = bocadillo.PVP;
             TipoPan = bocadillo.TipoPan.Nombre;
-            
+            NombreBocadillo=bocadillo.Nombre;
         }
-
+        
         public Bocadillo Bocadillo { get; set; }
 
         public int BocadilloId { get; set; }

@@ -19,7 +19,7 @@ namespace AppForSEII2526.API.Controllers
             _logger = logger;
         }
 
-
+        
 
         [HttpPost]
         [Route("[action]")]
@@ -33,9 +33,14 @@ namespace AppForSEII2526.API.Controllers
             if ( usuario == null)
                 ModelState.AddModelError("RentalApplicationUser", "Error! Usuario no registrado");
 
-            var metodoPago = _context.Compra.FirstOrDefault(mp => mp.MetodoPago == pedidoParaCrear.MetodoPago);
-            if (metodoPago == null)
-                ModelState.AddModelError("MetodoPago", "Error! Metodo de pago no registrado");
+            var metodoPagoEnum = pedidoParaCrear.MetodoPago;
+            // Validar que el método de pago sea uno de los valores del enum
+            if (!Enum.IsDefined(typeof(MetodoPago), pedidoParaCrear.MetodoPago))
+            {
+                ModelState.AddModelError("MetodoPago", "Error! Método de pago no válido. Usa: Tarjeta, Paypal o Gpay.");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
 
 
             var pedidoNombre = pedidoParaCrear.ItemPedido.Select(ri => ri.NombreBocadillo).ToList<string>();
@@ -48,7 +53,7 @@ namespace AppForSEII2526.API.Controllers
 
 
 
-            Compra compra = new Compra(DateTime.Now, new List<CompraBocadillo>(), pedidoParaCrear.MetodoPago, usuario);
+            Compra compra = new Compra(DateTime.Now, new List<CompraBocadillo>(), metodoPagoEnum, usuario);
             compra.PrecioTotal = 0;
 
 
@@ -65,9 +70,37 @@ namespace AppForSEII2526.API.Controllers
                     compra.CompraBocadillos.Add(new CompraBocadillo(bocadillo, compra, item.Cantidad));
                     item.PVP= bocadillo.PVP;
                 }
-                compra.PrecioTotal = compra.CompraBocadillos.Sum(cb => cb.Precio * cb.Cantidad);
+                
             }
 
+            compra.PrecioTotal = compra.CompraBocadillos.Sum(cb => cb.Precio * cb.Cantidad);
+
+
+            if (ModelState.ErrorCount > 0)
+            {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+            _context.Compra.Add(compra);
+
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                ModelState.AddModelError("GuardarCompra", "Error! No se ha podido guardar el pedido");
+                return Conflict("Error" + ex.Message);
+            }
+
+
+
+
+
+
+            return (Ok());
 
 
 
