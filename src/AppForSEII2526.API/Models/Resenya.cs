@@ -1,9 +1,8 @@
-﻿
-namespace AppForSEII2526.API.Models
+﻿namespace AppForSEII2526.API.Models
 {
     public class Resenya
     {
-        /*
+        
         public Resenya(string titulo, string descripcion, DateTime fechaPublicacion, ApplicationUser applicationUser, IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
         {
             Titulo = titulo;
@@ -13,8 +12,9 @@ namespace AppForSEII2526.API.Models
             ResenyaBocadillo = resenyaBocadillo;
             ValoracionGeneral = valoracionGeneral;
         }
-        */
+        
 
+        
         public Resenya(string titulo, string descripcion, DateTime fechaPublicacion, IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
         {
             Titulo = titulo;
