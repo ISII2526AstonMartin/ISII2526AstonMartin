@@ -9,6 +9,27 @@
             TipoPan = string.Empty;
         }
 
+        public CompraBocadillo(int bocadilloId,Compra compra, int cantidad)
+        {
+            BocadilloId = bocadilloId;
+            Compra = compra;
+            
+            Cantidad = cantidad;
+            CompraId = compra.CompraID;
+            
+
+        }
+
+        public CompraBocadillo(int bocadilloId, Compra compra, int compraId, int cantidad, float precio,string tipoPan, string nombreBocadillo)
+        {
+            BocadilloId = bocadilloId;
+            Compra = compra;
+            CompraId = compraId;
+            Cantidad = cantidad;
+            Precio = precio;
+            TipoPan = tipoPan;
+            NombreBocadillo = nombreBocadillo;
+        }
 
         public CompraBocadillo(Bocadillo bocadillo, Compra compra, int cantidad)
         {

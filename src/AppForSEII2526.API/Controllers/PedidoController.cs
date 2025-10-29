@@ -19,7 +19,7 @@ namespace AppForSEII2526.API.Controllers
             _logger = logger;
         }
 
-        
+
 
         [HttpPost]
         [Route("[action]")]
@@ -29,8 +29,8 @@ namespace AppForSEII2526.API.Controllers
 
         public async Task<ActionResult> CreatePedido(CreatePedidoDTO pedidoParaCrear)
         {
-            var usuario = _context.ApplicationUsers.FirstOrDefault(au => au.Nombre  == pedidoParaCrear.Nombre && au.Apellido1==pedidoParaCrear.Apellido1);
-            if ( usuario == null)
+            var usuario = _context.ApplicationUsers.FirstOrDefault(au => au.Nombre == pedidoParaCrear.Nombre && au.Apellido1 == pedidoParaCrear.Apellido1);
+            if (usuario == null)
                 ModelState.AddModelError("RentalApplicationUser", "Error! Usuario no registrado");
 
             var metodoPagoEnum = pedidoParaCrear.MetodoPago;
@@ -43,13 +43,15 @@ namespace AppForSEII2526.API.Controllers
 
 
 
-            var pedidoNombre = pedidoParaCrear.ItemPedido.Select(ri => ri.NombreBocadillo).ToList<string>();
-            
+            var pedidoNombre = pedidoParaCrear.ItemPedido.Select(ri => ri.Id).ToList();
+
             var bocadillos = _context.Bocadillo
 
-                .Where(m=> pedidoNombre.Contains(m.Nombre))
-                .Include(b => b.TipoPan
-                ).ToList();
+                .Where(b => pedidoNombre.Contains(b.Id))
+                .Select(b => new
+                {
+                    b.Nombre, b.PVP, b.Stock, b.Tamanyo, b.Id
+                }).ToList();
 
 
 
@@ -67,14 +69,14 @@ namespace AppForSEII2526.API.Controllers
                 }
                 else
                 {
-                    compra.CompraBocadillos.Add(new CompraBocadillo(bocadillo, compra, item.Cantidad));
+                    compra.CompraBocadillos.Add(new CompraBocadillo(bocadillo.Id, compra,compra.CompraID, item.Cantidad, bocadillo.PVP,item.TipoPan, bocadillo.Nombre));
                     item.PVP= bocadillo.PVP;
                 }
                 
             }
 
             compra.PrecioTotal = compra.CompraBocadillos.Sum(cb => cb.Precio * cb.Cantidad);
-
+            compra.nBocadillo = compra.CompraBocadillos.Sum(cb => cb.Cantidad);
 
             if (ModelState.ErrorCount > 0)
             {
@@ -83,18 +85,24 @@ namespace AppForSEII2526.API.Controllers
 
             _context.Compra.Add(compra);
 
+          
+            
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
-                ModelState.AddModelError("GuardarCompra", "Error! No se ha podido guardar el pedido");
-                return Conflict("Error" + ex.Message);
-            }
+                _logger.LogError(ex, "Error al guardar el pedido");
 
+                // 👇 Mostrar el mensaje interno del error para saber la causa exacta
+                return Problem(
+                    detail: ex.InnerException?.Message ?? ex.Message,
+                    statusCode: 500,
+                    title: "Error al guardar los datos en la base de datos"
+                );
+            }
 
 
 
