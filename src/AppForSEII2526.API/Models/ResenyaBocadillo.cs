@@ -5,15 +5,28 @@
 
     public class ResenyaBocadillo
     {
-        /*
+        public ResenyaBocadillo()
+        {
+        }
         public ResenyaBocadillo(Bocadillo bocadillo, int puntuacion, Resenya resenya)
         {
             Puntuacion = puntuacion;
             Resenya = resenya;
-            BocadilloId = bocadilloId;
             ResenyaId = resenya.Id;
+            Bocadillo = bocadillo;
+            BocadilloId = bocadillo.Id;
         }
-        */
+
+        public ResenyaBocadillo(int bocadilloId, int puntuacion, Resenya resenya)
+        {
+            this.BocadilloId = bocadilloId;
+            Puntuacion = puntuacion;
+            Resenya = resenya;
+            ResenyaId = resenya.Id;
+            Bocadillo = null!;
+
+        }
+        
         public Bocadillo Bocadillo { get; set; }
         public int BocadilloId { get; set; }
 
