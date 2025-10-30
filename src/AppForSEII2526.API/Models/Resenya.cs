@@ -2,8 +2,10 @@
 {
     public class Resenya
     {
-        
-        public Resenya(string titulo, string descripcion, DateTime fechaPublicacion, ApplicationUser applicationUser, IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
+        public Resenya()
+        {
+        }
+        public Resenya(string titulo, string descripcion, DateTime fechaPublicacion, ApplicationUser? applicationUser, IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
         {
             Titulo = titulo;
             Descripcion = descripcion;
@@ -12,17 +14,8 @@
             ResenyaBocadillo = resenyaBocadillo;
             ValoracionGeneral = valoracionGeneral;
         }
-        
 
         
-        public Resenya(string titulo, string descripcion, DateTime fechaPublicacion, IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
-        {
-            Titulo = titulo;
-            Descripcion = descripcion;
-            FechaPublicacion = fechaPublicacion;
-            ResenyaBocadillo = resenyaBocadillo;
-            ValoracionGeneral = valoracionGeneral;
-        }
 
         public int Id { get; set; }
 
@@ -32,7 +25,7 @@
         public string Descripcion { get; set; }
         public DateTime FechaPublicacion { get; set; }
 
-        public ApplicationUser ApplicationUser { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
 
 
         public IList<ResenyaBocadillo> ResenyaBocadillo { get; set; }
