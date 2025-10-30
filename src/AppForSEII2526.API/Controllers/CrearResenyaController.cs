@@ -1,4 +1,4 @@
-﻿/*
+﻿
 using AppForSEII2526.API.DTOs.BocadillosResenyaDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +19,60 @@ namespace AppForSEII2526.API.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(DetailResenyaDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> GetResenya(int id)
+        {
+
+            if (_context.Resenyas == null)
+            {
+                _logger.LogError("Error: Rentals table does not exist");
+                return NotFound();
+            }
+
+            var resenya = await _context.Resenyas
+                .Where(r => r.Id == id)
+                .Include(r => r.ResenyaBocadillo)
+                .ThenInclude(rb => rb.Bocadillo)
+                .ThenInclude(b => b.TipoPan)
+                .Select(r => new DetailResenyaDTO(id, r.ApplicationUser != null ? r.ApplicationUser.NombreUsuario : "Usuario desconocido"
+                , r.Titulo, 
+                r.Descripcion, r.FechaPublicacion, (CreateResenyaDTO.Valoracion_General)r.ValoracionGeneral,
+                r.ResenyaBocadillo.Select(
+                    rb => new ItemResenyaDTO(rb.BocadilloId, rb.Bocadillo.Nombre, rb.Puntuacion, rb.Bocadillo.Tamanyo, rb.Bocadillo.PVP
+                )).ToList()
+                ))
+            .FirstOrDefaultAsync();
+
+
+            if (resenya == null)
+            {
+                _logger.LogError($"Error: Rental with id {id} does not exist");
+                return NotFound();
+            }
+
+            return Ok(resenya);
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         [HttpPost]
         [Route("[action]")]
-        //[ProducesResponseType(typeof(RentalDetailDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(DetailResenyaDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<ActionResult> CreateResenya(CreateResenyaDTO createResenyaDTO)
@@ -86,7 +135,7 @@ namespace AppForSEII2526.API.Controllers
 
             _context.Add(resenya);
 
-
+            
             try
             {
                 //we store in the database both rental and its rentalitems
@@ -100,7 +149,24 @@ namespace AppForSEII2526.API.Controllers
 
             }
 
+
+
+            var resenyaDetail = new DetailResenyaDTO(resenya.Id, resenya.Titulo,
+                    resenya.Descripcion, resenya.FechaPublicacion, (CreateResenyaDTO.Valoracion_General)resenya.ValoracionGeneral,
+                    createResenyaDTO.items);
+
+            if (user != null)
+            {
+                resenyaDetail.NombreUsuario = resenya.ApplicationUser.NombreUsuario;
+            }
+                
+
+
+
+
+                return CreatedAtAction("GetResenya", new { id = resenya.Id }, resenyaDetail);
+
+
         }
     }
 }
-*/

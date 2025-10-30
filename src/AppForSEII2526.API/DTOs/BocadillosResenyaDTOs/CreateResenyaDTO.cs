@@ -3,7 +3,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosResenyaDTOs
 {
     public class CreateResenyaDTO
     {
-        /*
+        
         public CreateResenyaDTO(string? nombreUsuario, string titulo, string descripcion, Valoracion_General valoracion_General, List<ItemResenyaDTO> items)
         {
             NombreUsuario = nombreUsuario;
@@ -17,7 +17,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosResenyaDTOs
         {
             items = new List<ItemResenyaDTO>();
         }
-        */
+        
         
         [Display(Name = "Nombre de Usuario")]
         [StringLength(20, ErrorMessage = "El nombre de usuario no puede tener más de 20 caracteres.")]  
