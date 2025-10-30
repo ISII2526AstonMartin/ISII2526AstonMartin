@@ -31,10 +31,10 @@ namespace AppForSEII2526.API.Controllers
                 .Include(b => b.TipoPan)
                 .Where(b =>
 
-                tipoPan == null || b.TipoPan.Nombre.Contains(tipoPan)
+                (tipoPan == null || b.TipoPan.Nombre.Contains(tipoPan))
 
 
-                && tamanyo == null || b.Tamanyo == tamanyo)
+                && (tamanyo == null || b.Tamanyo == tamanyo))
 
 
                 .Select(b => new BocadillosDTO
