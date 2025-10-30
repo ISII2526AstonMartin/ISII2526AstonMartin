@@ -134,8 +134,11 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.BonoBocadillo", b =>
                 {
-                    b.Property<string>("BonoID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("BonoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BonoID"));
 
                     b.Property<int>("CantidadDisponible")
                         .HasColumnType("int");
@@ -150,9 +153,8 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<float>("PVP")
                         .HasColumnType("real");
 
-                    b.Property<string>("TipoIdTipo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("TipoIdTipo")
+                        .HasColumnType("int");
 
                     b.HasKey("BonoID");
 
@@ -163,11 +165,11 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.BonosComprados", b =>
                 {
-                    b.Property<string>("BonoId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("BonoId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("CompraBonoId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CompraBonoId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
@@ -244,8 +246,11 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.CompraBono", b =>
                 {
-                    b.Property<string>("CompraBonoId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CompraBonoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompraBonoId"));
 
                     b.Property<DateTime>("FechaCompraBono")
                         .HasColumnType("datetime2");
@@ -398,8 +403,11 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.TipoBocadillo", b =>
                 {
-                    b.Property<string>("IdTipo")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("IdTipo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdTipo"));
 
                     b.Property<string>("NombreTipo")
                         .IsRequired()

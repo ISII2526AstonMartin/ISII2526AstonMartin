@@ -8,7 +8,7 @@ namespace AppForSEII2526.API.DTOs.CompraBonosDTOs
         {
         }
 
-        public CompraBonoItemDTO(string id, float pvp, int nBocadillos, string nombreBono, string tipoBocadillo, int cantidad)
+        public CompraBonoItemDTO(int id, float pvp, int nBocadillos, string nombreBono, string tipoBocadillo, int cantidad)
         {
             this.id=id;
             this.pvp = pvp;
@@ -18,7 +18,7 @@ namespace AppForSEII2526.API.DTOs.CompraBonosDTOs
             this.cantidad = cantidad;
         }
 
-        public string id { get; set; }
+        public int id { get; set; }
         public float pvp { get; set; }
         public int nBocadillos { get; set; }
         public string nombreBono { get; set; }

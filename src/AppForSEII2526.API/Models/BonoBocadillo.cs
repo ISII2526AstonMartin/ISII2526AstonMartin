@@ -17,7 +17,7 @@ namespace AppForSEII2526.API.Models
             ListaBonosComprados = listaBonosComprados;
         }
 
-        public BonoBocadillo(string bonoID, int cantidadDisponible, int nBocadillos, string nombreBono, float pVP, TipoBocadillo tipo, List<BonosComprados> listaBonosComprados)
+        public BonoBocadillo(int bonoID, int cantidadDisponible, int nBocadillos, string nombreBono, float pVP, TipoBocadillo tipo, List<BonosComprados> listaBonosComprados)
         {
             BonoID = bonoID;
             CantidadDisponible = cantidadDisponible;
@@ -29,7 +29,7 @@ namespace AppForSEII2526.API.Models
         }
 
         [Key]
-        public string BonoID { get; set; }
+        public int BonoID { get; set; }
         
         public int CantidadDisponible { get; set; }
         

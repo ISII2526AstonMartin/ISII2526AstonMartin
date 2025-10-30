@@ -71,7 +71,8 @@ namespace AppForSEII2526.API.Migrations
                 name: "TiposBocadillos",
                 columns: table => new
                 {
-                    IdTipo = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IdTipo = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     NombreTipo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -246,7 +247,8 @@ namespace AppForSEII2526.API.Migrations
                 name: "ComprasBono",
                 columns: table => new
                 {
-                    CompraBonoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CompraBonoId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     FechaCompraBono = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NBono = table.Column<int>(type: "int", nullable: false),
                     PrecioTotalBono = table.Column<float>(type: "real", nullable: false),
@@ -313,12 +315,13 @@ namespace AppForSEII2526.API.Migrations
                 name: "BonoBocadillos",
                 columns: table => new
                 {
-                    BonoID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BonoID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CantidadDisponible = table.Column<int>(type: "int", nullable: false),
                     NBocadillos = table.Column<int>(type: "int", nullable: false),
                     NombreBono = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PVP = table.Column<float>(type: "real", nullable: false),
-                    TipoIdTipo = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    TipoIdTipo = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -409,8 +412,8 @@ namespace AppForSEII2526.API.Migrations
                 name: "BonosComprados",
                 columns: table => new
                 {
-                    BonoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CompraBonoId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BonoId = table.Column<int>(type: "int", nullable: false),
+                    CompraBonoId = table.Column<int>(type: "int", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     PrecioBono = table.Column<float>(type: "real", nullable: false)
                 },

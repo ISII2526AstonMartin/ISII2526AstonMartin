@@ -1,6 +1,7 @@
 ﻿using AppForSEII2526.API.DTOs.CompraBonosDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AppForSEII2526.API.Controllers
 {
@@ -21,7 +22,7 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(CompraBonoDetailsDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult> GetCompra(string id)
+        public async Task<ActionResult> GetCompra(int id)
         {
             if (_context.ComprasBono == null)
             {
@@ -59,27 +60,23 @@ namespace AppForSEII2526.API.Controllers
             var user = _context.ApplicationUsers.FirstOrDefault(au =>
             (au.Nombre == dto.nombreCliente) &&
             (au.Apellido1 == dto.apellido1) &&
-            (au.Apellido2 == dto.apellido2)
+            (dto.apellido2.IsNullOrEmpty() || au.Apellido2 == dto.apellido2)
             );
 
             if (user == null)
             {
                 return BadRequest("Cliente no registrado");
             }
-            var metodoPago = _context.ComprasBono.FirstOrDefault(bc =>
-            bc.MetodoPagoUsuario == dto.metodoPago
-            );
+            var metodoPago = dto.metodoPago;
 
-            if (metodoPago == null)
+            if (!Enum.IsDefined(typeof(MetodoPago), dto.metodoPago))
             {
-                return BadRequest("Metodo de pago no registrado");
+                return BadRequest("Metodo de pago no valido");
             }
 
-            var bonosNombres = dto.compraItems.Select(ri => ri.nombreBono).ToList<string>();
+            var bonosNombres = dto.compraItems.Select(ri => ri.nombreBono).ToList();
 
             var bonos = _context.BonoBocadillos
-                .Include(bc => bc.ListaBonosComprados)
-                    .ThenInclude(c => c.Comprabono)
                     .Where(bc => bonosNombres.Contains(bc.NombreBono))
                     .Select(m => new
                     {
@@ -89,13 +86,9 @@ namespace AppForSEII2526.API.Controllers
                         m.NombreBono,
                         m.Tipo,
                         m.CantidadDisponible
-                    })
-                    .ToList();
-            //TODO ID
-            /*
-             * todo this JOD4EEEEEEEEEEEEEEEEEEEEEEEEEEEER
-             */
-            CompraBono comprabono = new CompraBono(DateTime.Today, dto.compraItems.Count(), 0, dto.metodoPago, new List<BonosComprados>(), user);
+                    }).ToList();
+
+            CompraBono comprabono = new CompraBono(DateTime.Today, dto.compraItems.Count(), 0, metodoPago, new List<BonosComprados>(), user);
 
             foreach (var item in dto.compraItems)
             {
@@ -107,10 +100,14 @@ namespace AppForSEII2526.API.Controllers
 
                 else
                 {
-                    comprabono.ListaBonosComprados.Add(new BonosComprados(bono.BonoID, comprabono.CompraBonoId, item.cantidad, bono.PVP));
-                    comprabono.PrecioTotalBono += bono.PVP;
+                    comprabono.ListaBonosComprados.Add(new BonosComprados(bono.BonoID, comprabono, item.cantidad, bono.PVP));
+                    item.pvp = bono.PVP;
                 }
             }
+
+            comprabono.PrecioTotalBono = comprabono.ListaBonosComprados.Sum(cb=>cb.PrecioBono*cb.Cantidad);
+            comprabono.NBono = comprabono.ListaBonosComprados.Sum(cb => cb.Cantidad);
+
             _context.Add(comprabono);
             try
             {
@@ -123,20 +120,24 @@ namespace AppForSEII2526.API.Controllers
                 return Conflict("Error" + ex.Message);
             }
 
+            var compraItems = comprabono.ListaBonosComprados.Select(bc =>
+            {
+                var bono = bonos.First(b => b.BonoID == bc.BonoId);
+                return new CompraBonoItemDTO(
+                    bc.BonoId,
+                    (float)bono.PVP,
+                    bono.NBocadillos,
+                    bono.NombreBono,
+                    bono.Tipo.NombreTipo,
+                    bc.Cantidad
+                );
+            }).ToList();
+
             var compraBonoDetail = new CompraBonoDetailsDTO(comprabono.CompraBonoId, comprabono.FechaCompraBono,
                 comprabono.applicationuser.Nombre, comprabono.applicationuser.Apellido1, comprabono.applicationuser.Apellido2,
-                comprabono.MetodoPagoUsuario,
-                comprabono.ListaBonosComprados.Select(bc => new CompraBonoItemDTO(
-                    bc.BonoId.ToString(),
-                    (float)bc.BonoBocadillo.PVP,
-                    bc.BonoBocadillo.NBocadillos,
-                    bc.BonoBocadillo.NombreBono,
-                    bc.BonoBocadillo.Tipo.NombreTipo,
-                    bc.Cantidad
-                    )).ToList()
-                );
-
-            return CreatedAtAction("GetCompra", new { id = comprabono.CompraBonoId }, comprabono);
+                comprabono.MetodoPagoUsuario,compraItems);
+            
+            return CreatedAtAction("GetCompra", new { id = comprabono.CompraBonoId }, compraBonoDetail);
         }
     }
 }

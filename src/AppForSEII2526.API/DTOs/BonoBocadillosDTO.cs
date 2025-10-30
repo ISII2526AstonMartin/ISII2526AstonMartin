@@ -6,7 +6,7 @@
         {
         }
 
-        public BonoBocadillosDTO(string id, int cantidadDisponible, int nBocadillos, string nombreBono, float pVP, string tipo)
+        public BonoBocadillosDTO(int id, int cantidadDisponible, int nBocadillos, string nombreBono, float pVP, string tipo)
         {
             Id = id;
             CantidadDisponible = cantidadDisponible;
@@ -16,7 +16,7 @@
             TipoBocadillo = tipo;
         }
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public int CantidadDisponible { get; set; }
 
