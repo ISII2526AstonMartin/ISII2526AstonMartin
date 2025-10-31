@@ -8,7 +8,16 @@ namespace AppForSEII2526.API.Models
         public CompraBono()
         {
         }
-
+        public CompraBono(DateTime fechaCompraBono, int nBono, float precioTotalBono, MetodoPago metodoPagoUsuario, List<BonosComprados> listaBonosComprados, ApplicationUser applicationuser)
+        {
+            FechaCompraBono = fechaCompraBono;
+            NBono = nBono;
+            PrecioTotalBono = precioTotalBono;
+            MetodoPagoUsuario = metodoPagoUsuario;
+            ListaBonosComprados = listaBonosComprados;
+            this.applicationuser = applicationuser;
+        }
+        /*
         public CompraBono(string compraBonoId, DateTime fechaCompraBono, int nBono, float precioTotalBono, MetodoPago metodoPagoUsuario, List<BonosComprados> listaBonosComprados, ApplicationUser applicationuser)
         {
             CompraBonoId = compraBonoId;
@@ -19,9 +28,10 @@ namespace AppForSEII2526.API.Models
             ListaBonosComprados = listaBonosComprados;
             this.applicationuser = applicationuser;
         }
+        */
 
         [Key]
-        public string CompraBonoId { get; set; }
+        public int CompraBonoId { get; set; }
 
         public DateTime FechaCompraBono { get; set; }
 
