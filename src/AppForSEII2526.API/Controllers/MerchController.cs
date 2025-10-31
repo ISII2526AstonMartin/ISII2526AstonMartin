@@ -41,21 +41,6 @@ namespace AppForSEII2526.API.Controllers
 
             return Ok(productos);
         }
-        [HttpPost]
-        [Route("[action]")]
-        // [ProducesResponseType(typeof(MerchDetailDTO), (int)HttpStatusCode.Created)] COMENTADA PORQUE AUN NO ESTA DEFINIDO MerchDetailDTO
-        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-        public async Task<IActionResult> CreateMerch([FromBody] CreateMerchDTO createMerch)
-        {
-            // if (!_context.ApplicationUsers.Any(au=>au.UserName==rentalForCreate.CustomerUserName))
-            var user = _context.ApplicationUsers.FirstOrDefault(au => au.UserName == createMerch.CustomerUserName);
-            if (user == null)
-                ModelState.AddModelError("RentalApplicationUser", "Error! UserName is not registered");
-            if (ModelState.ErrorCount > 0)
-                return BadRequest(new ValidationProblemDetails(ModelState));
-
-            
-        }
+       
     }
 }
