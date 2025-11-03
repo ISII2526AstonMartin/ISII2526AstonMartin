@@ -1,7 +1,10 @@
+using AppForSEII2526.API.Logging;
 using Microsoft.Data.Sqlite;
 using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddRabbitMQ(builder.Configuration.GetSection("RabbitMQ"));
 
 // Add services to the container.
 
@@ -72,9 +75,15 @@ var app = builder.Build();
 
 
 
+
+
 //Map Identity routes
 //app.MapIdentityApi<IdentityUser>();
 var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+
+
+
 
 using (var scope = app.Services.CreateScope()) {
     try {
