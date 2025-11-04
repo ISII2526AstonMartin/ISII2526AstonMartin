@@ -22,8 +22,8 @@ namespace AppForSEII2526.API.DTOs.BocadillosParaPedirDTOs
                    MetodoPago == dTO.MetodoPago &&
                    Apellido1 == dTO.Apellido1 &&
                    Apellido2 == dTO.Apellido2 &&
-                   EqualityComparer<IList<ItemPedidoDTO>>.Default.Equals(ItemPedido, dTO.ItemPedido) &&
-                   FechaPedido == dTO.FechaPedido &&
+                    ItemPedido.SequenceEqual(dTO.ItemPedido) &&                  
+                    FechaPedido == dTO.FechaPedido &&
                    PrecioTotal == dTO.PrecioTotal;
         }
 
