@@ -40,70 +40,68 @@ namespace AppForSEII2526.UT.ResenyaController_test
         }
 
 
-        [Fact]
-        public async Task getBocadillosResenyaGoodNameResult_test()
+        public static IEnumerable<object[]> TestCasesFor_GetBocadillos_OK()
         {
-            List<BocadillosDTO> bocadillosEsperados = new List<BocadillosDTO>()
+            var bocadillosDTOs = new List<BocadillosDTO>
             {
-                new BocadillosDTO(2, "BaconQueso", Tamanyo.Normal, "Normal", 6),
-                new BocadillosDTO(3, "Bacon", Tamanyo.Pequeño, "Centeno", 2)
+                new BocadillosDTO(1, "Serrano", Tamanyo.Pequeño, "Integral", 5.5f),
+                new BocadillosDTO(2, "BaconQueso", Tamanyo.Normal, "Normal", 6f),
+                new BocadillosDTO(3, "Bacon", Tamanyo.Pequeño, "Centeno", 2f),
+                new BocadillosDTO(4, "Atun", Tamanyo.Normal, "Integral", 3f)
             };
-            var mock = new Mock<ILogger<BocadillosController>>();
-            ILogger<BocadillosController> logger = mock.Object;
-            BocadillosController controller = new BocadillosController(_context, logger);
 
+            var bocadillosDTOsTC1 = new List<BocadillosDTO>()
+            {
+                bocadillosDTOs[0],
+                bocadillosDTOs[1],
+                bocadillosDTOs[2],
+                bocadillosDTOs[3]
+            };
 
-            var result = await controller.GetBocadillosResenya("Bacon", null);
+            var bocadillosDTOsTC2 = new List<BocadillosDTO>()
+            {
+                bocadillosDTOs[1],
+                bocadillosDTOs[2]
+            };
 
+            var bocadillosDTOsTC3 = new List<BocadillosDTO>()
+            {
+                bocadillosDTOs[2],
+                bocadillosDTOs[3]
+            };
 
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var actualResult = Assert.IsType<List<BocadillosDTO>>(okResult.Value);
-            Assert.Equal(bocadillosEsperados, actualResult);
+            var bocadillosDTOsTC4 = new List<BocadillosDTO>()
+            {
+            };
+
+            var allTests = new List<object[]>
+            {
+                new object[] {null, null, bocadillosDTOsTC1 },
+                new object[] {"Bacon",null, bocadillosDTOsTC2 },
+                new object[] {null, 5f, bocadillosDTOsTC3 },
+                new object[] {null, 1f, bocadillosDTOsTC4 }
+            };
+
+            return allTests;
+
 
         }
 
-
-        [Fact]
-        public async Task getBocadillosResenyaGoodPVPResult_test()
+        [Theory]
+        [MemberData(nameof(TestCasesFor_GetBocadillos_OK))]
+        [Trait("Database", "WithoutFixture")]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task GetBocadillos_OK(string? nombreBocadillo, float? precioMaximo, List<BocadillosDTO> expectedBocadillos)
         {
-            List<BocadillosDTO> bocadillosEsperados = new List<BocadillosDTO>()
-            {
-                new BocadillosDTO(3, "Bacon", Tamanyo.Pequeño, "Centeno", 2),
-                new BocadillosDTO(4, "Atun", Tamanyo.Normal, "Integral", 3)
-            };
+            // Arrange
+            var controller = new BocadillosController(_context, null);
+            var result = await controller.GetBocadillosResenya(nombreBocadillo, precioMaximo);
 
-            var mock = new Mock<ILogger<BocadillosController>>();
-            ILogger<BocadillosController> logger = mock.Object;
-            BocadillosController controller = new BocadillosController(_context, logger);
-
-
-            var result = await controller.GetBocadillosResenya(null, 5);
-
-
+            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var actualResult = Assert.IsType<List<BocadillosDTO>>(okResult.Value);
-            Assert.Equal(bocadillosEsperados, actualResult);
+            var returnedBocadillos = Assert.IsAssignableFrom<IEnumerable<BocadillosDTO>>(okResult.Value);
+            Assert.Equal(expectedBocadillos.Count, returnedBocadillos.Count());
 
-
-        }
-
-
-        [Fact]
-        public async Task getBocadillosNombreNoExiste_test()
-        {
-            List<BocadillosDTO> bocadillosEsperados = new List<BocadillosDTO>();
-
-            var mock = new Mock<ILogger<BocadillosController>>();
-            ILogger<BocadillosController> logger = mock.Object;
-            BocadillosController controller = new BocadillosController(_context, logger);
-
-
-            var result = await controller.GetBocadillosResenya("tortilla", null);
-
-
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var actualResult = Assert.IsType<List<BocadillosDTO>>(okResult.Value);
-            Assert.Equal(bocadillosEsperados, actualResult);
         }
     }
 }
