@@ -17,12 +17,12 @@ namespace AppForSEII2526.API.DTOs.CompraBonosDTOs
             this.compraItems = compraItems;
         }
 
-        [Required]
+        //[Required]
         public string nombreCliente {  get; set; }
-        [Required]
+        //[Required]
         public string apellido1 { get; set; }
         public string? apellido2 { get; set; }
-        [Required]
+        //[Required]
         public MetodoPago metodoPago { get; set; }
         public List<CompraBonoItemDTO> compraItems { get; set; }
 
