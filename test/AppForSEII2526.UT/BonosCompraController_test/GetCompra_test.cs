@@ -33,7 +33,7 @@ namespace AppForSEII2526.UT.BonosCompraController_test
 
 
             var comprasBonos = new CompraBono(1, new DateTime(2025, 10, 6), 4, 15.5f, MetodoPago.Tarjeta, new List<BonosComprados>() { }, applicationUsers);
-            comprasBonos.ListaBonosComprados.Add(new BonosComprados(bonosBocadillos[0], comprasBonos, 4, 20.00f));
+            comprasBonos.ListaBonosComprados.Add(new BonosComprados(bonosBocadillos[0], comprasBonos, 4, 14.4f));
 
             _context.AddRange(tipos);
             _context.Add(applicationUsers);
@@ -49,7 +49,7 @@ namespace AppForSEII2526.UT.BonosCompraController_test
             //arrange
 
             CompraBonoDetailsDTO expectedCompraBono = new CompraBonoDetailsDTO(1, new DateTime(2025, 10, 6), "Andres", "Iniesta", "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>());
-            expectedCompraBono.compraItems.Add(new CompraBonoItemDTO(1, 20.00f, 5, "Bono1", "Vegano", 4));
+            expectedCompraBono.compraItems.Add(new CompraBonoItemDTO(1, 14.4f, 5, "Bono1", "Vegano", 4));
 
             var mock = new Mock<ILogger<CompraBonosController>>();
             ILogger<CompraBonosController> logger = mock.Object;
