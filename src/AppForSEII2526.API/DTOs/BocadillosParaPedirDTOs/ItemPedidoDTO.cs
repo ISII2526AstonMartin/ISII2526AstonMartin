@@ -14,7 +14,7 @@
         {
             
         }
-        public ItemPedidoDTO(int id, string nombreBocadillo, int cantidad, int pVP, string tipoPan)
+        public ItemPedidoDTO(int id, string nombreBocadillo, int cantidad, float pVP, string tipoPan)
         {
             Id = id;
             NombreBocadillo = nombreBocadillo;

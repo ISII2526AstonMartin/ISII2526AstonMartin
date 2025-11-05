@@ -55,7 +55,7 @@ namespace AppForSEII2526.API.Controllers
                     }).ToList()
                 )).FirstOrDefaultAsync();
 
-
+            
             if(pedido == null)
             {
                 _logger.LogError($"Error: Pedido con {id} no existe");
