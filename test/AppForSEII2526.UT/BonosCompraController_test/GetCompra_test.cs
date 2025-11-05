@@ -73,6 +73,7 @@ namespace AppForSEII2526.UT.BonosCompraController_test
 
             var results = await controller.GetCompra(123456789);
             var okResult = Assert.IsType<NotFoundObjectResult>(results);
+            Assert.Contains("No se han encontrado compras", okResult.Value.ToString());
         }
 
     }

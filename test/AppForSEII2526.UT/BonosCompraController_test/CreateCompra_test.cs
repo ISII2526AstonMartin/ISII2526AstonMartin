@@ -67,11 +67,11 @@ namespace AppForSEII2526.UT.BonosCompraController_test
             nuevo.compraItems.Add(new CompraBonoItemDTO(1, 14.4f, 5, "BonoNoExiste", "Vegano", 4));
             var allTests = new List<object[]>()
             {
-                new object[]{ new CompraBonoForCreateDTO(null, "Iniesta", "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()) },
-                new object[]{ new CompraBonoForCreateDTO("Andres", null, "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()) },
-                new object[]{ new CompraBonoForCreateDTO(null, "Iniesta", "Lujan", (MetodoPago)9999999, new List<CompraBonoItemDTO>()) },
-                new object[]{ new CompraBonoForCreateDTO("Lionel Andres", "Messi", "Cuccittini", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()) },
-                new object[]{ nuevo }
+                new object[]{ new CompraBonoForCreateDTO(null, "Iniesta", "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()), "El nombre no está definido" },
+                new object[]{ new CompraBonoForCreateDTO("Andres", null, "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()), "El apellido no está definido" },
+                new object[]{ new CompraBonoForCreateDTO("Andres", "Iniesta", "Lujan", (MetodoPago)9999999, new List<CompraBonoItemDTO>()), "Metodo de pago no valido" },
+                new object[]{ new CompraBonoForCreateDTO("Lionel Andres", "Messi", "Cuccittini", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()), "Cliente no registrado" },
+                new object[]{ nuevo , "Bono no existe" }
             };
             
             return allTests;
@@ -79,7 +79,7 @@ namespace AppForSEII2526.UT.BonosCompraController_test
 
         [Theory]
         [MemberData(nameof(badPostCompras))]
-        public async Task CreateCompraErrors(CompraBonoForCreateDTO dto)
+        public async Task CreateCompraErrors(CompraBonoForCreateDTO dto, string expectedString)
         {
             var mock = new Mock<ILogger<CompraBonosController>>();
             ILogger<CompraBonosController> logger = mock.Object;
@@ -89,7 +89,8 @@ namespace AppForSEII2526.UT.BonosCompraController_test
             var actual = await controller.CreateCompra(dto);
 
             //assert
-            Assert.IsType<BadRequestObjectResult>(actual);
+            var actualResult=Assert.IsType<BadRequestObjectResult>(actual);
+            Assert.Contains(expectedString,actualResult.Value.ToString());
         }
     }
 }
