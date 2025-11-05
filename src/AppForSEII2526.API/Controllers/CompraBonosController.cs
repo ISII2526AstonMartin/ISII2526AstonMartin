@@ -24,10 +24,6 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> GetCompra(int id)
         {
-            if (_context.ComprasBono == null)
-            {
-                return NotFound("No hay datos en la base de datos de compras");
-            }
             var compraBono = await _context.ComprasBono
                 .Where(cb=>cb.CompraBonoId == id)
                     .Include(cb=>cb.ListaBonosComprados)
