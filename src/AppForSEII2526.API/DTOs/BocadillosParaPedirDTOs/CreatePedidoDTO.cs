@@ -43,7 +43,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosParaPedirDTOs
                    MetodoPago == dTO.MetodoPago &&
                    Apellido1 == dTO.Apellido1 &&
                    Apellido2 == dTO.Apellido2 &&
-                   EqualityComparer<IList<ItemPedidoDTO>>.Default.Equals(ItemPedido, dTO.ItemPedido);
+                   ItemPedido.SequenceEqual(dTO.ItemPedido);
         }
 
         public override int GetHashCode()
