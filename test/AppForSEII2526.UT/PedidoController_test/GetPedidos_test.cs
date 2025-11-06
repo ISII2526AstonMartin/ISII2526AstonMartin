@@ -31,7 +31,7 @@ namespace AppForSEII2526.UT.PedidoController_test
 
             ApplicationUser user = new ApplicationUser("Antonio", "Garcia de la Reina", "Aguilar", "antonio@uclm.es");
 
-            var compra = new Compra(new DateTime(2025, 11, 04, 12, 30, 00),new List<CompraBocadillo>() , MetodoPago.Paypal, user);
+            var compra = new Compra(DateTime.Today,new List<CompraBocadillo>() , MetodoPago.Paypal, user);
             compra.CompraBocadillos.Add(new CompraBocadillo(bocadillo[0], compra, 2));
 
             compra.PrecioTotal = compra.CompraBocadillos.Sum(cb => cb.Precio * cb.Cantidad);
@@ -79,7 +79,7 @@ namespace AppForSEII2526.UT.PedidoController_test
 
             var controller = new PedidoController(_context, logger);
 
-            var expectedPedido = new PedidoDetailDTO("Antonio", MetodoPago.Paypal,"Garcia de la Reina", "Aguilar", new DateTime(2025, 11, 04, 12, 30, 00), 4.0f , new List<ItemPedidoDTO>());
+            var expectedPedido = new PedidoDetailDTO("Antonio", MetodoPago.Paypal,"Garcia de la Reina", "Aguilar", DateTime.Today, 4.0f , new List<ItemPedidoDTO>());
 
             expectedPedido.ItemPedido.Add(new ItemPedidoDTO(1,"Atun",2, 2.0f,"Semillas"));
 
