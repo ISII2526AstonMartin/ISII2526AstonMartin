@@ -61,7 +61,7 @@ namespace AppForSEII2526.UT.BonosCompraController_test
             //assert
             var okResult = Assert.IsType<OkObjectResult>(results);
             var actualResult = Assert.IsType<CompraBonoDetailsDTO>(okResult.Value);
-            Assert.Equivalent(expectedCompraBono, actualResult);
+            Assert.Equal(expectedCompraBono, actualResult);
         }
         
         [Fact]

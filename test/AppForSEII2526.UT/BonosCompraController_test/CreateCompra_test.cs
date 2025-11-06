@@ -58,7 +58,7 @@ namespace AppForSEII2526.UT.BonosCompraController_test
             //assert
             var createdObject=Assert.IsType<CreatedAtActionResult>(actual);
             var actualResult=Assert.IsType<CompraBonoDetailsDTO>(createdObject.Value);
-            Assert.Equivalent(expected, actualResult);
+            Assert.Equal(expected, actualResult);
         }
 
         public static IEnumerable<object[]> badPostCompras()
