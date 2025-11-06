@@ -114,7 +114,7 @@ namespace AppForSEII2526.UT.PedidoController_test
 
 
 
-        /*
+        
 
 
         [Fact]
@@ -132,7 +132,7 @@ namespace AppForSEII2526.UT.PedidoController_test
             var resultado = await controller.GetBocadillosParaPedir(Tamanyo.Normal, "NoExiste");
 
         }
-        */
+        
 
     }
 
