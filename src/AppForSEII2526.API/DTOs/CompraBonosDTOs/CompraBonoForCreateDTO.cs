@@ -33,7 +33,7 @@ namespace AppForSEII2526.API.DTOs.CompraBonosDTOs
                    apellido1 == dTO.apellido1 &&
                    apellido2 == dTO.apellido2 &&
                    metodoPago == dTO.metodoPago &&
-                   EqualityComparer<List<CompraBonoItemDTO>>.Default.Equals(compraItems, dTO.compraItems);
+                   compraItems.SequenceEqual(dTO.compraItems);
         }
 
         public override int GetHashCode()

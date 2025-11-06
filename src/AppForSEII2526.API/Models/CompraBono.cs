@@ -17,6 +17,17 @@ namespace AppForSEII2526.API.Models
             ListaBonosComprados = listaBonosComprados;
             this.applicationuser = applicationuser;
         }
+
+        public CompraBono(int id, DateTime fechaCompraBono, int nBono, float precioTotalBono, MetodoPago metodoPagoUsuario, List<BonosComprados> listaBonosComprados, ApplicationUser applicationuser)
+        {
+            CompraBonoId= id;
+            FechaCompraBono = fechaCompraBono;
+            NBono = nBono;
+            PrecioTotalBono = precioTotalBono;
+            MetodoPagoUsuario = metodoPagoUsuario;
+            ListaBonosComprados = listaBonosComprados;
+            this.applicationuser = applicationuser;
+        }
         /*
         public CompraBono(string compraBonoId, DateTime fechaCompraBono, int nBono, float precioTotalBono, MetodoPago metodoPagoUsuario, List<BonosComprados> listaBonosComprados, ApplicationUser applicationuser)
         {
