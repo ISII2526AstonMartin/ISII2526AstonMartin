@@ -108,7 +108,7 @@ namespace AppForSEII2526.API.Controllers
 
 
 
-            Compra compra = new Compra(DateTime.Now, new List<CompraBocadillo>(), metodoPagoEnum, usuario);
+            Compra compra = new Compra(DateTime.Today, new List<CompraBocadillo>(), metodoPagoEnum, usuario);
             compra.PrecioTotal = 0;
 
 
