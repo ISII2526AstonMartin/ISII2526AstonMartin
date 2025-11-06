@@ -74,6 +74,12 @@ namespace AppForSEII2526.API.Controllers
 
 
                 .ToListAsync();
+
+            if (bocadillos.Count == 0)
+            {
+                _logger.LogInformation("No hay bocadillos con esos filtros");
+                return NotFound("No hay bocadillos con esos filtros");
+            }
                 return Ok(bocadillos);  
         }
 

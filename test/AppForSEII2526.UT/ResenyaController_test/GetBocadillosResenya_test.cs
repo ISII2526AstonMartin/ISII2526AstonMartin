@@ -72,6 +72,7 @@ namespace AppForSEII2526.UT.ResenyaController_test
 
             var bocadillosDTOsTC4 = new List<BocadillosDTO>()
             {
+                 bocadillosDTOs[2],
             };
 
             var allTests = new List<object[]>
@@ -79,7 +80,7 @@ namespace AppForSEII2526.UT.ResenyaController_test
                 new object[] {null, null, bocadillosDTOsTC1 },
                 new object[] {"Bacon",null, bocadillosDTOsTC2 },
                 new object[] {null, 5f, bocadillosDTOsTC3 },
-                new object[] {null, 1f, bocadillosDTOsTC4 }
+                new object[] {"Bacon", 4f, bocadillosDTOsTC4 }
             };
 
             return allTests;
@@ -101,6 +102,23 @@ namespace AppForSEII2526.UT.ResenyaController_test
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnedBocadillos = Assert.IsAssignableFrom<IEnumerable<BocadillosDTO>>(okResult.Value);
             Assert.Equal(expectedBocadillos.Count, returnedBocadillos.Count());
+
+        }
+
+        [Fact]
+        [Trait("Database", "WithoutFixture")]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task GetBocadillos_NotFound()
+        {
+            // Arrange
+            var controller = new BocadillosController(_context, null);
+            var nombreBocadillo = "NoExiste";
+            var precioMaximo = 1f;
+            // Act
+            var result = await controller.GetBocadillosResenya(nombreBocadillo, precioMaximo);
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal("No hay bocadillos con esos filtros", notFoundResult.Value);
 
         }
     }
