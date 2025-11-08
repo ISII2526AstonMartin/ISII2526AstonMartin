@@ -1,5 +1,4 @@
 ﻿using AppForSEII2526.API.DTOs.ComprarMerchDTOs;
-using AppForSEII2526.API.DTOs.ComprarMerchDTOs;
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,65 +11,75 @@ namespace AppForSEII2526.API.Controllers
     public class POSTMerchController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<MerchController> _logger;
-        public POSTMerchController(ApplicationDbContext context, ILogger<MerchController> logger)
+        private readonly ILogger<POSTMerchController> _logger; // ✅ corregido el tipo de logger
+
+        public POSTMerchController(ApplicationDbContext context, ILogger<POSTMerchController> logger)
         {
-            this._context = context;
-            this._logger = logger;
+            _context = context;
+            _logger = logger;
         }
 
+        // POST: api/POSTMerch/CreateMerch
         [HttpPost]
         [Route("[action]")]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-        public async Task<ActionResult> CreateMerch([FromBody] CreateMerchDTO createMerch)
+        public async Task<ActionResult> CreateMerch(CreateMerchDTO createMerch)
         {
             if (createMerch == null)
-                return BadRequest("Request vacío");
+                return BadRequest("El cuerpo de la solicitud está vacío.");
 
-            if (createMerch.items == null || createMerch.items.Count == 0)
+            if (createMerch.Items == null || createMerch.Items.Count == 0)
             {
-                ModelState.AddModelError("CreateMerch", "Debes incluir al menos un producto");
+                ModelState.AddModelError("CreateMerch", "Debes incluir al menos un producto.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
+            // Buscar usuario por nombre y primer apellido
             var user = await _context.ApplicationUsers
-                .FirstOrDefaultAsync(au => au.UserName == createMerch.NombreUsuario && au.Apellido1 == createMerch.Apellido1);
+                .FirstOrDefaultAsync(au =>
+                    au.UserName == createMerch.NombreUsuario &&
+                    au.Apellido1 == createMerch.Apellido1);
 
             if (user == null)
             {
-                ModelState.AddModelError("CreateMerch", "Error! UserName o apellido no registrados");
+                ModelState.AddModelError("CreateMerch", "Error: Usuario o apellido no registrados.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            var nombres = createMerch.items.Select(i => i.Nombre).ToList();
+            // Obtener nombres de los productos solicitados
+            var nombres = createMerch.Items.Select(i => i.Nombre).ToList();
 
-            // Cargar las entidades Producto completas desde la BD (incluyendo Tipo_Producto)
+            // Cargar productos de la base de datos (incluyendo su tipo)
             var productosEnBd = await _context.Productos
                 .Include(p => p.Tipo_Producto)
                 .Where(p => nombres.Contains(p.Nombre))
                 .ToListAsync();
 
-            var compra = new Compra_Producto(user, createMerch.DireccionEnvio, DateTime.Now, createMerch.metodoPago, new List<Producto_Compra>());
-            compra.CompraID = Guid.NewGuid().ToString();
+            // Crear la compra
+            var compra = new Compra_Producto(user, createMerch.DireccionEnvio, DateTime.Now, createMerch.MetodoPago, new List<Producto_Compra>())
+            {
+                CompraID = Guid.NewGuid().ToString()
+            };
+
             float precioFinal = 0f;
 
-            foreach (var item in createMerch.items)
+            foreach (var item in createMerch.Items)
             {
                 var producto = productosEnBd.FirstOrDefault(p => p.Nombre == item.Nombre);
                 if (producto == null)
                 {
-                    ModelState.AddModelError("CreateMerch", $"Producto '{item.Nombre}' no encontrado");
+                    ModelState.AddModelError("CreateMerch", $"Producto '{item.Nombre}' no encontrado.");
                     continue;
                 }
 
                 if (item.Cantidad <= 0)
                 {
-                    ModelState.AddModelError("CreateMerch", $"Cantidad inválida para '{item.Nombre}'");
+                    ModelState.AddModelError("CreateMerch", $"Cantidad inválida para '{item.Nombre}'.");
                     continue;
                 }
 
-                var pc = new Producto_Compra
+                var productoCompra = new Producto_Compra
                 {
                     Cantidad = item.Cantidad,
                     ProductoID = producto.Nombre,
@@ -80,7 +89,7 @@ namespace AppForSEII2526.API.Controllers
                     CompraID = compra.CompraID
                 };
 
-                compra.Productos_Compras.Add(pc);
+                compra.Productos_Compras.Add(productoCompra);
                 precioFinal += producto.PVP * item.Cantidad;
             }
 
@@ -88,22 +97,28 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
 
             if (!compra.Productos_Compras.Any())
-                return Conflict("Ninguno de los productos indicados existe");
+                return BadRequest("Ninguno de los productos indicados existe.");
 
             compra.PrecioFinal = precioFinal;
 
             _context.Compras.Add(compra);
+
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al guardar la compra");
+                _logger.LogError(ex, "Error al guardar la compra.");
                 return Conflict("Error al guardar la compra: " + ex.Message);
             }
 
-            return Ok(new { message = "Compra realizada correctamente", precioFinal = compra.PrecioFinal, compraId = compra.CompraID });
+            return Ok(new
+            {
+                message = "Compra realizada correctamente.",
+                precioFinal = compra.PrecioFinal,
+                compraId = compra.CompraID
+            });
         }
     }
 }
