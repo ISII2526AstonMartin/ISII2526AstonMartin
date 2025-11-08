@@ -1,8 +1,4 @@
-﻿
-
-
-
-namespace AppForSEII2526.API.DTOs
+﻿namespace AppForSEII2526.API.DTOs
 {
     public class BonoBocadillosDTO
     {
@@ -10,7 +6,7 @@ namespace AppForSEII2526.API.DTOs
         {
         }
 
-        public BonoBocadillosDTO(string id, int cantidadDisponible, int nBocadillos, string nombreBono, float pVP, string tipo)
+        public BonoBocadillosDTO(int id, int cantidadDisponible, int nBocadillos, string nombreBono, float pVP, string tipo)
         {
             Id = id;
             CantidadDisponible = cantidadDisponible;
@@ -20,7 +16,7 @@ namespace AppForSEII2526.API.DTOs
             TipoBocadillo = tipo;
         }
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public int CantidadDisponible { get; set; }
 

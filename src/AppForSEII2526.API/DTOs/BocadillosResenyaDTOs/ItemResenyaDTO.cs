@@ -14,7 +14,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosResenyaDTOs
         public int BocadilloId { get; set; }
         public string BocadilloNombre { get; set; }
         [Required(ErrorMessage = "La puntuación es obligatoria")]
-        [Range(1, 10, ErrorMessage = "La puntuación debe estar entre 1 y 10")]
+        [Range(1, 10)]
         [Display(Name = "Puntuación")]
         public int puntuacion { get; set; }
         public Tamanyo tamanyo { get; set; }

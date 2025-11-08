@@ -4,15 +4,41 @@ namespace AppForSEII2526.API.Models
 {
     public class Bocadillo
     {
-        public Bocadillo(string nombre, float pVP, int stock, TipoPan tipoPan, Tamanyo tamanyo)
+
+        public Bocadillo(string nombre, float pVP, int stock, Tamanyo tamanyo, TipoPan tipoPan, int id)
+        {
+            Id = id;
+            Nombre = nombre;
+            PVP = pVP;
+            Stock = stock;
+            Tamanyo = tamanyo;
+            ResenyaBocadillo = new List<ResenyaBocadillo>();
+            CompraBocadillo = new List<CompraBocadillo>();
+            TipoPan = tipoPan;
+        }
+
+        public Bocadillo(string nombre, float pVP, int stock, Tamanyo tamanyo, TipoPan tipoPan)
+        {
+
+            Nombre = nombre;
+            PVP = pVP;
+            Stock = stock;
+            Tamanyo = tamanyo;
+            ResenyaBocadillo = new List<ResenyaBocadillo>();
+            CompraBocadillo = new List<CompraBocadillo>();
+            TipoPan = tipoPan;
+        }
+        public Bocadillo(string nombre,float pVP, int stock, Tamanyo tamanyo)
         {
             Nombre = nombre;
             PVP = pVP;
             Stock = stock;
-            TipoPan = tipoPan;
             Tamanyo = tamanyo;
+            ResenyaBocadillo = new List<ResenyaBocadillo>();
+            CompraBocadillo = new List<CompraBocadillo>();
+            TipoPan = null!;
         }
-
+        
         public int Id { get; set; }
         
         public string Nombre { get; set; }

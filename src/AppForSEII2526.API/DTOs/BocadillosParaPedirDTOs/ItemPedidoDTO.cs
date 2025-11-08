@@ -2,17 +2,22 @@
 {
     public class ItemPedidoDTO
     {
-
-        public string nombreBocadillo { get; set; }
+        public int Id { get; set; }
+        public string NombreBocadillo { get; set; }
 
         [Required]
         public int Cantidad { get; set; }
-        public int PVP { get; set; }
+        public float PVP { get; set; }
         public string TipoPan { get; set; }
 
-        public ItemPedidoDTO(string nombreBocadillo, int cantidad, int pVP, string tipoPan)
+        public ItemPedidoDTO()
         {
-            this.nombreBocadillo = nombreBocadillo;
+            
+        }
+        public ItemPedidoDTO(int id, string nombreBocadillo, int cantidad, float pVP, string tipoPan)
+        {
+            Id = id;
+            NombreBocadillo = nombreBocadillo;
             Cantidad = cantidad;
             PVP = pVP;
             TipoPan = tipoPan;
@@ -22,14 +27,17 @@
         public override bool Equals(object? obj)
         {
             return obj is ItemPedidoDTO dTO &&
-                   nombreBocadillo == dTO.nombreBocadillo &&
+                    Id == dTO.Id &&
+                   NombreBocadillo == dTO.NombreBocadillo &&
                    Cantidad == dTO.Cantidad &&
                    PVP == dTO.PVP &&
                    TipoPan == dTO.TipoPan;
+                    
         }
+
         public override int GetHashCode()
         {
-            return HashCode.Combine(nombreBocadillo, Cantidad, PVP, TipoPan);
+            return HashCode.Combine(Id, NombreBocadillo, Cantidad, PVP, TipoPan);
         }
 
     }

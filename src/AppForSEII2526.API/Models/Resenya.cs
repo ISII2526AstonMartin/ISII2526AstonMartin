@@ -1,9 +1,11 @@
-﻿
-namespace AppForSEII2526.API.Models
+﻿namespace AppForSEII2526.API.Models
 {
     public class Resenya
     {
-        public Resenya(string titulo, string descripcion, DateTime fechaPublicacion, ApplicationUser applicationUser, IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
+        public Resenya()
+        {
+        }
+        public Resenya(string titulo, string descripcion, DateTime fechaPublicacion, ApplicationUser? applicationUser, IList<ResenyaBocadillo> resenyaBocadillo, Valoracion_General valoracionGeneral)
         {
             Titulo = titulo;
             Descripcion = descripcion;
@@ -13,6 +15,8 @@ namespace AppForSEII2526.API.Models
             ValoracionGeneral = valoracionGeneral;
         }
 
+        
+
         public int Id { get; set; }
 
         [Required]
@@ -21,7 +25,7 @@ namespace AppForSEII2526.API.Models
         public string Descripcion { get; set; }
         public DateTime FechaPublicacion { get; set; }
 
-        public ApplicationUser ApplicationUser { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
 
 
         public IList<ResenyaBocadillo> ResenyaBocadillo { get; set; }
