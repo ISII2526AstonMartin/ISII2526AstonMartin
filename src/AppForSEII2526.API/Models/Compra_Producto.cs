@@ -6,14 +6,13 @@
         {
         }
 
-        public Compra_Producto(ApplicationUser usuario, string compraID, string direccion_Envio, DateTime fechaCompra, MetodoPago metodo_Pago, float precioFinal, List<Producto_Compra> productos_Compras)
+        public Compra_Producto(ApplicationUser usuario, string direccion_Envio, DateTime fechaCompra, MetodoPago metodo_Pago, List<Producto_Compra> productos_Compras)
         {
             Usuario = usuario;
-            CompraID = compraID;
             Direccion_Envio = direccion_Envio;
             FechaCompra = fechaCompra;
             Metodo_Pago = metodo_Pago;
-            PrecioFinal = precioFinal;
+            PrecioFinal = 0;
             Productos_Compras = productos_Compras;
         }
 
