@@ -12,12 +12,19 @@ namespace AppForSEII2526.API.Controllers
 
         private readonly ApplicationDbContext _context;
         private readonly ILogger<PedidoController> _logger;
+        
+
 
         public PedidoController(ApplicationDbContext context, ILogger<PedidoController> logger)
         {
             _context = context;
             _logger = logger;
         }
+
+
+
+   
+
 
         [HttpGet]
         [Route("[action]")]
@@ -26,55 +33,61 @@ namespace AppForSEII2526.API.Controllers
 
         public async Task<ActionResult> GetPedidos(int id)
         {
-            if (_context.Compra == null)
+
+            try {
+                if (_context.Compra == null)
+                {
+                    _logger.LogError("Error: No existen compras");
+                    return NotFound();
+                }
+
+
+                var pedido = await _context.Compra
+                    .Where(c => c.CompraID == id)
+                    .Include(c => c.CompraBocadillos)
+                    .ThenInclude(cb => cb.Bocadillo)
+                    .ThenInclude(b => b.TipoPan)
+                    .Select(c => new PedidoDetailDTO(
+                        c.usuario.Nombre,
+                        c.MetodoPago,
+                        c.usuario.Apellido1,
+                        c.usuario.Apellido2,
+                        c.FechaCompra,
+                        c.PrecioTotal,
+                        c.CompraBocadillos.Select(cb => new ItemPedidoDTO
+                        {
+                            Id = cb.BocadilloId,
+                            NombreBocadillo = cb.NombreBocadillo,
+                            Cantidad = cb.Cantidad,
+                            PVP = cb.Precio,
+                            TipoPan = cb.TipoPan
+                        }).ToList()
+                    )).FirstOrDefaultAsync();
+
+
+                if (pedido == null)
+                {
+                    _logger.LogError($"Error: Pedido con {id} no existe");
+                    return NotFound();
+                }
+
+                _logger.LogInformation($"Pedido con id {id} obtenido correctamente");
+                return Ok(pedido);
+
+
+
+            
+            }            catch (Exception ex)
             {
-                _logger.LogError("Error: No existen compras");
-                return NotFound();
-            }
+                _logger.LogError(ex, "Error al obtener el pedido");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno del servidor");
+    }
 
-
-            var pedido = await _context.Compra
-                .Where(c=> c.CompraID == id)
-                .Include(c=> c.CompraBocadillos)
-                .ThenInclude(cb => cb.Bocadillo)
-                .ThenInclude(b => b.TipoPan)
-                .Select(c=> new PedidoDetailDTO(
-                    c.usuario.Nombre,
-                    c.MetodoPago,
-                    c.usuario.Apellido1,
-                    c.usuario.Apellido2,
-                    c.FechaCompra,
-                    c.PrecioTotal,
-                    c.CompraBocadillos.Select(cb => new ItemPedidoDTO
-                    {
-                        Id = cb.BocadilloId,
-                        NombreBocadillo = cb.NombreBocadillo,
-                        Cantidad = cb.Cantidad,
-                        PVP = cb.Precio,
-                        TipoPan = cb.TipoPan
-                    }).ToList()
-                )).FirstOrDefaultAsync();
-
-
-            if(pedido == null)
-            {
-                _logger.LogError($"Error: Pedido con {id} no existe");
-                return NotFound();
-            }
-
-
-            return Ok(pedido);
+}
 
 
 
-        }
-
-
-
-
-
-
-            [HttpPost]
+    [HttpPost]
         [Route("[action]")]
         [ProducesResponseType(typeof(ItemPedidoDTO), (int)HttpStatusCode.Created)]
         //[ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]

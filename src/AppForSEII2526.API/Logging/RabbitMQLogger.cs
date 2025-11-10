@@ -45,59 +45,20 @@ public class RabbitMQLogger : ILogger, IDisposable
 
 
 
-        public void Log<TState>(
-    LogLevel logLevel,
-    EventId eventId,
-    TState state,
-    Exception? exception,
-    Func<TState, Exception?, string> formatter)
-        {
-            if (!IsEnabled(logLevel))
-                return;
-
-            try
-            {
-                // Crear el objeto dinámico con la información del log
-                var logEntry = new
-                {
-                    Timestamp = DateTime.UtcNow,
-                    LogLevel = logLevel.ToString(),
-                    Category = _name,
-                    EventId = eventId.Id,
-                    EventName = eventId.Name,
-                    Message = formatter(state, exception),
-                    Exception = exception?.ToString()
-                };
-
-                // Serializar el objeto log a JSON y convertirlo en un array de bytes
-                var logJson = JsonSerializer.Serialize(logEntry);
-                var body = Encoding.UTF8.GetBytes(logJson);
-
-                // Publicar el mensaje en el exchange
-                _channel.BasicPublish(
-                    exchange: _config.Exchange,
-                    routingKey: "",
-                    basicProperties: _properties,
-                    body: body
-                );
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Error publishing log message to RabbitMQ: {ex.Message}");
-            }
-        }
-
-
-
-
 
         
+
+
+
+
+
 
 
         _properties = _channel.CreateBasicProperties();
         _properties.Persistent = true;
         _properties.ContentType = "application/json";
     }
+
 
 
 
@@ -151,12 +112,28 @@ public class RabbitMQLogger : ILogger, IDisposable
                 Exception = exception?.ToString()
             };
 
+
+
+
+            // Serializar el objeto log a JSON y convertirlo en un array de bytes
+            var logJson = JsonSerializer.Serialize(logEntry);
+            var body = Encoding.UTF8.GetBytes(logJson);
+
+
+            _channel.BasicPublish(
+            exchange: _config.Exchange,
+            routingKey: "",
+            basicProperties: _properties,
+            body: body);
+
         }
         catch (Exception ex)
         {
             Console.Error.WriteLine($"Error publishing log message to RabbitMQ: {ex.Message}");
         }
     }
+
+
 
     public void Dispose()
     {
