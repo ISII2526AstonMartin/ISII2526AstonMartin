@@ -95,7 +95,9 @@ namespace AppForSEII2526.UT.ResenyaController_test
         public async Task GetBocadillos_OK(string? nombreBocadillo, float? precioMaximo, List<BocadillosDTO> expectedBocadillos)
         {
             // Arrange
-            var controller = new BocadillosController(_context, null);
+            var mock = new Mock<ILogger<BocadillosController>>();
+            ILogger<BocadillosController> logger = mock.Object;
+            var controller = new BocadillosController(_context, logger);
             var result = await controller.GetBocadillosResenya(nombreBocadillo, precioMaximo);
 
             // Assert
@@ -110,13 +112,15 @@ namespace AppForSEII2526.UT.ResenyaController_test
         [Trait("LevelTesting", "Unit Testing")]
         public async Task GetBocadillos_NotFound()
         {
-            // Arrange
-            var controller = new BocadillosController(_context, null);
+            var mock = new Mock<ILogger<BocadillosController>>();
+            ILogger<BocadillosController> logger = mock.Object;
+            var controller = new BocadillosController(_context, logger);
+
             var nombreBocadillo = "NoExiste";
             var precioMaximo = 1f;
-            // Act
             var result = await controller.GetBocadillosResenya(nombreBocadillo, precioMaximo);
-            // Assert
+
+
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("No hay bocadillos con esos filtros", notFoundResult.Value);
 
