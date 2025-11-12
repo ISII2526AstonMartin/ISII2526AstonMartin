@@ -8,6 +8,12 @@
         public ResenyaBocadillo()
         {
         }
+        public ResenyaBocadillo(Bocadillo bocadillo, int puntuacion)
+        {
+            Puntuacion = puntuacion;
+            Bocadillo = bocadillo;
+            BocadilloId = bocadillo.Id;
+        }
         public ResenyaBocadillo(Bocadillo bocadillo, int puntuacion, Resenya resenya)
         {
             Puntuacion = puntuacion;
