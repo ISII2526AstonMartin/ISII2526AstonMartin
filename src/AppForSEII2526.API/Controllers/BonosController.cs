@@ -1,4 +1,5 @@
 ﻿using AppForSEII2526.API.DTOs;
+using AppForSEII2526.API.DTOs.CompraBonosDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,15 +22,15 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(List<BonoBocadillosDTO>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType ((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> GetBonos(string? nombre, string? nombretipo)
         {
             List<BonoBocadillosDTO> bonobocadillos = await _context.BonoBocadillos
-                .Include(bb=>bb.Tipo)
-                .Where(bb=>
-                (nombre==null || bb.NombreBono.Contains(nombre)) && 
-                (nombretipo==null || bb.Tipo.NombreTipo.Contains(nombretipo)))
-                .Select(bb=> 
+                .Include(bb => bb.Tipo)
+                .Where(bb =>
+                (nombre == null || bb.NombreBono.Contains(nombre)) &&
+                (nombretipo == null || bb.Tipo.NombreTipo.Contains(nombretipo)))
+                .Select(bb =>
                 new BonoBocadillosDTO(bb.BonoID, bb.CantidadDisponible, bb.NBocadillos, bb.NombreBono, bb.PVP, bb.Tipo.NombreTipo)
                 )
                 .ToListAsync();

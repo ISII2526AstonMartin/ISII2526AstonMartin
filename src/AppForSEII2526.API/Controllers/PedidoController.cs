@@ -19,9 +19,62 @@ namespace AppForSEII2526.API.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(PedidoDetailDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+
+        public async Task<ActionResult> GetPedidos(int id)
+        {
+            if (_context.Compra == null)
+            {
+                _logger.LogError("Error: No existen compras");
+                return NotFound();
+            }
 
 
-        [HttpPost]
+            var pedido = await _context.Compra
+                .Where(c=> c.CompraID == id)
+                .Include(c=> c.CompraBocadillos)
+                .ThenInclude(cb => cb.Bocadillo)
+                .ThenInclude(b => b.TipoPan)
+                .Select(c=> new PedidoDetailDTO(
+                    c.usuario.Nombre,
+                    c.MetodoPago,
+                    c.usuario.Apellido1,
+                    c.usuario.Apellido2,
+                    c.FechaCompra,
+                    c.PrecioTotal,
+                    c.CompraBocadillos.Select(cb => new ItemPedidoDTO
+                    {
+                        Id = cb.BocadilloId,
+                        NombreBocadillo = cb.NombreBocadillo,
+                        Cantidad = cb.Cantidad,
+                        PVP = cb.Precio,
+                        TipoPan = cb.TipoPan
+                    }).ToList()
+                )).FirstOrDefaultAsync();
+
+            
+            if(pedido == null)
+            {
+                _logger.LogError($"Error: Pedido con {id} no existe");
+                return NotFound();
+            }
+
+
+            return Ok(pedido);
+
+
+
+        }
+
+
+
+
+
+
+            [HttpPost]
         [Route("[action]")]
         [ProducesResponseType(typeof(ItemPedidoDTO), (int)HttpStatusCode.Created)]
         //[ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
@@ -55,7 +108,7 @@ namespace AppForSEII2526.API.Controllers
 
 
 
-            Compra compra = new Compra(DateTime.Now, new List<CompraBocadillo>(), metodoPagoEnum, usuario);
+            Compra compra = new Compra(DateTime.Today, new List<CompraBocadillo>(), metodoPagoEnum, usuario);
             compra.PrecioTotal = 0;
 
 
@@ -96,22 +149,28 @@ namespace AppForSEII2526.API.Controllers
             {
                 _logger.LogError(ex, "Error al guardar el pedido");
 
-                // 👇 Mostrar el mensaje interno del error para saber la causa exacta
-                return Problem(
-                    detail: ex.InnerException?.Message ?? ex.Message,
-                    statusCode: 500,
-                    title: "Error al guardar los datos en la base de datos"
-                );
+                
             }
 
 
 
 
 
-            return (Ok());
+            var PedidoDetailsDTO = new PedidoDetailDTO(
+                usuario.Nombre,
+                compra.MetodoPago,
+                usuario.Apellido1,
+                usuario.Apellido2,
+                compra.FechaCompra,
+                compra.PrecioTotal,
+                pedidoParaCrear.ItemPedido.ToList()
+                );
 
-
-
+            return CreatedAtAction(
+                "GetPedidos",
+                new { id = compra.CompraID },
+                PedidoDetailsDTO
+                );
 
 
 
