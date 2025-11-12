@@ -24,10 +24,6 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> GetCompra(int id)
         {
-            if (_context.ComprasBono == null)
-            {
-                return NotFound("No hay datos en la base de datos de compras");
-            }
             var compraBono = await _context.ComprasBono
                 .Where(cb=>cb.CompraBonoId == id)
                     .Include(cb=>cb.ListaBonosComprados)
@@ -57,6 +53,18 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<ActionResult> CreateCompra(CompraBonoForCreateDTO dto)
         {
+            
+            if(dto.nombreCliente.IsNullOrEmpty())
+            {
+                return BadRequest("El nombre no está definido");
+            } else if (dto.apellido1.IsNullOrEmpty()) 
+            {
+                return BadRequest("El apellido no está definido");
+            }else if (!Enum.IsDefined(typeof(MetodoPago), dto.metodoPago))
+            {
+                return BadRequest("Metodo de pago no valido");
+            }
+
             var user = _context.ApplicationUsers.FirstOrDefault(au =>
             (au.Nombre == dto.nombreCliente) &&
             (au.Apellido1 == dto.apellido1) &&
@@ -67,12 +75,8 @@ namespace AppForSEII2526.API.Controllers
             {
                 return BadRequest("Cliente no registrado");
             }
-            var metodoPago = dto.metodoPago;
 
-            if (!Enum.IsDefined(typeof(MetodoPago), dto.metodoPago))
-            {
-                return BadRequest("Metodo de pago no valido");
-            }
+            var metodoPago = dto.metodoPago;
 
             var bonosNombres = dto.compraItems.Select(ri => ri.nombreBono).ToList();
 
