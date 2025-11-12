@@ -48,7 +48,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosResenyaDTOs
                    Titulo == dTO.Titulo &&
                    descripcion == dTO.descripcion &&
                    valoracion_General == dTO.valoracion_General &&
-                   EqualityComparer<List<ItemResenyaDTO>>.Default.Equals(items, dTO.items);
+                   items.SequenceEqual(dTO.items);
         }
 
         public override int GetHashCode()

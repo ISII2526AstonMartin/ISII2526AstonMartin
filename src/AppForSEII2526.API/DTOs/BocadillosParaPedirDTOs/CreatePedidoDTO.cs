@@ -13,8 +13,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosParaPedirDTOs
         [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor introduzca el metodo de pago que desee")]
 
         public MetodoPago MetodoPago { get; set; }
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor introduzca su primer apellido")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "El apellido tiene que tener al menos 3 caracteres")]
+        
         public string Apellido1 { get; set; }
 
         public string? Apellido2 { get; set; }
@@ -43,7 +42,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosParaPedirDTOs
                    MetodoPago == dTO.MetodoPago &&
                    Apellido1 == dTO.Apellido1 &&
                    Apellido2 == dTO.Apellido2 &&
-                   EqualityComparer<IList<ItemPedidoDTO>>.Default.Equals(ItemPedido, dTO.ItemPedido);
+                   ItemPedido.SequenceEqual(dTO.ItemPedido);
         }
 
         public override int GetHashCode()

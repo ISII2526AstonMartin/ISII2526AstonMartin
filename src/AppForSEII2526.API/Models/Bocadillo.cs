@@ -5,7 +5,20 @@ namespace AppForSEII2526.API.Models
     public class Bocadillo
     {
 
-        public Bocadillo(string nombre, float pVP, int stock, Tamanyo tamanyo, TipoPan tipoPan,int id)
+        public Bocadillo(int id, string nombre, float pVP, int stock, Tamanyo tamanyo, TipoPan tipoPan)
+        {
+            Id = id;
+            Nombre = nombre;
+            PVP = pVP;
+            Stock = stock;
+            Tamanyo = tamanyo;
+            ResenyaBocadillo = new List<ResenyaBocadillo>();
+            CompraBocadillo = new List<CompraBocadillo>();
+            this.TipoPan = tipoPan;
+        }
+
+
+        public Bocadillo(string nombre, float pVP, int stock, Tamanyo tamanyo, TipoPan tipoPan, int id)
         {
             Id = id;
             Nombre = nombre;
@@ -17,9 +30,9 @@ namespace AppForSEII2526.API.Models
             TipoPan = tipoPan;
         }
 
-        public Bocadillo(string nombre, float pVP, int stock, Tamanyo tamanyo,TipoPan tipoPan)
+        public Bocadillo(string nombre, float pVP, int stock, Tamanyo tamanyo, TipoPan tipoPan)
         {
-            
+
             Nombre = nombre;
             PVP = pVP;
             Stock = stock;
@@ -39,6 +52,9 @@ namespace AppForSEII2526.API.Models
             TipoPan = null!;
         }
         
+
+        
+
         public int Id { get; set; }
         
         public string Nombre { get; set; }

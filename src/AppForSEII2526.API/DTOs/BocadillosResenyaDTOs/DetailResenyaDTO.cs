@@ -22,14 +22,14 @@
         public override bool Equals(object? obj)
         {
             return obj is DetailResenyaDTO dTO &&
-                   base.Equals(obj) &&
-                   NombreUsuario == dTO.NombreUsuario &&
-                   Titulo == dTO.Titulo &&
-                   descripcion == dTO.descripcion &&
-                   valoracion_General == dTO.valoracion_General &&
-                   EqualityComparer<List<ItemResenyaDTO>>.Default.Equals(items, dTO.items) &&
-                   Id == dTO.Id &&
-                   FechaPublicacion == dTO.FechaPublicacion;
+               base.Equals(obj) &&
+               NombreUsuario == dTO.NombreUsuario &&
+               Titulo == dTO.Titulo &&
+               descripcion == dTO.descripcion &&
+               valoracion_General == dTO.valoracion_General &&
+               items.SequenceEqual(dTO.items) &&
+               Id == dTO.Id &&
+               FechaPublicacion == dTO.FechaPublicacion;
         }
 
         public override int GetHashCode()

@@ -1,4 +1,5 @@
 ﻿using AppForSEII2526.API.DTOs;
+using AppForSEII2526.API.DTOs.ComprarMerchDTOs;
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace AppForSEII2526.API.Controllers
                 .Where(p =>
                 (tipo == null || p.Tipo_Producto.Nombre.Contains(tipo))
                 && (precio == null || p.PVP <= precio))
-                .Select(p => 
+                .Select(p =>
                 new MerchDTO(p.Nombre, p.PVP, p.Tipo_Producto, p.Stock)
                 )
                 .ToListAsync();
@@ -40,5 +41,6 @@ namespace AppForSEII2526.API.Controllers
 
             return Ok(productos);
         }
+       
     }
 }

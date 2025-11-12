@@ -13,6 +13,12 @@ namespace AppForSEII2526.API.Models
             Nombre = nombre;
         }
 
+        public TipoPan(int id, string nombre)
+        {
+            Id = id;
+            Nombre = nombre;
+        }
+
         public override bool Equals(object? obj)
         {
             return obj is TipoPan pan &&
