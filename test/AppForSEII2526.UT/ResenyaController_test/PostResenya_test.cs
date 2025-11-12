@@ -83,7 +83,6 @@ namespace AppForSEII2526.UT.ResenyaController_test
 
             var allTests = new List<object[]>
             {
-                // input for createResenya - Error expected
                 new object[] { resenyaNoItems, "Debe incluir al menos un bocadillo en la reseña." },
                 new object[] { resenyaBocadilloIdNotExist, "Error! El bocadillo con ID '999' no existe" },
             };
@@ -97,26 +96,22 @@ namespace AppForSEII2526.UT.ResenyaController_test
         [MemberData(nameof(TestCasesFor_CreateResenya))]
         public async Task CreateResenya_Error_test(CreateResenyaDTO resenyaDTO, string errorExpected)
         {
-            // Arrange
             var mock = new Mock<ILogger<CrearResenyaController>>();
             ILogger<CrearResenyaController> logger = mock.Object;
 
             var controller = new CrearResenyaController(_context, logger);
 
-            // Act
+            
             var result = await controller.CreateResenya(resenyaDTO);
 
-            // Assert
-            // we check that the response type is BadRequest and obtain the error returned
+            
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             
-            // Check if it's a ValidationProblemDetails (for structured errors)
             if (badRequestResult.Value is ValidationProblemDetails problemDetails)
             {
                 var errorActual = problemDetails.Errors.First().Value[0];
                 Assert.StartsWith(errorExpected, errorActual);
             }
-            // Or if it's a simple string error message
             else if (badRequestResult.Value is string errorMessage)
             {
                 Assert.StartsWith(errorExpected, errorMessage);
@@ -132,7 +127,7 @@ namespace AppForSEII2526.UT.ResenyaController_test
         [Trait("Database", "WithoutFixture")]
         public async Task CreateResenya_Success_test()
         {
-            // Arrange
+            
             var mock = new Mock<ILogger<CrearResenyaController>>();
             ILogger<CrearResenyaController> logger = mock.Object;
 
@@ -146,11 +141,8 @@ namespace AppForSEII2526.UT.ResenyaController_test
             var resenyaDTO = new CreateResenyaDTO(_nombreUsuario, "titulo nuevo", "descripcion nueva",
                 (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cuatro, resenyaBocadillo);
 
-            // Act
             var result = await controller.CreateResenya(resenyaDTO);
 
-            // Assert
-            // we check that the response type is CreatedAtAction
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             var actualResenyaDetailDTO = Assert.IsType<DetailResenyaDTO>(createdResult.Value);
 
