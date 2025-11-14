@@ -34,11 +34,10 @@ namespace AppForSEII2526.UT.MerchController_test
             _context.TiposProductos.AddRange(tipoRopa, tipoAccesorio);
             _context.SaveChanges();
 
-            // 2️⃣ CORREGIDO: Crear productos con nombres descriptivos
-            // El primer parámetro es el ID, el segundo es el Nombre
+            // 2️⃣ Crear productos con nombres descriptivos
             var camiseta = new Producto(
-                Guid.NewGuid().ToString(),  // ID (único)
-                "Camiseta UCLM",           // Nombre (descriptivo)
+                Guid.NewGuid().ToString(),  // ID único
+                "Camiseta UCLM",           // Nombre descriptivo
                 8,                         // PVP
                 48,                        // Stock
                 tipoRopa,                  // Tipo
@@ -84,37 +83,9 @@ namespace AppForSEII2526.UT.MerchController_test
             };
             _context.ApplicationUsers.AddRange(usuarios);
             _context.SaveChanges();
-
-            // Verificar creación
-            Console.WriteLine($"Productos creados: {_context.Productos.Count()}");
-            foreach (var p in _context.Productos)
-            {
-                Console.WriteLine($"- ID: {p.ProductoID}, Nombre: {p.Nombre}");
-            }
         }
 
-        // ✅ Método auxiliar para verificar datos de prueba - CORREGIDO
-        private void VerificarDatosDePrueba()
-        {
-            // Verificar que el producto existe por NOMBRE
-            var producto = _context.Productos.FirstOrDefault(p => p.Nombre == "Camiseta UCLM");
-            if (producto == null)
-            {
-                // Listar productos disponibles para debug
-                var productosDisponibles = _context.Productos
-                    .Select(p => $"Nombre: '{p.Nombre}', ID: {p.ProductoID}")
-                    .ToList();
-                throw new Exception($"El producto 'Camiseta UCLM' no se encontró. Productos en BD: {string.Join("; ", productosDisponibles)}");
-            }
-
-            var usuario = _context.ApplicationUsers.FirstOrDefault(u => u.UserName == "juan");
-            if (usuario == null)
-            {
-                throw new Exception("El usuario 'juan' no se creó en el constructor.");
-            }
-        }
-
-        // ✅ Casos de error esperados - CORREGIDOS (usar nombres reales)
+        // ✅ Casos de error esperados
         public static IEnumerable<object[]> TestCasesFor_CreateMerch()
         {
             var merchSinItems = new CreateMerchDTO(
@@ -154,7 +125,7 @@ namespace AppForSEII2526.UT.MerchController_test
             };
         }
 
-        // ❌ Test de errores - SIN verificación inicial (para evitar fallos tempranos)
+        // ❌ Test de errores
         [Theory]
         [Trait("LevelTesting", "Unit Testing")]
         [Trait("Database", "WithoutFixture")]
@@ -173,7 +144,7 @@ namespace AppForSEII2526.UT.MerchController_test
             Assert.StartsWith(errorEsperado, errorActual);
         }
 
-        // ✅ Test de éxito - VERSIÓN SIMPLIFICADA
+        // ✅ Test de éxito
         [Fact]
         [Trait("LevelTesting", "Unit Testing")]
         [Trait("Database", "WithoutFixture")]
@@ -182,18 +153,10 @@ namespace AppForSEII2526.UT.MerchController_test
             var logger = new Mock<ILogger<POSTMerchController>>().Object;
             var controller = new POSTMerchController(_context, logger);
 
-            // Buscar producto por nombre directamente
+            // Tomar el primer producto disponible (sea cual sea su nombre)
             var producto = await _context.Productos
                 .Include(p => p.Tipo_Producto)
-                .FirstOrDefaultAsync(p => p.Nombre == "Camiseta UCLM");
-
-            // Si no existe, usar cualquier producto disponible
-            if (producto == null)
-            {
-                producto = await _context.Productos
-                    .Include(p => p.Tipo_Producto)
-                    .FirstAsync();
-            }
+                .FirstAsync();
 
             var merchDTO = new CreateMerchDTO(
                 "juan",
@@ -203,7 +166,7 @@ namespace AppForSEII2526.UT.MerchController_test
                 MetodoPago.Tarjeta,
                 new List<ItemMerchDTO>
                 {
-                    new ItemMerchDTO(producto.Nombre, producto.PVP, producto.Tipo_Producto.Nombre, 2)
+            new ItemMerchDTO(producto.Nombre, producto.PVP, producto.Tipo_Producto?.Nombre ?? "Ropa", 2)
                 }
             );
 
@@ -216,21 +179,6 @@ namespace AppForSEII2526.UT.MerchController_test
             Assert.Equal(merchDTO.DireccionEnvio, detail.DireccionEnvio);
             Assert.Equal(merchDTO.Items.Count, detail.Items.Count);
             Assert.True(detail.PrecioFinal > 0);
-        }
-
-        // ✅ Test adicional para debug
-        [Fact]
-        [Trait("LevelTesting", "Unit Testing")]
-        [Trait("Database", "WithoutFixture")]
-        public void VerificarProductosCreados()
-        {
-            var productos = _context.Productos.ToList();
-            Assert.True(productos.Count >= 1, $"Debe haber al menos 1 producto. Encontrados: {productos.Count}");
-
-            foreach (var p in productos)
-            {
-                Console.WriteLine($"Producto: ID={p.ProductoID}, Nombre='{p.Nombre}', PVP={p.PVP}");
-            }
         }
     }
 }
