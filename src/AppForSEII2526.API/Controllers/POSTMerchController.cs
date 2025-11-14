@@ -19,6 +19,7 @@ namespace AppForSEII2526.API.Controllers
             _context = context;
             _logger = logger;
         }
+
         // GET: api/POSTMerch/GetMerchDetail/{id}
         [HttpGet]
         [Route("[action]/{id}")]
@@ -67,6 +68,7 @@ namespace AppForSEII2526.API.Controllers
 
             return Ok(detalle);
         }
+
         // POST: api/POSTMerch/CreateMerch
         [HttpPost]
         [Route("[action]")]
@@ -95,7 +97,7 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            // Buscar productos
+            // Buscar productos existentes
             var nombres = createMerch.Items.Select(i => i.Nombre).ToList();
 
             var productosEnBd = await _context.Productos
@@ -111,18 +113,19 @@ namespace AppForSEII2526.API.Controllers
 
             float precioFinal = 0f;
 
+            // ✅ Primero validamos cantidad, luego existencia del producto
             foreach (var item in createMerch.Items)
             {
+                if (item.Cantidad <= 0)
+                {
+                    ModelState.AddModelError("CreateMerch", $"Cantidad inválida para '{item.Nombre}'.");
+                    continue;
+                }
+
                 var producto = productosEnBd.FirstOrDefault(p => p.Nombre == item.Nombre);
                 if (producto == null)
                 {
                     ModelState.AddModelError("CreateMerch", $"Producto '{item.Nombre}' no encontrado.");
-                    continue;
-                }
-
-                if (item.Cantidad <= 0)
-                {
-                    ModelState.AddModelError("CreateMerch", $"Cantidad inválida para '{item.Nombre}'.");
                     continue;
                 }
 
@@ -160,7 +163,7 @@ namespace AppForSEII2526.API.Controllers
                 return Conflict("Error al guardar la compra: " + ex.Message);
             }
 
-            // Crear DTO de detalle para devolver en la respuesta
+            // Crear DTO de detalle para devolver
             var merchDetail = new DetailMerchDTO(
                 createMerch.NombreUsuario!,
                 createMerch.Apellido1,
@@ -175,6 +178,5 @@ namespace AppForSEII2526.API.Controllers
 
             return CreatedAtAction("GetMerchDetail", new { id = compra.CompraID }, merchDetail);
         }
-
     }
 }
