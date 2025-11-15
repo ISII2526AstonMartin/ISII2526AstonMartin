@@ -32,8 +32,6 @@ namespace AppForSEII2526.UT.MerchController_test
             };
 
             // Crear productos de prueba
-            // NOTA: Los productos se guardan con IDs como nombres ("1", "2", "3", "4")
-            // debido a la configuracion del modelo Producto
             var productos = new List<Producto>()
             {
                 new Producto("1", "Camiseta UCLM", 8, 48, tipos[0], new List<Producto_Compra>()),
@@ -50,46 +48,51 @@ namespace AppForSEII2526.UT.MerchController_test
         // Casos de prueba para filtros correctos
         public static IEnumerable<object[]> TestCasesForGetMerchOK()
         {
+            // Crear los objetos MerchDTO esperados para cada caso
+            var tipoCamiseta = new TipoProducto("Camiseta", "1", new List<Producto>());
+            var tipoGorra = new TipoProducto("Gorra", "2", new List<Producto>());
+            var tipoBoligrafo = new TipoProducto("Boligrafo", "3", new List<Producto>());
+
             var allTests = new List<object[]>
             {
                 // Caso 1: Sin filtros - debe devolver todos los productos
                 new object[] {
                     null, null,
-                    new List<(string nombre, float precio, string tipo, int stock)>
+                    new List<MerchDTO>
                     {
-                        ("1", 8, "Camiseta", 48),
-                        ("2", 4, "Gorra", 10),
-                        ("3", 2, "Boligrafo", 39),
-                        ("4", 12, "Camiseta", 5)
+                        new MerchDTO("1", 8, tipoCamiseta, 48),
+                        new MerchDTO("2", 4, tipoGorra, 10),
+                        new MerchDTO("3", 2, tipoBoligrafo, 39),
+                        new MerchDTO("4", 12, tipoCamiseta, 5)
                     }
                 },
                 
                 // Caso 2: Filtro por tipo "Camiseta" - debe devolver 2 productos
                 new object[] {
                     "Camiseta", null,
-                    new List<(string nombre, float precio, string tipo, int stock)>
+                    new List<MerchDTO>
                     {
-                        ("1", 8, "Camiseta", 48),
-                        ("4", 12, "Camiseta", 5)
+                        new MerchDTO("1", 8, tipoCamiseta, 48),
+                        new MerchDTO("4", 12, tipoCamiseta, 5)
                     }
                 },
                 
                 // Caso 3: Filtro por precio maximo 5 - debe devolver 2 productos
                 new object[] {
                     null, 5f,
-                    new List<(string nombre, float precio, string tipo, int stock)>
+                    new List<MerchDTO>
                     {
-                        ("2", 4, "Gorra", 10),
-                        ("3", 2, "Boligrafo", 39)
+                        new MerchDTO("2", 4, tipoGorra, 10),
+                        new MerchDTO("3", 2, tipoBoligrafo, 39)
                     }
                 },
                 
                 // Caso 4: Filtro por tipo "Camiseta" y precio maximo 10 - debe devolver 1 producto
                 new object[] {
                     "Camiseta", 10f,
-                    new List<(string nombre, float precio, string tipo, int stock)>
+                    new List<MerchDTO>
                     {
-                        ("1", 8, "Camiseta", 48)
+                        new MerchDTO("1", 8, tipoCamiseta, 48)
                     }
                 }
             };
@@ -98,7 +101,7 @@ namespace AppForSEII2526.UT.MerchController_test
 
         [Theory]
         [MemberData(nameof(TestCasesForGetMerchOK))]
-        public async Task GetMerch_GoodResult_test(string? tipo, float? precio, IList<(string nombre, float precio, string tipo, int stock)> expectedProducts)
+        public async Task GetMerch_GoodResult_test(string? tipo, float? precio, IList<MerchDTO> expectedProducts)
         {
             // Preparacion
             var mock = new Mock<ILogger<MerchController>>();
@@ -112,25 +115,8 @@ namespace AppForSEII2526.UT.MerchController_test
             var okResult = Assert.IsType<OkObjectResult>(result);
             var actualResult = Assert.IsType<List<MerchDTO>>(okResult.Value);
 
-            // Verificar que se devuelve la cantidad correcta de productos
-            Assert.Equal(expectedProducts.Count, actualResult.Count);
-
-            // Verificar que cada producto esperado esta presente en el resultado
-            foreach (var expected in expectedProducts)
-            {
-                var actualProduct = actualResult.FirstOrDefault(p =>
-                    p.Nombre == expected.nombre &&
-                    p.Precio == expected.precio);
-
-                // Si el producto no se encuentra, el test fallara con este mensaje
-                Assert.NotNull(actualProduct);
-
-                // Verificar todas las propiedades del producto
-                Assert.Equal(expected.nombre, actualProduct.Nombre);
-                Assert.Equal(expected.precio, actualProduct.Precio);
-                Assert.Equal(expected.tipo, actualProduct.Tipo?.Nombre);
-                Assert.Equal(expected.stock, actualProduct.Stock);
-            }
+            // Assert.Equivalent verifica que las colecciones tienen los mismos elementos sin importar el orden
+            Assert.Equivalent(expectedProducts, actualResult);
         }
 
         // Casos de prueba para filtros que no devuelven resultados
@@ -177,8 +163,21 @@ namespace AppForSEII2526.UT.MerchController_test
             var okResult = Assert.IsType<OkObjectResult>(result);
             var actualResult = Assert.IsType<List<MerchDTO>>(okResult.Value);
 
-            // Deben devolverse 4 productos cuando no hay filtros
-            Assert.Equal(4, actualResult.Count);
+            // Verificar que se devuelven exactamente los 4 productos esperados
+            var tipoCamiseta = new TipoProducto("Camiseta", "1", new List<Producto>());
+            var tipoGorra = new TipoProducto("Gorra", "2", new List<Producto>());
+            var tipoBoligrafo = new TipoProducto("Boligrafo", "3", new List<Producto>());
+
+            var expectedProducts = new List<MerchDTO>
+            {
+                new MerchDTO("1", 8, tipoCamiseta, 48),
+                new MerchDTO("2", 4, tipoGorra, 10),
+                new MerchDTO("3", 2, tipoBoligrafo, 39),
+                new MerchDTO("4", 12, tipoCamiseta, 5)
+            };
+
+            // Assert.Equivalent verifica que las colecciones tienen los mismos elementos sin importar el orden
+            Assert.Equivalent(expectedProducts, actualResult);
         }
     }
 }
