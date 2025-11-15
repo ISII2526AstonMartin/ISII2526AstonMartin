@@ -2,14 +2,14 @@
 
 namespace AppForSEII2526.API.Models
 {
-    [PrimaryKey(nameof(CompraID),nameof(ProductoID))]
+    [PrimaryKey(nameof(CompraID), nameof(ProductoID))]
     public class Producto_Compra
     {
         public Producto_Compra()
         {
         }
 
-        public Producto_Compra(int cantidad, string compraID, string productoID, float pVP, Producto producto, Compra_Producto compra)
+        public Producto_Compra(int cantidad, int compraID, int productoID, float pVP, Producto producto, Compra_Producto compra)
         {
             Cantidad = cantidad;
             CompraID = compraID;
@@ -24,8 +24,8 @@ namespace AppForSEII2526.API.Models
         // Atributos
         [Required]
         public int Cantidad { get; set; }
-        public string CompraID { get; set; }
-        public string ProductoID { get; set; }
+        public int CompraID { get; set; }
+        public int ProductoID { get; set; }
         [Required]
         public float PVP { get; set; }
         //Relaciones

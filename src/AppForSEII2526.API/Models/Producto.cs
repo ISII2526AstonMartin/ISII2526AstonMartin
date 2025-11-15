@@ -9,7 +9,7 @@ namespace AppForSEII2526.API.Models
 
         }
 
-        public Producto(string nombre, string productoID, float pVP, int stock, TipoProducto tipo_Producto, List<Producto_Compra> productos_Compras)
+        public Producto(string nombre, int productoID, float pVP, int stock, TipoProducto tipo_Producto, List<Producto_Compra> productos_Compras)
         {
             Nombre = nombre;
             ProductoID = productoID;
@@ -24,7 +24,7 @@ namespace AppForSEII2526.API.Models
         [Required]
         public string Nombre { get; set; }
         [Key]
-        public string ProductoID { get; set; }
+        public int ProductoID { get; set; }
         [Required]
         public float PVP { get; set; }
         [Required]

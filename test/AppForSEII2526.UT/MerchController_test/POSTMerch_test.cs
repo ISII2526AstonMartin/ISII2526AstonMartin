@@ -29,16 +29,16 @@ namespace AppForSEII2526.UT.MerchController_test
             _context.Database.EnsureCreated();
 
             // Crear tipos de producto para las pruebas
-            var tipoRopa = new TipoProducto("Ropa", Guid.NewGuid().ToString(), new List<Producto>());
-            var tipoAccesorio = new TipoProducto("Accesorios", Guid.NewGuid().ToString(), new List<Producto>());
+            var tipoRopa = new TipoProducto("Ropa", 1, new List<Producto>());
+            var tipoAccesorio = new TipoProducto("Accesorios", 2, new List<Producto>());
 
             _context.TiposProductos.AddRange(tipoRopa, tipoAccesorio);
             _context.SaveChanges();
 
             // Crear productos de prueba con datos realistas
             var camiseta = new Producto(
-                Guid.NewGuid().ToString(),
                 "Camiseta UCLM",
+                1,
                 8,
                 48,
                 tipoRopa,
@@ -46,8 +46,8 @@ namespace AppForSEII2526.UT.MerchController_test
             );
 
             var gorra = new Producto(
-                Guid.NewGuid().ToString(),
                 "Gorra",
+                2,
                 4,
                 10,
                 tipoAccesorio,

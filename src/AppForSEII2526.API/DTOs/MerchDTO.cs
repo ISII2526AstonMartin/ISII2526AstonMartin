@@ -7,7 +7,7 @@ namespace AppForSEII2526.API.DTOs
         public float Precio { get; set; }
         public TipoProducto Tipo { get; set; }
         public int Stock { get; set; }
-   
+
         public MerchDTO()
         {
 
@@ -20,7 +20,7 @@ namespace AppForSEII2526.API.DTOs
             Stock = stock;
         }
 
-    
+
 
         public override bool Equals(object? obj)
         {

@@ -25,7 +25,7 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")] // Cambiado: se quitó el {id} de la ruta
         [ProducesResponseType(typeof(DetailMerchDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult> GetMerchDetail(string id) // El id viene como parámetro de query
+        public async Task<ActionResult> GetMerchDetail(int id) // El id viene como parámetro de query
         {
             // Verificar si la tabla de Compras existe en la base de datos
             if (_context.Compras == null)
@@ -115,10 +115,8 @@ namespace AppForSEII2526.API.Controllers
                 .ToListAsync();
 
             // Crear una nueva compra con ID único
-            var compra = new Compra_Producto(user, createMerch.DireccionEnvio, DateTime.Today, createMerch.MetodoPago, new List<Producto_Compra>()) // Cambiado: DateTime.Now por DateTime.Today
-            {
-                CompraID = Guid.NewGuid().ToString()
-            };
+
+            var compra = new Compra_Producto(user, createMerch.DireccionEnvio, DateTime.Today, createMerch.MetodoPago, new List<Producto_Compra>());
 
             float precioFinal = 0f;
 
@@ -144,7 +142,7 @@ namespace AppForSEII2526.API.Controllers
                 var productoCompra = new Producto_Compra
                 {
                     Cantidad = item.Cantidad,
-                    ProductoID = producto.Nombre,
+                    ProductoID = producto.ProductoID,
                     PVP = producto.PVP,
                     Producto = producto,
                     Compra = compra,

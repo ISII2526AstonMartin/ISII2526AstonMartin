@@ -4,7 +4,7 @@
     {
         public string Nombre { get; set; }
         public float PVP { get; set; }
-        public string TipoProducto { get; set; }  // ✅ CAMBIO: ahora es solo un string (nombre del tipo)
+        public string TipoProducto { get; set; }
         public int Cantidad { get; set; }
 
         public ItemMerchDTO() { }
