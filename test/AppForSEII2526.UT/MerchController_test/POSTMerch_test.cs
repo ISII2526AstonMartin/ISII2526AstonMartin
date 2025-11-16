@@ -189,8 +189,8 @@ namespace AppForSEII2526.UT.MerchController_test
                 "Calle Gran Vía 123, Madrid",
                 MetodoPago.Tarjeta,
                 items,
-                actualDetail.CompraID, // Usar el ID real generado
-                actualDetail.FechaCompra, // Usar la fecha real generada
+                1, // Usar el ID real generado
+                DateTime.Today, // Usar la fecha real generada
                 producto.PVP * 2 // Precio final calculado
             );
 

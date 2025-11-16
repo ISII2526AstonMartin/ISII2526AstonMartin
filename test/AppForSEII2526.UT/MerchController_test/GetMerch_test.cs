@@ -1,200 +1,183 @@
-﻿using AppForSEII2526.API.DTOs.ComprarMerchDTOs;
-using AppForSEII2526.API.Models;
-using Microsoft.AspNetCore.Http;
+﻿using AppForMovies.UT;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using AppForSEII2526.API.Controllers;
+using AppForSEII2526.API.DTOs;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Microsoft.AspNetCore.Mvc;
+using Xunit;
+using AppForSEII2526.API.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
-namespace AppForSEII2526.API.Controllers
+namespace AppForSEII2526.UT.MerchController_test
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class POSTMerchController : ControllerBase
+    public class GetMerch_test : AppForMovies4SqliteUT
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<POSTMerchController> _logger;
-
-        public POSTMerchController(ApplicationDbContext context, ILogger<POSTMerchController> logger)
+        public GetMerch_test()
         {
-            _context = context;
-            _logger = logger;
+            // Limpiar y crear base de datos de pruebas
+            _context.Database.EnsureDeleted();
+            _context.Database.EnsureCreated();
+
+            // Crear tipos de producto para pruebas
+            var tipos = new List<TipoProducto>()
+            {
+                new TipoProducto("Camiseta", 1, new List<Producto>()),
+                new TipoProducto("Gorra", 2, new List<Producto>()),
+                new TipoProducto("Boligrafo", 3, new List<Producto>()),
+            };
+
+            // Crear productos de prueba
+            var productos = new List<Producto>()
+            {
+                new Producto("Camiseta UCLM",1, 8, 48, tipos[0], new List<Producto_Compra>()),
+                new Producto("Gorra UCLM",2, 4, 10, tipos[1], new List<Producto_Compra>()),
+                new Producto("Boligrafo UCLM",3, 2, 39, tipos[2], new List<Producto_Compra>()),
+                new Producto("Camiseta Verde",4, 12, 5, tipos[0], new List<Producto_Compra>())
+            };
+
+            _context.TiposProductos.AddRange(tipos);
+            _context.Productos.AddRange(productos);
+            _context.SaveChanges();
         }
 
-        // GET: Obtiene el detalle de una compra específica por ID
-        [HttpGet]
-        [Route("[action]")] // Cambiado: se quitó el {id} de la ruta
-        [ProducesResponseType(typeof(DetailMerchDTO), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult> GetMerchDetail(int id) // El id viene como parámetro de query
+        // Casos de prueba para filtros correctos
+        public static IEnumerable<object[]> TestCasesForGetMerchOK()
         {
-            // Verificar si la tabla de Compras existe en la base de datos
-            if (_context.Compras == null)
+            // Crear los objetos MerchDTO esperados para cada caso
+            var tipoCamiseta = new TipoProducto("Camiseta", 1, new List<Producto>());
+            var tipoGorra = new TipoProducto("Gorra", 2, new List<Producto>());
+            var tipoBoligrafo = new TipoProducto("Boligrafo", 3, new List<Producto>());
+
+            var allTests = new List<object[]>
             {
-                _logger.LogError("Error: La tabla de Compras no existe en la base de datos.");
-                return NotFound();
-            }
-
-            // Buscar la compra con el ID proporcionado, incluyendo las relaciones necesarias
-            var compra = await _context.Compras
-                .Where(c => c.CompraID == id)
-                .Include(c => c.Usuario)
-                .Include(c => c.Productos_Compras)
-                    .ThenInclude(pc => pc.Producto)
-                        .ThenInclude(p => p.Tipo_Producto)
-                .FirstOrDefaultAsync();
-
-            // Si no se encuentra la compra, retornar NotFound
-            if (compra == null)
-            {
-                _logger.LogError($"Error: La compra con ID {id} no existe.");
-                return NotFound();
-            }
-
-            // Mapear los productos de la compra a ItemMerchDTO
-            var items = compra.Productos_Compras.Select(pc => new ItemMerchDTO(
-                pc.Producto.Nombre,
-                pc.PVP,
-                pc.Producto.Tipo_Producto.Nombre,
-                pc.Cantidad
-            )).ToList();
-
-            // Crear el DTO de detalle con toda la información de la compra
-            var detalle = new DetailMerchDTO(
-                compra.Usuario.NombreUsuario,
-                compra.Usuario.Apellido1,
-                compra.Usuario.Apellido2,
-                compra.Direccion_Envio,
-                compra.Metodo_Pago,
-                items,
-                compra.CompraID,
-                compra.FechaCompra,
-                compra.PrecioFinal
-            );
-
-            return Ok(detalle);
+                // Caso 1: Sin filtros - debe devolver todos los productos
+                new object[] {
+                    null, null,
+                    new List<MerchDTO>
+                    {
+                        new MerchDTO("Camiseta UCLM", 8, tipoCamiseta, 48),
+                        new MerchDTO("Gorra UCLM", 4, tipoGorra, 10),
+                        new MerchDTO("Boligrafo UCLM", 2, tipoBoligrafo, 39),
+                        new MerchDTO("Camiseta Verde", 12, tipoCamiseta, 5)
+                    }
+                },
+                
+                // Caso 2: Filtro por tipo "Camiseta" - debe devolver 2 productos
+                new object[] {
+                    "Camiseta", null,
+                    new List<MerchDTO>
+                    {
+                        new MerchDTO("Camiseta UCLM", 8, tipoCamiseta, 48),
+                        new MerchDTO("Camiseta Verde", 12, tipoCamiseta, 5)
+                    }
+                },
+                
+                // Caso 3: Filtro por precio maximo 5 - debe devolver 2 productos
+                new object[] {
+                    null, 5f,
+                    new List<MerchDTO>
+                    {
+                        new MerchDTO("Gorra UCLM", 4, tipoGorra, 10),
+                        new MerchDTO("Boligrafo UCLM", 2, tipoBoligrafo, 39)
+                    }
+                },
+                
+                // Caso 4: Filtro por tipo "Camiseta" y precio maximo 10 - debe devolver 1 producto
+                new object[] {
+                    "Camiseta", 10f,
+                    new List<MerchDTO>
+                    {
+                        new MerchDTO("Camiseta UCLM", 8, tipoCamiseta, 48),
+                    }
+                }
+            };
+            return allTests;
         }
 
-        // POST: Crea una nueva compra de merchandising
-        [HttpPost]
-        [Route("[action]")]
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-        public async Task<ActionResult> CreateMerch(CreateMerchDTO createMerch)
+        [Theory]
+        [MemberData(nameof(TestCasesForGetMerchOK))]
+        public async Task GetMerch_GoodResult_test(string? tipo, float? precio, IList<MerchDTO> expectedProducts)
         {
-            // Validar que el objeto recibido no sea nulo
-            if (createMerch == null)
-                return BadRequest("El cuerpo de la solicitud está vacío.");
+            // Preparacion
+            var mock = new Mock<ILogger<MerchController>>();
+            ILogger<MerchController> logger = mock.Object;
+            MerchController controller = new MerchController(_context, logger);
 
-            // Validar que la compra contenga al menos un producto
-            if (createMerch.Items == null || createMerch.Items.Count == 0)
+            // Ejecucion
+            var result = await controller.GetProductos(tipo, precio);
+
+            // Verificacion
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var actualResult = Assert.IsType<List<MerchDTO>>(okResult.Value);
+
+            // Assert.Equivalent verifica que las colecciones tienen los mismos elementos sin importar el orden
+            Assert.Equivalent(expectedProducts, actualResult);
+        }
+
+        // Casos de prueba para filtros que no devuelven resultados
+        public static IEnumerable<object[]> TestCasesForGetMerchBad()
+        {
+            var allTests = new List<object[]>
             {
-                ModelState.AddModelError("CreateMerch", "Debes incluir al menos un producto.");
-                return BadRequest(new ValidationProblemDetails(ModelState));
-            }
+                new object[] { "TipoInexistente", null },     // Tipo que no existe en la base de datos
+                new object[] { null, 1f },                    // Precio maximo demasiado bajo
+                new object[] { "TipoInexistente", 1f }        // Combinacion de filtros sin resultados
+            };
+            return allTests;
+        }
 
-            // Buscar el usuario en la base de datos
-            var user = await _context.ApplicationUsers
-                .FirstOrDefaultAsync(au =>
-                    au.UserName == createMerch.NombreUsuario &&
-                    au.Apellido1 == createMerch.Apellido1);
+        [Theory]
+        [MemberData(nameof(TestCasesForGetMerchBad))]
+        public async Task GetMerch_BadResult_test(string? tipo, float? precio)
+        {
+            // Preparacion
+            var mock = new Mock<ILogger<MerchController>>();
+            ILogger<MerchController> logger = mock.Object;
+            MerchController controller = new MerchController(_context, logger);
 
-            // Si el usuario no existe, retornar error
-            if (user == null)
+            // Ejecucion
+            var result = await controller.GetProductos(tipo, precio);
+
+            // Verificacion: debe devolver NotFound cuando no hay resultados
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+        }
+
+        // Test adicional: verificar que sin filtros se devuelven todos los productos
+        [Fact]
+        public async Task GetMerch_AllProducts_NoFilters()
+        {
+            // Preparacion
+            var mock = new Mock<ILogger<MerchController>>();
+            ILogger<MerchController> logger = mock.Object;
+            MerchController controller = new MerchController(_context, logger);
+
+            // Ejecucion
+            var result = await controller.GetProductos(null, null);
+
+            // Verificacion
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var actualResult = Assert.IsType<List<MerchDTO>>(okResult.Value);
+
+            // Verificar que se devuelven exactamente los 4 productos esperados
+            var tipoCamiseta = new TipoProducto("Camiseta", 1, new List<Producto>());
+            var tipoGorra = new TipoProducto("Gorra", 2, new List<Producto>());
+            var tipoBoligrafo = new TipoProducto("Boligrafo", 3, new List<Producto>());
+
+            var expectedProducts = new List<MerchDTO>
             {
-                ModelState.AddModelError("CreateMerch", "Error: Usuario o apellido no registrados.");
-                return BadRequest(new ValidationProblemDetails(ModelState));
-            }
+                 new MerchDTO("Camiseta UCLM", 8, tipoCamiseta, 48),
+                 new MerchDTO("Gorra UCLM", 4, tipoGorra, 10),
+                 new MerchDTO("Boligrafo UCLM", 2, tipoBoligrafo, 39),
+                 new MerchDTO("Camiseta Verde", 12, tipoCamiseta, 5)
+            };
 
-            // Obtener los nombres de los productos para buscar en la base de datos
-            var nombres = createMerch.Items.Select(i => i.Nombre).ToList();
-
-            // Buscar los productos en la base de datos
-            var productosEnBd = await _context.Productos
-                .Include(p => p.Tipo_Producto)
-                .Where(p => nombres.Contains(p.Nombre))
-                .ToListAsync();
-
-            // Crear una nueva compra con ID único
-
-            var compra = new Compra_Producto(user, createMerch.DireccionEnvio, DateTime.Today, createMerch.MetodoPago, new List<Producto_Compra>());
-
-            float precioFinal = 0f;
-
-            // Procesar cada item de la compra
-            foreach (var item in createMerch.Items)
-            {
-                // Validar que la cantidad sea válida
-                if (item.Cantidad <= 0)
-                {
-                    ModelState.AddModelError("CreateMerch", $"Cantidad inválida para '{item.Nombre}'.");
-                    continue;
-                }
-
-                // Buscar el producto en la lista de productos de la base de datos
-                var producto = productosEnBd.FirstOrDefault(p => p.Nombre == item.Nombre);
-                if (producto == null)
-                {
-                    ModelState.AddModelError("CreateMerch", $"Producto '{item.Nombre}' no encontrado.");
-                    continue;
-                }
-
-                // Crear la relación Producto_Compra
-                var productoCompra = new Producto_Compra
-                {
-                    Cantidad = item.Cantidad,
-                    ProductoID = producto.ProductoID,
-                    PVP = producto.PVP,
-                    Producto = producto,
-                    Compra = compra,
-                    CompraID = compra.CompraID
-                };
-
-                // Agregar el producto a la compra y calcular el precio
-                compra.Productos_Compras.Add(productoCompra);
-                precioFinal += producto.PVP * item.Cantidad;
-            }
-
-            // Si hay errores de validación, retornar BadRequest
-            if (ModelState.ErrorCount > 0)
-                return BadRequest(new ValidationProblemDetails(ModelState));
-
-            // Validar que al menos un producto fue agregado a la compra
-            if (!compra.Productos_Compras.Any())
-                return BadRequest("Ninguno de los productos indicados existe.");
-
-            // Asignar el precio final calculado a la compra
-            compra.PrecioFinal = precioFinal;
-
-            // Agregar la compra al contexto
-            _context.Compras.Add(compra);
-
-            try
-            {
-                // Guardar los cambios en la base de datos
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // Log del error y retornar Conflict si hay problemas al guardar
-                _logger.LogError(ex, "Error al guardar la compra.");
-                return Conflict("Error al guardar la compra: " + ex.Message);
-            }
-
-            // Crear el DTO de respuesta con los detalles de la compra creada
-            var merchDetail = new DetailMerchDTO(
-                createMerch.NombreUsuario!,
-                createMerch.Apellido1,
-                createMerch.Apellido2,
-                createMerch.DireccionEnvio,
-                createMerch.MetodoPago,
-                createMerch.Items,
-                compra.CompraID,
-                DateTime.Today, // Cambiado: DateTime.Now por DateTime.Today
-                compra.PrecioFinal
-            );
-
-            // Retornar respuesta Created con referencia al endpoint GetMerchDetail
-            return CreatedAtAction("GetMerchDetail", new { id = compra.CompraID }, merchDetail);
+            // Assert.Equivalent verifica que las colecciones tienen los mismos elementos sin importar el orden
+            Assert.Equivalent(expectedProducts, actualResult);
         }
     }
 }
