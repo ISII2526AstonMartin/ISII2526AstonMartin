@@ -9,7 +9,7 @@
             string direccionEnvio,
             MetodoPago metodoPago,
             IList<ItemMerchDTO> items,
-            string compraID,
+            int compraID,
             DateTime fechaCompra,
             float precioFinal)
             : base(nombreUsuario, apellido1, apellido2, direccionEnvio, metodoPago, items)
@@ -19,7 +19,7 @@
             PrecioFinal = precioFinal;
         }
 
-        public string CompraID { get; set; }
+        public int CompraID { get; set; }
 
         public DateTime FechaCompra { get; set; }
 
