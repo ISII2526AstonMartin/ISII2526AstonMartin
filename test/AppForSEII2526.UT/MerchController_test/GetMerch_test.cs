@@ -26,18 +26,18 @@ namespace AppForSEII2526.UT.MerchController_test
             // Crear tipos de producto para pruebas
             var tipos = new List<TipoProducto>()
             {
-                new TipoProducto("Camiseta", "1", new List<Producto>()),
-                new TipoProducto("Gorra", "2", new List<Producto>()),
-                new TipoProducto("Boligrafo", "3", new List<Producto>()),
+                new TipoProducto("Camiseta", 1, new List<Producto>()),
+                new TipoProducto("Gorra", 2, new List<Producto>()),
+                new TipoProducto("Boligrafo", 3, new List<Producto>()),
             };
 
             // Crear productos de prueba
             var productos = new List<Producto>()
             {
-                new Producto("1", "Camiseta UCLM", 8, 48, tipos[0], new List<Producto_Compra>()),
-                new Producto("2", "Gorra UCLM", 4, 10, tipos[1], new List<Producto_Compra>()),
-                new Producto("3", "Boligrafo UCLM", 2, 39, tipos[2], new List<Producto_Compra>()),
-                new Producto("4", "Camiseta Verde", 12, 5, tipos[0], new List<Producto_Compra>())
+                new Producto("Camiseta UCLM",1, 8, 48, tipos[0], new List<Producto_Compra>()),
+                new Producto("Gorra UCLM",2, 4, 10, tipos[1], new List<Producto_Compra>()),
+                new Producto("Boligrafo UCLM",3, 2, 39, tipos[2], new List<Producto_Compra>()),
+                new Producto("Camiseta Verde",4, 12, 5, tipos[0], new List<Producto_Compra>())
             };
 
             _context.TiposProductos.AddRange(tipos);
@@ -49,9 +49,9 @@ namespace AppForSEII2526.UT.MerchController_test
         public static IEnumerable<object[]> TestCasesForGetMerchOK()
         {
             // Crear los objetos MerchDTO esperados para cada caso
-            var tipoCamiseta = new TipoProducto("Camiseta", "1", new List<Producto>());
-            var tipoGorra = new TipoProducto("Gorra", "2", new List<Producto>());
-            var tipoBoligrafo = new TipoProducto("Boligrafo", "3", new List<Producto>());
+            var tipoCamiseta = new TipoProducto("Camiseta", 1, new List<Producto>());
+            var tipoGorra = new TipoProducto("Gorra", 2, new List<Producto>());
+            var tipoBoligrafo = new TipoProducto("Boligrafo", 3, new List<Producto>());
 
             var allTests = new List<object[]>
             {
@@ -60,10 +60,10 @@ namespace AppForSEII2526.UT.MerchController_test
                     null, null,
                     new List<MerchDTO>
                     {
-                        new MerchDTO("1", 8, tipoCamiseta, 48),
-                        new MerchDTO("2", 4, tipoGorra, 10),
-                        new MerchDTO("3", 2, tipoBoligrafo, 39),
-                        new MerchDTO("4", 12, tipoCamiseta, 5)
+                        new MerchDTO("Camiseta UCLM", 8, tipoCamiseta, 48),
+                        new MerchDTO("Gorra UCLM", 4, tipoGorra, 10),
+                        new MerchDTO("Boligrafo UCLM", 2, tipoBoligrafo, 39),
+                        new MerchDTO("Camiseta Verde", 12, tipoCamiseta, 5)
                     }
                 },
                 
@@ -72,8 +72,8 @@ namespace AppForSEII2526.UT.MerchController_test
                     "Camiseta", null,
                     new List<MerchDTO>
                     {
-                        new MerchDTO("1", 8, tipoCamiseta, 48),
-                        new MerchDTO("4", 12, tipoCamiseta, 5)
+                        new MerchDTO("Camiseta UCLM", 8, tipoCamiseta, 48),
+                        new MerchDTO("Camiseta Verde", 12, tipoCamiseta, 5)
                     }
                 },
                 
@@ -82,8 +82,8 @@ namespace AppForSEII2526.UT.MerchController_test
                     null, 5f,
                     new List<MerchDTO>
                     {
-                        new MerchDTO("2", 4, tipoGorra, 10),
-                        new MerchDTO("3", 2, tipoBoligrafo, 39)
+                        new MerchDTO("Gorra UCLM", 4, tipoGorra, 10),
+                        new MerchDTO("Boligrafo UCLM", 2, tipoBoligrafo, 39)
                     }
                 },
                 
@@ -92,7 +92,7 @@ namespace AppForSEII2526.UT.MerchController_test
                     "Camiseta", 10f,
                     new List<MerchDTO>
                     {
-                        new MerchDTO("1", 8, tipoCamiseta, 48)
+                        new MerchDTO("Camiseta UCLM", 8, tipoCamiseta, 48),
                     }
                 }
             };
@@ -164,16 +164,16 @@ namespace AppForSEII2526.UT.MerchController_test
             var actualResult = Assert.IsType<List<MerchDTO>>(okResult.Value);
 
             // Verificar que se devuelven exactamente los 4 productos esperados
-            var tipoCamiseta = new TipoProducto("Camiseta", "1", new List<Producto>());
-            var tipoGorra = new TipoProducto("Gorra", "2", new List<Producto>());
-            var tipoBoligrafo = new TipoProducto("Boligrafo", "3", new List<Producto>());
+            var tipoCamiseta = new TipoProducto("Camiseta", 1, new List<Producto>());
+            var tipoGorra = new TipoProducto("Gorra", 2, new List<Producto>());
+            var tipoBoligrafo = new TipoProducto("Boligrafo", 3, new List<Producto>());
 
             var expectedProducts = new List<MerchDTO>
             {
-                new MerchDTO("1", 8, tipoCamiseta, 48),
-                new MerchDTO("2", 4, tipoGorra, 10),
-                new MerchDTO("3", 2, tipoBoligrafo, 39),
-                new MerchDTO("4", 12, tipoCamiseta, 5)
+                 new MerchDTO("Camiseta UCLM", 8, tipoCamiseta, 48),
+                 new MerchDTO("Gorra UCLM", 4, tipoGorra, 10),
+                 new MerchDTO("Boligrafo UCLM", 2, tipoBoligrafo, 39),
+                 new MerchDTO("Camiseta Verde", 12, tipoCamiseta, 5)
             };
 
             // Assert.Equivalent verifica que las colecciones tienen los mismos elementos sin importar el orden

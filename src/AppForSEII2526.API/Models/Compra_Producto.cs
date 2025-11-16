@@ -21,7 +21,7 @@
         [Required]
         public ApplicationUser Usuario { get; set; }
         [Key]
-        public string CompraID { get; set; }
+        public int CompraID { get; set; }
         [Required]
         public string Direccion_Envio { get; set; }
         public DateTime FechaCompra { get; set; }

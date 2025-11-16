@@ -277,8 +277,11 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Compra_Producto", b =>
                 {
-                    b.Property<string>("CompraID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CompraID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompraID"));
 
                     b.Property<string>("Direccion_Envio")
                         .IsRequired()
@@ -306,8 +309,11 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Producto", b =>
                 {
-                    b.Property<string>("ProductoID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProductoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductoID"));
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -319,9 +325,8 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
-                    b.Property<string>("Tipo_ProductoProductoID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Tipo_ProductoProductoID")
+                        .HasColumnType("int");
 
                     b.HasKey("ProductoID");
 
@@ -332,11 +337,11 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Producto_Compra", b =>
                 {
-                    b.Property<string>("CompraID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CompraID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ProductoID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProductoID")
+                        .HasColumnType("int");
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
@@ -437,8 +442,11 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.TipoProducto", b =>
                 {
-                    b.Property<string>("ProductoID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProductoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductoID"));
 
                     b.Property<string>("Nombre")
                         .IsRequired()
