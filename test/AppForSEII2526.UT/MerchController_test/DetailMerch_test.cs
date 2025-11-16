@@ -35,13 +35,14 @@ namespace AppForSEII2526.UT.MerchController_test
             _context.Productos.AddRange(camiseta, gorra);
             _context.SaveChanges();
 
-            // Crear usuario
+            // Crear usuario - CON NombreUsuario asignado
             var user = new ApplicationUser
             {
                 UserName = "juan",
                 Nombre = "Juan",
                 Apellido1 = "Perez",
                 Apellido2 = "Muñoz",
+                NombreUsuario = "juan",  // ← ESTA LÍNEA FALTABA
                 Email = "juan@example.com"
             };
 
@@ -69,18 +70,33 @@ namespace AppForSEII2526.UT.MerchController_test
             var mock = new Mock<ILogger<POSTMerchController>>();
             var controller = new POSTMerchController(_context, mock.Object);
 
+            // Crear el objeto DetailMerchDTO esperado
+            var expectedItems = new List<ItemMerchDTO>
+            {
+                new ItemMerchDTO("Camiseta UCLM", 8.0f, "Ropa", 2),
+                new ItemMerchDTO("Gorra UCLM", 4.0f, "Accesorios", 1)
+            };
+
+            var expectedDetail = new DetailMerchDTO(
+                "juan",           // NombreUsuario
+                "Perez",          // Apellido1
+                "Muñoz",          // Apellido2
+                "Calle Gran Vía 123, Madrid", // DireccionEnvio
+                MetodoPago.Tarjeta, // MetodoPago
+                expectedItems,    // Items
+                1,                // CompraID
+                DateTime.Today,   // FechaCompra
+                20.0f             // PrecioFinal
+            );
+
             // Act - Buscar compra existente
             var result = await controller.GetMerchDetail(1);
 
-            // Assert - Verificar que devuelve OK con los datos
+            // Assert - Verificar que devuelve el objeto esperado
             var okResult = Assert.IsType<OkObjectResult>(result);
             var actualDetail = Assert.IsType<DetailMerchDTO>(okResult.Value);
 
-            Assert.Equal(1, actualDetail.CompraID);
-            Assert.Equal("Calle Gran Vía 123, Madrid", actualDetail.DireccionEnvio);
-            Assert.Equal(MetodoPago.Tarjeta, actualDetail.MetodoPago);
-            Assert.Equal(20.0f, actualDetail.PrecioFinal);
-            Assert.Equal(2, actualDetail.Items.Count);
+            Assert.Equal(expectedDetail, actualDetail);
         }
 
         [Fact]
