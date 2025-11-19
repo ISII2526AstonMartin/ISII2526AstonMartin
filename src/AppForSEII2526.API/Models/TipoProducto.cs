@@ -8,7 +8,7 @@ namespace AppForSEII2526.API.Models
         {
         }
 
-        public TipoProducto(string nombre, string productoID, List<Producto> productos)
+        public TipoProducto(string nombre, int productoID, List<Producto> productos)
         {
             Nombre = nombre;
             ProductoID = productoID;
@@ -18,7 +18,7 @@ namespace AppForSEII2526.API.Models
         // Atributos
         public string Nombre { get; set; }
         [Key]
-        public string ProductoID { get; set; }
+        public int ProductoID { get; set; }
         //Relaciones
         public List<Producto> Productos { get; set; }
 
