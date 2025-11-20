@@ -59,7 +59,7 @@ namespace AppForSEII2526.UT.ResenyaController_test
 
         public static IEnumerable<object[]> TestCasesFor_CreateResenya()
         {
-            var resenyaNoItems = new CreateResenyaDTO("angellohor", "titulo", "descripcion",
+            var resenyaNoItems = new CreateResenyaDTO("angellohor", "Sugerencia para cenar", "descripcion",
                 (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cinco, new List<ItemResenyaDTO>());
 
             var resenyaBocadillo = new List<ItemResenyaDTO>()
@@ -67,10 +67,10 @@ namespace AppForSEII2526.UT.ResenyaController_test
                 new ItemResenyaDTO(2, "Bocadillo2", 8, Tamanyo.Normal, 2.0f)
             };
 
-            var resenyaNoUser = new CreateResenyaDTO(null, "titulo", "descripcion",
+            var resenyaNoUser = new CreateResenyaDTO(null, "Sugerencia para cenar", "descripcion",
                 (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cuatro, resenyaBocadillo);
 
-            var resenyaUser = new CreateResenyaDTO("angellohor", "titulo", "descripcion",
+            var resenyaUser = new CreateResenyaDTO("angellohor", "Sugerencia para cenar", "descripcion",
                 (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cinco, resenyaBocadillo);
 
             var resenyaBocadilloNotExist = new List<ItemResenyaDTO>()
@@ -78,13 +78,26 @@ namespace AppForSEII2526.UT.ResenyaController_test
                 new ItemResenyaDTO(999, "BocadilloNoExiste", 8, Tamanyo.Normal, 2.0f)
             };
 
-            var resenyaBocadilloIdNotExist = new CreateResenyaDTO("angellohor", "titulo", "descripcion",
+            var resenyaBocadilloIdNotExist = new CreateResenyaDTO("angellohor", "Sugerencia para cenar", "descripcion",
                 (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cinco, resenyaBocadilloNotExist);
+
+
+            var resenyaBocadilloErrorTitulo = new List<ItemResenyaDTO>()
+            {
+                new ItemResenyaDTO(2, "Bocadillo2", 8, Tamanyo.Normal, 2.0f)
+            };
+
+            var resenyaDTOErrorTitulo = new CreateResenyaDTO(_nombreUsuario, "Perfecto", "descripcion nueva",
+                (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cuatro, resenyaBocadilloErrorTitulo);
+
+
+
 
             var allTests = new List<object[]>
             {
                 new object[] { resenyaNoItems, "Debe incluir al menos un bocadillo en la reseña." },
                 new object[] { resenyaBocadilloIdNotExist, "Error! El bocadillo con ID '999' no existe" },
+                new object[] { resenyaDTOErrorTitulo, "Error!, el título de la reseña debe empezar por sugerencia para" }
             };
 
             return allTests;
@@ -138,7 +151,7 @@ namespace AppForSEII2526.UT.ResenyaController_test
                 new ItemResenyaDTO(2, "Bocadillo2", 8, Tamanyo.Normal, 2.0f)
             };
 
-            var resenyaDTO = new CreateResenyaDTO(_nombreUsuario, "titulo nuevo", "descripcion nueva",
+            var resenyaDTO = new CreateResenyaDTO(_nombreUsuario, "Sugerencia para cenar", "descripcion nueva",
                 (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cuatro, resenyaBocadillo);
 
             var result = await controller.CreateResenya(resenyaDTO);
@@ -146,8 +159,8 @@ namespace AppForSEII2526.UT.ResenyaController_test
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             var actualResenyaDetailDTO = Assert.IsType<DetailResenyaDTO>(createdResult.Value);
 
-            var expectedResenyaDetailDTO = new DetailResenyaDTO(actualResenyaDetailDTO.Id, _nombreUsuario, 
-                "titulo nuevo", "descripcion nueva", actualResenyaDetailDTO.FechaPublicacion,
+            var expectedResenyaDetailDTO = new DetailResenyaDTO(actualResenyaDetailDTO.Id, _nombreUsuario,
+                "Sugerencia para cenar", "descripcion nueva", actualResenyaDetailDTO.FechaPublicacion,
                 (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cuatro, resenyaBocadillo);
 
             Assert.Equal(expectedResenyaDetailDTO, actualResenyaDetailDTO);
