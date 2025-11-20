@@ -116,13 +116,22 @@ namespace AppForSEII2526.UT.MerchController_test
                 MetodoPago.Tarjeta,
                 new List<ItemMerchDTO> { new ItemMerchDTO("Camiseta UCLM", 8, "Ropa", 0) }
             );
+            // Nueva prueba para las BadRequest de dirección de envio inválida (Ponemos "C/" que seria incorrecto ya que deberia ser "Calle")
+            var merchDireccionInvalida = new CreateMerchDTO(
+                "juan", "Perez", "Muñoz",
+                "C/ Rosario",
+                MetodoPago.Tarjeta,
+                new List<ItemMerchDTO> { new ItemMerchDTO("Camiseta UCLM", 8, "Ropa", 1)}
+                );
 
             return new List<object[]>
             {
                 new object[] { merchSinItems, "Debes incluir al menos un producto." },
                 new object[] { merchUsuarioNoExiste, "Error: Usuario o apellido no registrados." },
                 new object[] { merchProductoNoExiste, "Producto 'ProductoFantasma' no encontrado." },
-                new object[] { merchCantidadInvalida, "Cantidad inválida para 'Camiseta UCLM'." }
+                new object[] { merchCantidadInvalida, "Cantidad inválida para 'Camiseta UCLM'." },
+                //Nuevo objeto para la nueva prueba de badRequest.
+                new object[] {merchDireccionInvalida, "Error!, por favor introduce una dirección de envío válida"}
             };
         }
 
