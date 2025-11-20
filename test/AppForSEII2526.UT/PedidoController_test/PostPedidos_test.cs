@@ -112,11 +112,24 @@ namespace AppForSEII2526.UT.PedidoController_test
                 new List<ItemPedidoDTO>()
             );
 
+            var pedidoSinSemillas = new CreatePedidoDTO(
+                "Antonio",
+                MetodoPago.Tarjeta,
+                "Garcia de la Reina",
+                "Aguilar",
+
+                new List<ItemPedidoDTO>()
+                {
+                    new ItemPedidoDTO(1, "serrano", 1, 2.0f, "semilla")
+                }
+
+                );
             return new List<object[]>
             {
                 new object[] { pedidoUsuarioNoRegistrado, "Error! Usuario no registrado" },
                 new object[] { pedidoMetodoPagoInvalido, "Error! Método de pago no válido. Usa: Tarjeta, Paypal o Gpay." },
                 new object[] { pedidoBocadilloInexistente, "Error! El bocadillo FalsoBocadillo no está disponible" },
+                new object[] { pedidoSinSemillas, "Error!, no nos quedan panes de tipo semillas para realizar tu pedido" }
 
             };
 
