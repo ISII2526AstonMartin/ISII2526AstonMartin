@@ -92,6 +92,14 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
+            // Validar que la direccion de envio no es nula y no contiene la palabra "Calle" //EXAMEN
+            if (createMerch.DireccionEnvio == null || !createMerch.DireccionEnvio.Contains("Calle"))
+            {
+                // Devolvemos un bad request.
+                ModelState.AddModelError("CreateMerch", "Error!, por favor introduce una dirección de envío válida");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
             // Buscar el usuario en la base de datos
             var user = await _context.ApplicationUsers
                 .FirstOrDefaultAsync(au =>
