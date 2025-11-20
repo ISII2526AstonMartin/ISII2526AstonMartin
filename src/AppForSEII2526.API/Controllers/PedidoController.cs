@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Validations;
+using NuGet.Packaging.Signing;
 
 namespace AppForSEII2526.API.Controllers
 {
@@ -94,7 +95,9 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
+            
 
+            
 
             var pedidoNombre = pedidoParaCrear.ItemPedido.Select(ri => ri.Id).ToList();
 
@@ -103,7 +106,7 @@ namespace AppForSEII2526.API.Controllers
                 .Where(b => pedidoNombre.Contains(b.Id))
                 .Select(b => new
                 {
-                    b.Nombre, b.PVP, b.Stock, b.Tamanyo, b.Id
+                    b.Nombre, b.PVP, b.Stock, b.Tamanyo, b.Id, b.TipoPan
                 }).ToList();
 
 
@@ -114,12 +117,20 @@ namespace AppForSEII2526.API.Controllers
 
             foreach(var item in pedidoParaCrear.ItemPedido)
             {
+                if(item.TipoPan == "semilla")
+                {
+                    ModelState.AddModelError("Bocadillo", "Error!, no nos quedan panes de tipo semillas para realizar tu pedido");
+                    return ValidationProblem(ModelState);
+                }
+              
+
                 var bocadillo= bocadillos.FirstOrDefault(p=> p.Nombre == item.NombreBocadillo);
                 if (bocadillo == null)
                 {
                     ModelState.AddModelError("Bocadillo", $"Error! El bocadillo {item.NombreBocadillo} no está disponible");
                     return ValidationProblem(ModelState);
                 }
+                
                 else
                 {
                     compra.CompraBocadillos.Add(new CompraBocadillo(bocadillo.Id, compra,compra.CompraID, item.Cantidad, bocadillo.PVP,item.TipoPan, bocadillo.Nombre));

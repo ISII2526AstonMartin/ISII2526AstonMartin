@@ -25,9 +25,10 @@ namespace AppForSEII2526.UT.BonosCompraController_test
             var bonosBocadillos = new List<BonoBocadillo>()
             {
                 new BonoBocadillo(1,5,5,"Bono1",14.4f,tipos[0],new List<BonosComprados>()),
-                new BonoBocadillo(2,3,7,"Bono2", 29.95f,tipos[1],new List<BonosComprados>()),
-                new BonoBocadillo(3,6,6,"Bono3", 3.99f, tipos[2], new List<BonosComprados>()),
-                new BonoBocadillo(4, 4,4,"Bono 4", 4.44f, tipos[3], new List<BonosComprados>())
+                new BonoBocadillo(2,3,7,"Bono2",29.95f,tipos[1],new List<BonosComprados>()),
+                new BonoBocadillo(3,6,6,"Bono3",3.99f,tipos[2], new List<BonosComprados>()),
+                new BonoBocadillo(4,4,4,"Bono 4",4.44f,tipos[3], new List<BonosComprados>()),
+                new BonoBocadillo(5,1,6,"BonoBarato", 1.5f,tipos[3], new List<BonosComprados>())
             };
             var applicationUsers = new ApplicationUser("Andres", "Iniesta", "Lujan", "AIniesta");
 
@@ -65,13 +66,18 @@ namespace AppForSEII2526.UT.BonosCompraController_test
         {
             var nuevo = new CompraBonoForCreateDTO("Andres", "Iniesta", "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>());
             nuevo.compraItems.Add(new CompraBonoItemDTO(1, 14.4f, 5, "BonoNoExiste", "Vegano", 4));
+
+            var eldemenorquetres = new CompraBonoForCreateDTO("Andres", "Iniesta", "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>());
+            eldemenorquetres.compraItems.Add(new CompraBonoItemDTO(90, 1.5f, 1, "BonoBarato", "Normal", 1));
+
             var allTests = new List<object[]>()
             {
                 new object[]{ new CompraBonoForCreateDTO(null, "Iniesta", "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()), "El nombre no está definido" },
                 new object[]{ new CompraBonoForCreateDTO("Andres", null, "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()), "El apellido no está definido" },
                 new object[]{ new CompraBonoForCreateDTO("Andres", "Iniesta", "Lujan", (MetodoPago)9999999, new List<CompraBonoItemDTO>()), "Metodo de pago no valido" },
                 new object[]{ new CompraBonoForCreateDTO("Lionel Andres", "Messi", "Cuccittini", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()), "Cliente no registrado" },
-                new object[]{ nuevo , "Bono no existe" }
+                new object[]{ nuevo , "Bono no existe" },
+                new object[]{ eldemenorquetres , "Error!, El precio del bono debe ser mayor que 3" }
             };
             
             return allTests;

@@ -65,11 +65,11 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest("Metodo de pago no valido");
             }
 
-            var user = _context.ApplicationUsers.FirstOrDefault(au =>
-            (au.Nombre == dto.nombreCliente) &&
-            (au.Apellido1 == dto.apellido1) &&
-            (dto.apellido2.IsNullOrEmpty() || au.Apellido2 == dto.apellido2)
-            );
+                var user = _context.ApplicationUsers.FirstOrDefault(au =>
+                (au.Nombre == dto.nombreCliente) &&
+                (au.Apellido1 == dto.apellido1) &&
+                (dto.apellido2.IsNullOrEmpty() || au.Apellido2 == dto.apellido2)
+                );
 
             if (user == null)
             {
@@ -111,6 +111,12 @@ namespace AppForSEII2526.API.Controllers
 
             comprabono.PrecioTotalBono = comprabono.ListaBonosComprados.Sum(cb=>cb.PrecioBono*cb.Cantidad);
             comprabono.NBono = comprabono.ListaBonosComprados.Sum(cb => cb.Cantidad);
+
+            //MODIFICACIÓN DE EXAMEN SPRINT 2
+            if (comprabono.PrecioTotalBono <= 3)
+            {
+                return BadRequest("Error!, El precio del bono debe ser mayor que 3");
+            }
 
             _context.Add(comprabono);
             try
