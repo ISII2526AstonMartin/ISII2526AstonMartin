@@ -101,8 +101,11 @@ namespace AppForSEII2526.API.Controllers
                 })
                 .ToList();
 
-            
 
+            if (!createResenyaDTO.Titulo.StartsWith("Sugerencia para"))
+            {
+                return BadRequest("Error!, el título de la reseña debe empezar por sugerencia para");
+            }
 
             Resenya resenya = new Resenya
                 (
