@@ -1,0 +1,61 @@
+﻿<h3>SelectMerchParaComprar</h3>
+@page "/Merch/SelectMerchParaComprar"
+
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526PIClient apiclient
+@inject ILogger<SelectMerchParaComprar> logger
+f
+<h3>Select Merch para comprar</h3>
+<div class="container-fluid">
+    <div class="row" hidden="@hideErrors">
+        <p>Errores</p>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <p>Filtros</p>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchMerch id="searchMovies">Search movies</button>
+                </div>
+            </div>
+            <div class="row">
+                @if (merch == null)
+                {
+                    <p>Cargando merch....</p>
+                }
+                else
+                {
+                    <p>number of merch @merch.Count</p>
+
+                }
+            </div>
+        </div>
+        <div class="col-2">
+            <p>Carrito de merch</p>
+        </div>
+
+    </div>
+
+</div>
+@code {
+    private ICollection<MerchDTO> merch;
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    private string movieTitle { get; set; }
+    private string movieGenre { get; set; }
+
+    public async void SearchMerch()
+    {
+        try
+        {
+            merch = await apiclient.GetMoviesForRentingAsync(movieTitle, movieGenre, null, null);
+
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError($"{DateTime.Now} Error: {ex}");
+            errors = "Error conectando con el sistema.";
+        }
+        StateHasChanged();
+    }
+}
