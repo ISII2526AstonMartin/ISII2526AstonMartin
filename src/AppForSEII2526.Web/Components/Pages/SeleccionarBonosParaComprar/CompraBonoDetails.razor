@@ -71,12 +71,12 @@ else
     public int CompraBonoID { get; set; }
     private CompraBonoDetailsDTO CompraBonoDTO;
     private string error = "";
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
+    //[CascadingParameter]
+    //private Task<AuthenticationState>? authenticationState { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        //we check the user is logged in
+        /*
         string userName = "";
         if (authenticationState is not null)
         {
@@ -91,6 +91,7 @@ else
                 }
             }
         }
+        */
         try
         {
             CompraBonoDTO = await apiclient.GetCompraAsync(CompraBonoID);
@@ -100,7 +101,7 @@ else
             CompraBonoDTO = null;
             //error = exception.ToString();
         }
-        if ((CompraBonoDTO == null) || (CompraBonoDTO.NombreCliente != userName))
+        if (CompraBonoDTO == null)
         {
             error = $"Error! You are not authorized to see this rental or there is not a rental with id={CompraBonoID}";
         }

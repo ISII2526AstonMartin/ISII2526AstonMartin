@@ -29,7 +29,7 @@ namespace AppForSEII2526.Web
                     NombreBono= bono.NombreBono,
                     Cantidad=1
                 });
-            }   
+            }
         }
         public void RemoveCompraBonoItem(CompraBonoItemDTO item)
         {
