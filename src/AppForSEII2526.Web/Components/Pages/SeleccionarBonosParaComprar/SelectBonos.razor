@@ -1,0 +1,167 @@
+﻿@page "/SeleccionarBonosParaComprar/SelectBonos"
+
+@using Microsoft.AspNetCore.Authorization
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<AppForSEII2526APIClient> logger
+@inject CompraBonosStateContainer cbsc
+@inject NavigationManager navigation
+
+@*@attribute [Authorize]*@
+<h3>Select Bonos</h3>
+<div class="container-fluid">
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown">Errors: @errors</p>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Nombre</span>
+                        <input type="text" id="inputTitle" @bind=nombreBono class="form-control" placeholder="Nombre" aria-label="Nombre" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Tipo</span>
+                        <select class="form-select" aria-label="Default select" @bind="tipoBocadiloSelected" id="selectTipoBocadillo">
+                            <option value="Todos" selected>Todos</option>
+                            @foreach (string tipoBocadilloName in tiposBocadillosNames)
+                            {
+                                <option value="@tipoBocadilloName" id="tipoBocadilloNameSelected_@tipoBocadilloName">@tipoBocadilloName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchBonos id="searchBonos">Buscar Bonos</button>
+                </div>
+            </div>
+            <div class="row">
+                @if (bonos == null)
+                {
+                    <p>Cargando bonos....</p>
+                }
+                else
+                {
+                    <div class="mh-100 table-responsive">
+                        <table class="table table-condensed table-hover" id="TableOfBonos">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Número de bocadillos</th>
+                                    <th>PVP</th>
+                                    <th>Comprar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var bono in bonos)
+                                {
+                                    <tr id="BonoData_@bono.NombreBono">
+                                        <td>@bono.NombreBono</td>
+                                        <td>@bono.TipoBocadillo</td>
+                                        <td>@bono.NBocadillos</td>
+                                        <td>@bono.Pvp</td>
+                                        <td>
+                                            <button class="btn btn-outline-secondary" id="BonoToBuy_@bono.NombreBono" @onclick="@(() => AddBono(bono))">Añadir</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-2" hidden="@hiddenRentingCart">
+            <div class="row">
+                <h3>Carrito de la compra</h3>
+            </div>
+            @foreach (CompraBonoItemDTO item in CompraBono.CompraItems)
+            {
+                <div class="row">
+                    <button type="button" class="btn btn-light" id="removeBono_@item.NombreBono" @onclick="@(() => RemoveCompraBonoItem(item))">x @item.NombreBono - @item.Pvp €</button>
+                </div>
+            }
+            <div class="row">
+                <button type="button" class="btn btn-primary" id="compraButton" @onclick=@ComprarBonos>ComprarBonos</button>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    private ICollection<BonoBocadillosDTO> bonos;
+    private string tipoBocadiloSelected;
+    private ICollection<string>? tiposBocadillosNames = new List<string>();
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    private string nombreBono { get; set; }
+    private string tipoBocadillo { get; set; }
+    private bool hidenRentingCart { get { return CompraBono.CompraItems.Count == 0; } }
+    private CompraBonoForCreateDTO CompraBono => cbsc.CreateDTO;
+    private bool hiddenRentingCart = true;
+
+    private void AddBono(BonoBocadillosDTO bono)
+    {
+        cbsc.AddBonoToCompra(bono);
+        hiddenRentingCart = false;
+    }
+
+    private void RemoveCompraBonoItem(CompraBonoItemDTO item)
+    {
+        cbsc.RemoveCompraBonoItem(item);
+        if (CompraBono.CompraItems.Count == 0)
+        {
+            hiddenRentingCart = true;
+        }
+    }
+
+    public async void SearchBonos()
+    {
+        try
+        {
+            tipoBocadillo = tipoBocadiloSelected == "Todos" ? null : tipoBocadiloSelected;
+            bonos = await apiclient.GetBonosAsync(nombreBono, tipoBocadillo);
+            errors = "";
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError($"{DateTime.Now} Error: {ex}");
+            if (ex.ToString().Contains("No hay bonos con esos filtros"))
+            {
+                errors = "No hay bonos con esos filtros";
+                bonos.Clear();
+            }
+            else
+            {
+                errors = "Error while connecting to the system";
+            }
+            
+        }
+        StateHasChanged();
+    }
+
+    private void ComprarBonos()
+    {
+        navigation.NavigateTo("/SeleccionarBonosParaComprar/CompraBonoDetails");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        try
+        {
+            tiposBocadillosNames = await apiclient.GetTiposBocadillosAsync(null);
+        }
+        catch (ApiException ex)
+        {
+            if (tiposBocadillosNames == null) tiposBocadillosNames = new List<string>() { "All", };
+            logger.LogError("Error! There was an error while connecting to the GetGenresAsync service");
+        }
+
+        SearchBonos();
+        //return base.OnInitializedAsync();
+    }
+}

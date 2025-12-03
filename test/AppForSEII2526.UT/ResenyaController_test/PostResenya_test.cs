@@ -90,14 +90,31 @@ namespace AppForSEII2526.UT.ResenyaController_test
             var resenyaDTOErrorTitulo = new CreateResenyaDTO(_nombreUsuario, "Perfecto", "descripcion nueva",
                 (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cuatro, resenyaBocadilloErrorTitulo);
 
+            
+            var resenyaBocadilloDescripcionVacia = new List<ItemResenyaDTO>()
+            {
+                new ItemResenyaDTO(2, "Bocadillo2", 8, Tamanyo.Normal, 2.0f)
+            };
 
+            var resenyaDTODescripcionVacia = new CreateResenyaDTO(_nombreUsuario, "Sugerencia para cenar", "",
+                (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cinco, resenyaBocadilloDescripcionVacia);
+
+            var resenyaBocadilloDescripcionNula = new List<ItemResenyaDTO>()
+            {
+                new ItemResenyaDTO(2, "Bocadillo2", 8, Tamanyo.Normal, 2.0f)
+            };
+
+            var resenyaDTODescripcionNula = new CreateResenyaDTO(_nombreUsuario, "Sugerencia para cenar", null,
+                (CreateResenyaDTO.Valoracion_General)Valoracion_General.Cinco, resenyaBocadilloDescripcionNula);
 
 
             var allTests = new List<object[]>
             {
                 new object[] { resenyaNoItems, "Debe incluir al menos un bocadillo en la reseña." },
                 new object[] { resenyaBocadilloIdNotExist, "Error! El bocadillo con ID '999' no existe" },
-                new object[] { resenyaDTOErrorTitulo, "Error!, el título de la reseña debe empezar por sugerencia para" }
+                new object[] { resenyaDTOErrorTitulo, "Error!, el título de la reseña debe empezar por sugerencia para" },
+                new object[] { resenyaDTODescripcionVacia, "La descripción es obligatoria" },
+                new object[] { resenyaDTODescripcionNula, "La descripción es obligatoria" }
             };
 
             return allTests;
