@@ -2,6 +2,8 @@
 @using AppForSEII2526.Web.API
 @using Microsoft.AspNetCore.Authorization
 @inject AppForSEII2526APIClient apiclient
+@inject CompraBonosStateContainer cbsc 
+@*Preguntar sobre esto*@
 
 <h3>Compra Bono Details</h3>
 @*@attribute [Authorize]*@
@@ -46,8 +48,6 @@ else
         <tbody>
             @foreach (CompraBonoItemDTO item in CompraBonoDTO.CompraItems)
             {
-                preciofinal += (item.Pvp*item.Cantidad);
-
                 <tr id="CompraBonoItem_@item.NombreBono">
                     <td>@item.NombreBono</td>
                     <td>@item.TipoBocadillo</td>
@@ -59,7 +59,7 @@ else
         <tfoot>
             @*colspan is used to state that TWO columns are collapsed*@
         <th scope="row" colspan="2" class="text-end">Precio Total</th>
-        <td id="TotalPrice">@preciofinal €</td>
+        <td id="TotalPrice">@cbsc.TotalPrice €</td>
         </tfoot>
     </table>
 }
@@ -98,6 +98,7 @@ else
         catch (ApiException exception)
         {
             CompraBonoDTO = null;
+            //error = exception.ToString();
         }
         if ((CompraBonoDTO == null) || (CompraBonoDTO.NombreCliente != userName))
         {
