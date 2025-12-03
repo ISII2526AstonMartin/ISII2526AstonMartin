@@ -1,0 +1,161 @@
+﻿@page "/Resenyas/CreateResenya"
+
+@using AppForSEII2526.Web.API
+@inject NavigationManager navigation
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<CreateResenya> logger
+@inject ResenyaStateContainer resenyaState
+
+<h3>Crear Reseña</h3>
+
+<EditForm Model="resenya" OnValidSubmit="OpenDialog">
+    <div class="row">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="row alert alert-danger" />
+    </div>
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown">Errors: @messageError</p>
+    </div>
+    <div class="row g-3">
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="resenya.NombreUsuario" class="form-control" id="NombreUsuario" />
+                <label for="NombreUsuario">Nombre de Usuario </label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="resenya.Titulo" class="form-control" id="Titulo" />
+                <label for="Titulo">Titulo </label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="resenya.Descripcion" class="form-control" id="Descripcion" />
+                <label for="Descripcion">Descripcion</label>
+            </div>
+        </div>
+        <div class="row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    @* Dropdown para seleccionar la valoración general *@
+                    <InputSelect class="form-select" @bind-Value="@resenya.Valoracion_General" id="ValoracionGeneral">
+                        <option value="@Valoracion_General.Cinco" selected>⭐⭐⭐⭐⭐ (5) Excelente</option>
+                        <option value="@Valoracion_General.Cuatro">⭐⭐⭐⭐ (4) Muy Bueno</option>
+                        <option value="@Valoracion_General.Tres">⭐⭐⭐ (3) Bueno</option>
+                        <option value="@Valoracion_General.Dos">⭐⭐ (2) Regular</option>
+                        <option value="@Valoracion_General.Uno">⭐ (1) Malo</option>
+                    </InputSelect>
+                    <label for="ValoracionGeneral">Valoración General</label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md">
+            <div class="form-floating">
+                @*this button will be used to ask the user if he want to proceed to rent the movies*@
+                <button class="btn btn-primary" type="submit" id="Submit">
+                    Crea Tus Reseñas
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <p>
+        <button class="btn btn-outline-primary" type="submit" @onclick="ModifyResenyaItems" id="ModificarResenyas">
+            Modificar Reseñas
+        </button>
+    </p>
+
+
+    <div class="mh-100 table-responsive">
+        <table class="table table-condensed table-hover" id="TableOfBocadillos">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tamaño</th>
+                    <th>Pvp</th>
+                    <th>Puntuacion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in resenya.Items)
+                {
+                    <tr id="BocadilloData_@item.BocadilloNombre">
+                        <td>@item.BocadilloNombre</td>
+                        <td>@item.Tamanyo</td>
+                        <td>@item.Pvp</td>
+                        <td>
+                            <InputNumber @bind-Value="item.Puntuacion" class="form-control" min="1" max="10" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</EditForm>
+
+
+
+@code {
+
+    private string messageError = "";
+    private bool hideErrors { get { return messageError.Length == 0; } }
+    private bool DialogIsOpen;
+
+    private void ModifyResenyaItems()
+    {
+        navigation.NavigateTo("/Resenyas/SelectBocadilloForResenya");
+    }
+
+    private CreateResenyaDTO resenya => resenyaState.Resenya;
+
+
+    private void OpenDialog()
+    {
+        DialogIsOpen = true;
+    }
+    private async Task OnDialogClose(bool isOk)
+    {
+        DialogIsOpen = false;
+        if (isOk)
+        {
+            // Process the data introduced by the user if they are valid
+            if (resenya.Items.Count > 0)
+            {
+                try
+                {
+                    var resenyaCreada = await apiclient.CreateResenyaAsync(resenya);
+                    
+                    navigation.NavigateTo($"/Resenyas/DetailResenya/?ResenyaID={resenyaCreada.Id}");
+                }
+                catch (ApiException<ValidationProblemDetails> apiexceptionvalidation)
+                {
+
+                    if (apiexceptionvalidation.Result.Errors.Values != null)
+                    {
+                        messageError = "";
+                        foreach (var errors in apiexceptionvalidation.Result.Errors.Values)
+                            messageError = string.Join("(*) ", messageError, string.Join(" (*) ", errors));
+                    }
+                }
+                catch (ApiException apiexception)
+                {
+                    //we need to inform user that there was some other error while processing the request
+                    messageError = "Error while processing your request, please try again later!";
+
+                }
+            }
+            
+
+            }
+    }
+
+
+}
+
+
+
