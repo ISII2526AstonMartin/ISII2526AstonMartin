@@ -117,6 +117,8 @@ namespace AppForSEII2526.API.Controllers
 
             foreach(var item in pedidoParaCrear.ItemPedido)
             {
+
+
                 if(item.TipoPan == "semilla")
                 {
                     ModelState.AddModelError("Bocadillo", "Error!, no nos quedan panes de tipo semillas para realizar tu pedido");
@@ -124,19 +126,31 @@ namespace AppForSEII2526.API.Controllers
                 }
               
 
+
+             
                 var bocadillo= bocadillos.FirstOrDefault(p=> p.Nombre == item.NombreBocadillo);
                 if (bocadillo == null)
                 {
                     ModelState.AddModelError("Bocadillo", $"Error! El bocadillo {item.NombreBocadillo} no está disponible");
                     return ValidationProblem(ModelState);
                 }
+
                 
                 else
                 {
                     compra.CompraBocadillos.Add(new CompraBocadillo(bocadillo.Id, compra,compra.CompraID, item.Cantidad, bocadillo.PVP,item.TipoPan, bocadillo.Nombre));
                     item.PVP= bocadillo.PVP;
                 }
-                
+
+
+
+                if (item.Cantidad > bocadillo.Stock)
+                {
+                    ModelState.AddModelError("Cantidad", $"Error! La cantidad para el bocadillo es mayor que el stock");
+                    return ValidationProblem(ModelState);
+                }
+
+
             }
 
             compra.PrecioTotal = compra.CompraBocadillos.Sum(cb => cb.Precio * cb.Cantidad);
