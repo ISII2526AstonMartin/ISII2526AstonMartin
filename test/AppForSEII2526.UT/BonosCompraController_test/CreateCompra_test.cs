@@ -28,7 +28,8 @@ namespace AppForSEII2526.UT.BonosCompraController_test
                 new BonoBocadillo(2,3,7,"Bono2",29.95f,tipos[1],new List<BonosComprados>()),
                 new BonoBocadillo(3,6,6,"Bono3",3.99f,tipos[2], new List<BonosComprados>()),
                 new BonoBocadillo(4,4,4,"Bono 4",4.44f,tipos[3], new List<BonosComprados>()),
-                new BonoBocadillo(5,1,6,"BonoBarato", 1.5f,tipos[3], new List<BonosComprados>())
+                new BonoBocadillo(5,1,6,"BonoBarato", 1.5f,tipos[3], new List<BonosComprados>()),
+                new BonoBocadillo(6,0,9, "BonoAgotado", 2f, tipos[1], new List<BonosComprados>())
             };
             var applicationUsers = new ApplicationUser("Andres", "Iniesta", "Lujan", "AIniesta");
 
@@ -70,6 +71,10 @@ namespace AppForSEII2526.UT.BonosCompraController_test
             var eldemenorquetres = new CompraBonoForCreateDTO("Andres", "Iniesta", "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>());
             eldemenorquetres.compraItems.Add(new CompraBonoItemDTO(90, 1.5f, 1, "BonoBarato", "Normal", 1));
 
+            var eldelbonoagotado= new CompraBonoForCreateDTO("Andres", "Iniesta", "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>());
+            //new BonoBocadillo(6, 0, "BonoAgotado", 2f, tipos[1], new List<BonosComprados>())
+            eldelbonoagotado.compraItems.Add(new CompraBonoItemDTO(750000, 2f, 1, "BonoAgotado", "Vegetariano", 0));
+
             var allTests = new List<object[]>()
             {
                 new object[]{ new CompraBonoForCreateDTO(null, "Iniesta", "Lujan", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()), "El nombre no está definido" },
@@ -77,7 +82,8 @@ namespace AppForSEII2526.UT.BonosCompraController_test
                 new object[]{ new CompraBonoForCreateDTO("Andres", "Iniesta", "Lujan", (MetodoPago)9999999, new List<CompraBonoItemDTO>()), "Metodo de pago no valido" },
                 new object[]{ new CompraBonoForCreateDTO("Lionel Andres", "Messi", "Cuccittini", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()), "Cliente no registrado" },
                 new object[]{ nuevo , "Bono no existe" },
-                new object[]{ eldemenorquetres , "Error!, El precio del bono debe ser mayor que 3" }
+                new object[]{ eldemenorquetres , "Error!, El precio del bono debe ser mayor que 3" },
+                new object[]{ eldelbonoagotado, "No se puede tener cantidad 0 en un bono"}
             };
             
             return allTests;

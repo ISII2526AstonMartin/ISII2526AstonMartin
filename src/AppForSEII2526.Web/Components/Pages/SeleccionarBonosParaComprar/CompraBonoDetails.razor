@@ -1,0 +1,109 @@
+﻿@page "/SeleccionarBonosParaComprar/CompraBonoDetails"
+@using AppForSEII2526.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject AppForSEII2526APIClient apiclient
+@inject CompraBonosStateContainer cbsc 
+@*Preguntar sobre esto*@
+
+<h3>Compra Bono Details</h3>
+@*@attribute [Authorize]*@
+
+@if (CompraBonoDTO == null)
+{
+    <p>@error</p>
+}
+else
+{
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>Nombre y apellidos</th>
+            <td id="NameSurname">@CompraBonoDTO.NombreCliente @CompraBonoDTO.Apellido1 @(CompraBonoDTO.Apellido2 ?? "")</td>
+        </tr>
+        <!--
+        <tr>
+            <th>Direccion de envio</th>
+            <td id="DeliveryAddress">@*@CompraBonoDTO.*@</td>
+        </tr>
+        -->
+        <tr>
+            <th>Método de pago</th>
+            <td id="PaymentMethod">@CompraBonoDTO.MetodoPago</td>
+        </tr>
+        <tr>
+            <th>Fecha de compra</th>
+            <td id="RentalDate">@CompraBonoDTO.FechaCompra.ToString("dd/MM/yyyy hh:mm:ss")</td>
+        </tr>
+    </table>
+
+    <h4>Bonos Comprados</h4>
+    <table class="table" id="BonosCompradosTable">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CompraBonoItemDTO item in CompraBonoDTO.CompraItems)
+            {
+                <tr id="CompraBonoItem_@item.NombreBono">
+                    <td>@item.NombreBono</td>
+                    <td>@item.TipoBocadillo</td>
+                    <td>@item.Pvp €</td>
+                    <td>@item.Cantidad</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            @*colspan is used to state that TWO columns are collapsed*@
+        <th scope="row" colspan="2" class="text-end">Precio Total</th>
+        <td id="TotalPrice">@cbsc.TotalPrice €</td>
+        </tfoot>
+    </table>
+}
+
+@code {
+    public float preciofinal = 0;
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int CompraBonoID { get; set; }
+    private CompraBonoDetailsDTO CompraBonoDTO;
+    private string error = "";
+    //[CascadingParameter]
+    //private Task<AuthenticationState>? authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        /*
+        string userName = "";
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+            //we retrieve the id of the user logged in
+            if (user is not null)
+            {
+                if (user.Identity is not null && user.Identity.IsAuthenticated && user.IsInRole("User"))
+                {
+                    userName = user.Identity.Name;
+                }
+            }
+        }
+        */
+        try
+        {
+            CompraBonoDTO = await apiclient.GetCompraAsync(CompraBonoID);
+        }
+        catch (ApiException exception)
+        {
+            CompraBonoDTO = null;
+            //error = exception.ToString();
+        }
+        if (CompraBonoDTO == null)
+        {
+            error = $"Error! You are not authorized to see this rental or there is not a rental with id={CompraBonoID}";
+        }
+    }
+}

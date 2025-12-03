@@ -39,10 +39,10 @@ namespace AppForSEII2526.UT.BonosController_test
         {
             var bonosDTOs = new List<BonoBocadillosDTO>()
             {
-                new BonoBocadillosDTO(1,5,5,"Bono1",14.4f,"Vegano"),
-                new BonoBocadillosDTO(2,3,7,"Bono2",29.95f,"Vegetariano"),
-                new BonoBocadillosDTO(3,6,6,"Bono3",3.99f,"Sin Gluten"),
-                new BonoBocadillosDTO(4,4,4,"Bono4",4.44f,"Normal")
+                new BonoBocadillosDTO(1,5,"Bono1",14.4f,"Vegano"),
+                new BonoBocadillosDTO(2,7,"Bono2",29.95f,"Vegetariano"),
+                new BonoBocadillosDTO(3,6,"Bono3",3.99f,"Sin Gluten"),
+                new BonoBocadillosDTO(4,4,"Bono4",4.44f,"Normal")
             };
 
             var expected1 = new List<BonoBocadillosDTO>() { bonosDTOs[0], bonosDTOs[1], bonosDTOs[2], bonosDTOs[3] };
