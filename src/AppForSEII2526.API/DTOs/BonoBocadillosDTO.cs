@@ -6,10 +6,9 @@
         {
         }
 
-        public BonoBocadillosDTO(int id, int cantidadDisponible, int nBocadillos, string nombreBono, float pVP, string tipo)
+        public BonoBocadillosDTO(int id, int nBocadillos, string nombreBono, float pVP, string tipo)
         {
             Id = id;
-            CantidadDisponible = cantidadDisponible;
             NBocadillos = nBocadillos;
             NombreBono = nombreBono;
             PVP = pVP;
@@ -17,8 +16,6 @@
         }
 
         public int Id { get; set; }
-
-        public int CantidadDisponible { get; set; }
 
         public int NBocadillos { get; set; }
 
@@ -32,7 +29,6 @@
         {
             return obj is BonoBocadillosDTO dTO &&
                    Id == dTO.Id &&
-                   CantidadDisponible == dTO.CantidadDisponible &&
                    NBocadillos == dTO.NBocadillos &&
                    NombreBono == dTO.NombreBono &&
                    PVP == dTO.PVP &&
@@ -41,7 +37,7 @@
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, CantidadDisponible, NBocadillos, NombreBono, PVP, TipoBocadillo);
+            return HashCode.Combine(Id, NBocadillos, NombreBono, PVP, TipoBocadillo);
         }
     }
 }
