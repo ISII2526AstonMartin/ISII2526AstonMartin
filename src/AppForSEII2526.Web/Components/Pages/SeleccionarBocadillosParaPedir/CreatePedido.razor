@@ -1,0 +1,39 @@
+﻿@page "/SeleccionarBocadillosParaPedir/CreatePedido"
+
+
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<CreatePedido> logger
+@inject CompraBocadilloStateContainercs compraState
+
+<h3>Create Pedido</h3>
+
+
+
+
+<EditForm Model="compra" OnValidSubmit="OpenDialog">
+    <div class="row">
+
+        <div class="col-md">
+            <div class="form-floating">
+                @*this button will be used to ask the user if he want to proceed to rent the movies*@
+                <button class="btn btn-primary" type="submit" id="Submit">
+                    Rent your movies
+                </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+
+
+@code {
+    private CreatePedidoDTO compra => compraState.Compra;
+
+    private void OpenDialog()
+    {
+
+    }
+
+}
+
