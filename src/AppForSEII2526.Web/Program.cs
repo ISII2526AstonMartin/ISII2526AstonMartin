@@ -37,6 +37,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddScoped<CompraBocadilloStateContainercs>();
 builder.Services.AddScoped<CompraBonosStateContainer>();
 string? URI2API = builder.Configuration.GetValue(typeof(string), "AppForSEII2526_API") as string;  
 
