@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="OpenAPIs\swagger.json" ClassName="AppForSEII2526APIClient" />
+    <None Include="OpenAPIs\swagger.json" ClassName="AppForSEII2526.APICliente" />
   </ItemGroup>
 
   <ItemGroup>

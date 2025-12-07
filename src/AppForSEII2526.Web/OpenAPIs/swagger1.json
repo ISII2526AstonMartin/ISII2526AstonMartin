@@ -888,7 +888,7 @@
         "operationId": "GetTipoPanes",
         "parameters": [
           {
-            "name": "tipoPanes",
+            "name": "tipoBocadilloString",
             "in": "query",
             "schema": {
               "type": "string"

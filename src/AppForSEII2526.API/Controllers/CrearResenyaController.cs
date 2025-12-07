@@ -82,6 +82,18 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest("Debe incluir al menos un bocadillo en la reseña.");
             }
 
+            // Validar que la descripción no está vacía o nula
+            if (string.IsNullOrWhiteSpace(createResenyaDTO.descripcion))
+            {
+                return BadRequest("La descripción es obligatoria");
+            }
+
+            // Validar que la valoración general es válida
+            if (!Enum.IsDefined(typeof(CreateResenyaDTO.Valoracion_General), createResenyaDTO.valoracion_General))
+            {
+                return BadRequest("La valoración general no es válida");
+            }
+
             var user = _context.ApplicationUsers.FirstOrDefault(au => au.NombreUsuario == createResenyaDTO.NombreUsuario);
 
 
