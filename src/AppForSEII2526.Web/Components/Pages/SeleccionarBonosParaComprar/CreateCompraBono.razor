@@ -1,0 +1,155 @@
+﻿@page "/SeleccionarBonosParaComprar/CreateCompraBono"
+@using AppForSEII2526.Web.API
+@using AppForSEII2526.Web.Components.Shared
+@inject NavigationManager navigation
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<AppForSEII2526APIClient> logger
+@inject CompraBonosStateContainer cbsc
+
+<h3>CreateCompraBono</h3>
+
+<EditForm Model="compra4create" OnValidSubmit="OpenDialog">
+    <div class="row">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="row alert alert-danger" />
+    </div>
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown">Errors: @messageError</p>
+    </div>
+    <div class="row g-3">
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="compra4create.NombreCliente" class="form-control" id="Name" />
+                <label for="Name">Nombre </label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="compra4create.Apellido1" class="form-control" id="Surname" />
+                <label for="Ap1">Apellido 1 </label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="compra4create.Apellido2" class="form-control" id="Surname" />
+                <label for="ap2">Apellido 2 </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md">
+        <div class="form-floating">
+            <InputSelect class="form-select" @bind-Value="@compra4create.MetodoPago" id="PaymentMethod">
+                <option value="@MetodoPago.Tarjeta" default> Tarjeta</option>
+                <option value="@MetodoPago.Paypal"> PayPal</option>
+                <option value="@MetodoPago.Gpay"> Gpay</option>
+            </InputSelect>
+            <label for="PaymentMethod">Método de pago</label>
+        </div>
+    </div>
+        <div class="col-md">
+            <div class="form-floating">
+                <button class="btn btn-primary" type="submit" id="Submit">Compra tus bonos</button>
+            </div>
+        </div>
+    <h4>Detalle de la compra</h4>
+    <p>
+
+
+        <b>Total:</b> @cbsc.TotalPrice €
+        <button class="btn btn-outline-primary" type="submit" @onclick="ModifyBonos" id="ModifyMovies">Modificar Bonos</button>
+
+
+    </p>
+    <div class="mh-100 table-responsive">
+        <table class="table table-condensed table-hover" id="TableOfRentalItems">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in compra4create.CompraItems)
+                {
+                    <tr id="MovieData_@item.NombreBono">
+                        <td>@item.NombreBono</td>
+                        <td>@item.TipoBocadillo</td>
+                        <td>@item.Pvp</td>
+                        <td><InputNumber @bind-Value=item.Cantidad class="form-control" id="@($"cantidad_{item.Id}")" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</EditForm>
+
+@if (DialogIsOpen)
+{
+    <Dialog Caption="Comprar bonos"
+    Message="Do you want to proceed to rent the selected movies?"
+    OnClose="@OnDialogClose"
+    Type=Dialog.Category.SaveNot>
+    </Dialog>
+}
+
+@code{
+    private CompraBonoForCreateDTO compra4create => cbsc.CreateDTO;
+    private bool DialogIsOpen;
+    private string messageError = "";
+    private bool hideErrors { get { return messageError.Length == 0; } }
+
+    private void ModifyBonos()
+    {
+        navigation.NavigateTo("/SeleccionarBonosParaComprar/SelectBonos");
+    }
+
+    private void OpenDialog()
+    {
+        DialogIsOpen = true;
+    }
+
+    private async Task OnDialogClose(bool isOk)
+    {
+        DialogIsOpen = false;
+        if (isOk)
+        {
+            if (compra4create.CompraItems.Count > 0)
+            {
+                try
+                {
+                    var comprao = await apiclient.CreateCompraAsync(compra4create);
+                    
+                    navigation.NavigateTo($"/SeleccionarBonosParaComprar/CompraBonoDetails/?Id={comprao.Id}");
+                }
+                catch (ApiException<ValidationProblemDetails> apiexceptionvalidation)
+                {
+                    if (apiexceptionvalidation.Result.Errors.Values != null)
+                    {
+                        messageError = "";
+                        foreach (var errors in apiexceptionvalidation.Result.Errors.Values)
+                            messageError = string.Join("(*) ", messageError, string.Join(" (*) ", errors));
+                    }
+                }
+
+                catch (ApiException apiexception)
+                {
+                    messageError = apiexception.ToString();
+                    //messageError = "Error while processing your request, please try again later!";
+                }
+            }
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        /*
+        compra4create.NombreCliente = compra4create.NombreCliente == null ? "" : compra4create.NombreCliente;
+        compra4create.Apellido1 = compra4create.Apellido1 == null ? "" : compra4create.Apellido1;
+        compra4create.Apellido2 = compra4create.Apellido2 == null ? "" : compra4create.Apellido2;
+        */
+        compra4create.NombreCliente = "Daniel";
+        compra4create.Apellido1 = "Martinez";
+        compra4create.Apellido2 = "Bautista";
+    }
+}

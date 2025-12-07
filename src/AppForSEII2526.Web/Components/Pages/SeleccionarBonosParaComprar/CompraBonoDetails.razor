@@ -3,10 +3,8 @@
 @using Microsoft.AspNetCore.Authorization
 @inject AppForSEII2526APIClient apiclient
 @inject CompraBonosStateContainer cbsc 
-@*Preguntar sobre esto*@
 
 <h3>Compra Bono Details</h3>
-@*@attribute [Authorize]*@
 
 @if (CompraBonoDTO == null)
 {
@@ -68,7 +66,7 @@ else
     public float preciofinal = 0;
     [Parameter]
     [SupplyParameterFromQuery]
-    public int CompraBonoID { get; set; }
+    public int Id { get; set; }
     private CompraBonoDetailsDTO CompraBonoDTO;
     private string error = "";
     //[CascadingParameter]
@@ -94,7 +92,7 @@ else
         */
         try
         {
-            CompraBonoDTO = await apiclient.GetCompraAsync(CompraBonoID);
+            CompraBonoDTO = await apiclient.GetCompraAsync(Id);
         }
         catch (ApiException exception)
         {
@@ -103,7 +101,7 @@ else
         }
         if (CompraBonoDTO == null)
         {
-            error = $"Error! You are not authorized to see this rental or there is not a rental with id={CompraBonoID}";
+            error = $"Error! You are not authorized to see this rental or there is not a rental with id={Id}";
         }
     }
 }

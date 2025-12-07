@@ -129,6 +129,9 @@
         catch (ApiException ex)
         {
             logger.LogError($"{DateTime.Now} Error: {ex}");
+            errors = "No hay bonos con esos filtros";
+            bonos.Clear();
+            /*
             if (ex.ToString().Contains("No hay bonos con esos filtros"))
             {
                 errors = "No hay bonos con esos filtros";
@@ -138,6 +141,7 @@
             {
                 errors = "Error while connecting to the system";
             }
+            */
             
         }
         StateHasChanged();
@@ -145,7 +149,7 @@
 
     private void ComprarBonos()
     {
-        navigation.NavigateTo("/SeleccionarBonosParaComprar/CompraBonoDetails");
+        navigation.NavigateTo("/SeleccionarBonosParaComprar/CreateCompraBono");
     }
 
     protected override async Task OnInitializedAsync()
@@ -157,7 +161,7 @@
         }
         catch (ApiException ex)
         {
-            if (tiposBocadillosNames == null) tiposBocadillosNames = new List<string>() { "All", };
+            if (tiposBocadillosNames == null) tiposBocadillosNames = new List<string>() { "Todos", };
             logger.LogError("Error! There was an error while connecting to the GetGenresAsync service");
         }
 
