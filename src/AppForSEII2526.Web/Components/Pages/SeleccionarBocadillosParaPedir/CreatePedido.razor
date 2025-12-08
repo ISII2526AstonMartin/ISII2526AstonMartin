@@ -5,7 +5,7 @@
 @using AppForSEII2526.Web.API
 @inject AppForSEII2526APIClient apiclient
 @inject ILogger<CreatePedido> logger
-
+@inject CompraStateContainercs compralState
 <h3>Create Pedido</h3>
 
 
@@ -62,7 +62,7 @@
             <div class="form-floating">
                 @*this button will be used to ask the user if he want to proceed to rent the movies*@
                 <button class="btn btn-primary" type="submit" id="Submit">
-                    Rent your movies
+                    Compra tu Bocadillo
                 </button>
             </div>
         </div>
@@ -73,8 +73,8 @@
 
       <p>
         <b>Total price:</b> @PrecioTotal €
-        <button class="btn btn-outline-primary" type="submit" @onclick="ModifyCompra" id="ModifyMovies">
-            Modify movies
+        <button class="btn btn-outline-primary" type="submit" @onclick="ModifyCompra" id="ModifyBocadillo">
+            Modify Bocadillo
         </button>
     </p>
 
