@@ -21,8 +21,9 @@ namespace AppForSEII2526.Web
         {
             get
             {
-              
-                return Convert.ToDecimal(Compra.ItemPedido.Sum(ri => ri.Pvp));
+
+                double price = Compra.ItemPedido.Sum(ri => ri.Pvp * ri.Cantidad);
+                return Convert.ToDecimal(price);
             }
         }
 
@@ -64,7 +65,7 @@ namespace AppForSEII2526.Web
         }
 
         //we have already finished the process of renting, thus, we create a new Rental 
-        public void RentalProcessed()
+        public void CompraProcessed()
         {
             //we have finished the rental process so we create a new object without data
             Compra = new CreatePedidoDTO()

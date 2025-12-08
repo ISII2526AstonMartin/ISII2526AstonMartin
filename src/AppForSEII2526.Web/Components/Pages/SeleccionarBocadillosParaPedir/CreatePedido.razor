@@ -5,7 +5,7 @@
 @using AppForSEII2526.Web.API
 @inject AppForSEII2526APIClient apiclient
 @inject ILogger<CreatePedido> logger
-@inject CompraStateContainercs compraState
+@inject CompraBocadilloStateContainercs compraState
 <h3>Create Pedido</h3>
 
 
@@ -15,7 +15,7 @@
     <div class="row">
 
         <DataAnnotationsValidator />
-        <ValidationSummary />
+        <ValidationSummary class="row alert alert-danger" />
     </div>
 
 
@@ -31,13 +31,13 @@
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
-                <InputText @bind-Value="compra.Apellido1" class="form-control" id="PrimerApellido" />
+                <InputText @bind-Value="compra.Apellido1" class="form-control" id="Apellido" />
                 <label for="PrimerApellido">Primer Apellido </label>
             </div>
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
-                <InputText @bind-Value="compra.Apellido2" class="form-control" id="SegundoApellido" /> @*SOLUCIONAR PROBLEMA METODO DE PAGO*@
+                <InputText @bind-Value="compra.Apellido2" class="form-control" id="Apellido" /> 
                 <label for="SegundoApellido">Segundo Apellido</label>
             </div>
         </div>
@@ -54,7 +54,7 @@
                     <option value="@MetodoPago.Paypal"> PayPal</option>
                     <option value="@MetodoPago.Gpay"> Gpay</option>
                 </InputSelect>
-                <label for="PaymentMethod">Payment Method</label>
+                <label for="MetodoPago">Metodo de Pago</label>
             </div>
         </div>
 
@@ -72,9 +72,9 @@
     <h4>Detalle de Compra</h4>
 
       <p>
-        <b>Total price:</b> @PrecioTotal €
-        <button class="btn btn-outline-primary" type="submit" @onclick="ModifyCompra" id="ModifyBocadillo">
-            Modify Bocadillo
+        <b>Precio Total:</b> @compraState.TotalPrice €
+        <button class="btn btn-outline-primary" type="submit" @onclick="ModifyCompra" id="ModifyCompra">
+            Modifica Bocadillo
         </button>
     </p>
 
@@ -93,7 +93,7 @@
             <tbody>
                 @foreach (var item in compra.ItemPedido)
                 {
-                    <tr id="MovieData_@item.NombreBocadillo">
+                    <tr id="Data_@item.NombreBocadillo">
                         <td>@item.NombreBocadillo</td>
                         <td>@item.TipoPan</td>
                         <td>@item.Pvp</td>
@@ -121,24 +121,16 @@
 
     private string messageError = "";
     private bool hideErrors { get { return messageError.Length == 0; } }
-    private CreatePedidoDTO compra => compraState.Compra;
+    
     private bool DialogIsOpen;
 
-
-    private decimal PrecioTotal
-    {
-        get
-        {
-            
-            double price = compra.ItemPedido.Sum(ri => ri.Pvp * ri.Cantidad);
-            return Convert.ToDecimal(price);
-        }
-    }
+    
     private void ModifyCompra()
     {
         navigation.NavigateTo("/SeleccionarBocadillosParaPedir/SelectBocadillos");
     }
     
+    private CreatePedidoDTO compra => compraState.Compra;
     private void OpenDialog()
     {
         DialogIsOpen = true;
@@ -157,7 +149,7 @@
                 try
                 {
                     var comprado = await apiclient.CreatePedidoAsync(compra);
-                    compraState.RentalProcessed();
+                    compraState.CompraProcessed();
                     navigation.NavigateTo($"/rental/detailrental/?RentalID={comprado.Id}"); //Navegacion del Details
                 }
                 catch (ApiException<ValidationProblemDetails> apiexceptionvalidation)
@@ -171,15 +163,38 @@
                             messageError = string.Join("(*) ", messageError, string.Join(" (*) ", errors));
                     }
                 }
-                catch (ApiException apiexception) {
-                    //we need to inform user that there was some other error while processing the request
-                    messageError = "Error while processing your request, please try again later!";
+catch (ApiException apiexception)
+{
+    if ((int)apiexception.StatusCode >= 200 && (int)apiexception.StatusCode < 300)
+    {
+        
+        Console.WriteLine($"Successful response caught as exception. StatusCode: {(int)apiexception.StatusCode}");
+        return;
+    }
 
-                }
+    
+    messageError = "Error while processing your request, please try again later!";
+    Console.WriteLine($"ApiException: {apiexception.Message}");
+    Console.WriteLine($"StackTrace: {apiexception.StackTrace}");
+}
+
+
+
 
             }
 
         }
     }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        compra.Nombre = compra.Nombre == null ? "" : compra.Nombre;
+        compra.Apellido1 = compra.Apellido1 == null ? "" : compra.Apellido1;
+        compra.Apellido2 = compra.Apellido2 == null ? "" : compra.Apellido2;
+        
+    }
+
+
 }
 
