@@ -8,7 +8,7 @@
 
 <h3>Crear Reseña</h3>
 
-<EditForm Model="resenya" OnValidSubmit="OpenDialog">
+<EditForm Model="resenya" OnValidSubmit="OpenDialog" OnInvalidSubmit="HandleInvalidSubmit">
     <div class="row">
         <DataAnnotationsValidator />
         <ValidationSummary class="row alert alert-danger" />
@@ -98,7 +98,14 @@
 
 </EditForm>
 
-
+@if (DialogIsOpen)
+{
+    <Dialog Caption="Rental movies"
+    Message="Do you want to proceed to rent the selected movies?"
+    OnClose="@OnDialogClose"
+    Type=Dialog.Category.SaveNot>
+    </Dialog>
+}
 
 @code {
 
@@ -113,6 +120,19 @@
 
     private CreateResenyaDTO resenya => resenyaState.Resenya;
 
+
+    protected override void OnInitialized()
+    {
+        // Esto es crucial. Si llegan nulos, el formulario falla internamente.
+        resenya.NombreUsuario = resenya.NombreUsuario ?? "";
+        resenya.Titulo = resenya.Titulo ?? "";
+        resenya.Descripcion = resenya.Descripcion ?? "";
+    }
+
+    private void HandleInvalidSubmit()
+    {
+        messageError = "El formulario no es válido. Revisa los campos obligatorios.";
+    }
 
     private void OpenDialog()
     {
