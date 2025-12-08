@@ -1,0 +1,196 @@
+﻿
+@page "/SeleccionarBocadillosParaPedir/SelectBocadillos"
+
+
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<AppForSEII2526APIClient> logger
+@inject CompraBocadilloStateContainercs compraState
+@inject NavigationManager navigation
+
+
+
+
+<h3>Select Bocadillos Para Pedir</h3>
+
+
+<div class="container-fluid">
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown">Errors: @errors</p>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Tamaño</span>
+                        <input type="text" id="inputTitle" @bind=tamanyo class="form-control" placeholder="Tamaño" aria-label="Tamaño" aria-describedby="basic-addon1">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Tipo Pan</span>
+                        <select class="form-select" aria-label="Default select" @bind="TipoPanSelected" id="selectTipoPan">
+                            <option value="All" selected>All</option>
+                            @foreach (string tipoPanName in tipoPanNames)
+                            {
+                                <option value="@tipoPanName" id="tipoPanSelected_@tipoPanName">@tipoPanName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+             
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchBocadillos id="searchBocadillos">Search bocadillos</button>
+                </div>
+            </div>
+            <div class="row">
+                @if (bocadillos == null)
+                {
+                    <p>Loading bocadillos....</p>
+                }
+                else
+                {
+                    <div class="mh-100 table-responsive">
+                        <table class="table table-condensed table-hover" id="TableOfBocadillos">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tamaño</th>
+                                    <th>Tipo Pan</th>
+                                    <th>PVP</th>
+                                    <th>Comprar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var bocadillo in bocadillos)
+                                {
+                                    <tr id="BocadilloData_@bocadillo.Nombre">
+                                        <td>@bocadillo.Nombre</td>
+                                        <td>@bocadillo.Tamanyo</td>
+                                        <td>@bocadillo.TipoPan</td>
+                                        <td>@bocadillo.Pvp</td>
+                                        <td>
+                                            <button class="btn btn-outline-secondary" id="movieToRent_@bocadillo.Nombre" @onclick="@(() => AddBocadillo(bocadillo))">Add</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                }
+            </div>
+        </div>
+        <div class="col-2" hidden="@hideRentingCart">
+            <div class="row">
+                <h3>Shopping Cart</h3>
+            </div>
+            @foreach (ItemPedidoDTO item in compra.ItemPedido)
+            {
+                <div class="row">
+                    <button type="button" class="btn btn-light" id="removeMovie_@item.NombreBocadillo" @onclick="@(() => RemoveRentalItem(item))">x @item.NombreBocadillo - @item.Pvp€</button>
+                </div>
+            }
+            <div class="row">
+                <button type="button" class="btn btn-primary" id="purchaseMovieButton" @onclick=@CompraBocadillo>Compra Bocadillo</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+@code {
+    private ICollection<BocadillosDTO> bocadillos;
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    private Tamanyo tamanyo { get; set; }
+    private string tipoPan { get; set; }
+
+
+    private string TipoPanSelected;
+    private ICollection<string>? tipoPanNames = new List<string>();
+
+
+    private bool hideRentingCart { get { return compra.ItemPedido.Count == 0; } }
+
+    public async void SearchBocadillos()
+    {
+        
+
+
+
+        try
+        {
+
+            tipoPan = TipoPanSelected == "All" ? null : TipoPanSelected;
+            bocadillos = await apiclient.GetBocadillosParaPedirAsync(tamanyo, tipoPan);
+
+            errors = "";
+
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError($"{DateTime.Now} Error: {ex}");
+            errors = "Error while connecting to the system";
+        }
+        StateHasChanged();
+    }
+
+
+    private CreatePedidoDTO compra => compraState.Compra;
+
+    private bool hiddenRentingCart = true;
+
+    private void AddBocadillo(BocadillosDTO bocadillo)
+    {
+        compraState.AddBocadilloToComprar(bocadillo);
+    }
+
+    private void RemoveRentalItem(ItemPedidoDTO item)
+    {
+        compraState.RemoveCompralItemToRent(item);
+        if (compra.ItemPedido.Count == 0) hiddenRentingCart = true;
+    }
+
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        //the type of RentalDateFrom is DateTimeOffset, it is required a conversion
+        //https://learn.microsoft.com/es-es/dotnet/standard/datetime/converting-between-datetime-and-offset
+       
+
+
+        try
+        {
+            tipoPanNames = await apiclient.GetTipoPanesAsync(null);
+        }
+        catch (ApiException ex)
+        {
+            if (tipoPanNames == null) tipoPanNames = new List<string>() { "All", };
+            logger.LogError("Error! There was an error while connecting to the GetGenresAsync service");
+        }
+
+
+
+        SearchBocadillos();
+
+       // return base.OnInitializedAsync();
+    }
+
+
+    //Link Vista Post
+
+    private void CompraBocadillo()
+    {
+        navigation.NavigateTo("/rentals/createrental");
+    }
+}

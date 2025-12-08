@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using AppForSEII2526.Web;
 using AppForSEII2526.Web.Components;
 using AppForSEII2526.Web.Components.Account;
 using AppForSEII2526.Web.Data;
@@ -37,11 +38,14 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddScoped<CompraBocadilloStateContainercs>();
 builder.Services.AddScoped<CompraBonosStateContainer>();
 string? URI2API = builder.Configuration.GetValue(typeof(string), "AppForSEII2526_API") as string;  
 
 builder.Services.AddScoped<AppForSEII2526APIClient>(sp => new AppForSEII2526APIClient(URI2API, new HttpClient()));
 //AppForSEII2526APIClient
+
+builder.Services.AddScoped<ResenyaStateContainer>();
 
 var app = builder.Build();
 
