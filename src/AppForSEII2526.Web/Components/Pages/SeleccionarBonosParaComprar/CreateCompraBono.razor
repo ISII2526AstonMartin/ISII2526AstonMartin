@@ -135,21 +135,21 @@
 
                 catch (ApiException apiexception)
                 {
-                    messageError = apiexception.ToString();
-                    //messageError = "Error while processing your request, please try again later!";
+                    //messageError = apiexception.ToString();
+                    messageError = "Error while processing your request, please try again later!";
                 }
             }
         }
     }
     protected override async Task OnInitializedAsync()
     {
-        /*
         compra4create.NombreCliente = compra4create.NombreCliente == null ? "" : compra4create.NombreCliente;
         compra4create.Apellido1 = compra4create.Apellido1 == null ? "" : compra4create.Apellido1;
         compra4create.Apellido2 = compra4create.Apellido2 == null ? "" : compra4create.Apellido2;
-        */
+        /*
         compra4create.NombreCliente = "Daniel";
         compra4create.Apellido1 = "Martinez";
         compra4create.Apellido2 = "Bautista";
+        */
     }
 }
