@@ -136,14 +136,14 @@
             {
                 errors = "No hay bonos con esos filtros";
                 bonos.Clear();
-            }
+                }
             else
             {
                 errors = "Error while connecting to the system";
-            }
+                }
             */
-            
-        }
+
+    }
         StateHasChanged();
     }
 
@@ -154,9 +154,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         try
         {
+            
             tiposBocadillosNames = await apiclient.GetTiposBocadillosAsync(null);
         }
         catch (ApiException ex)

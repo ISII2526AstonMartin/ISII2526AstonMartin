@@ -44,7 +44,10 @@ namespace AppForSEII2526.Web
         public void CompraProcessed()
         {
             //we have finished the rental process so we create a new object without data
-            CreateDTO = new CompraBonoForCreateDTO();
+            CreateDTO = new CompraBonoForCreateDTO() {
+                CompraItems = new List<CompraBonoItemDTO>()
+            }
+                ;
         }
     }
 }
