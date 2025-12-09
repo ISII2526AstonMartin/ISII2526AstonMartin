@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string NombreBocadillo { get; set; }
 
+        
         public int Cantidad { get; set; }
         public float PVP { get; set; }
         public string TipoPan { get; set; }

@@ -44,7 +44,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger3.json" CodeGenerator="NSwagCSharp" Namespace="AppForSEII2526.Web.API" ClassName="AppForSEII2526APIClient">
+    <None Include="OpenAPIs\swagger3.json" ClassName="AppForSEII2526APIClient" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <OpenApiReference Include="OpenAPIs\swagger4.json" CodeGenerator="NSwagCSharp" Namespace="AppForSEII2526.Web.API" ClassName="AppForSEII2526APIClient">
       <SourceUri>https://localhost:7067/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
   </ItemGroup>
