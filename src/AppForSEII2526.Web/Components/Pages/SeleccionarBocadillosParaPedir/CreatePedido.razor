@@ -4,7 +4,7 @@
 @using AppForSEII2526.Web.Components.Shared
 @using AppForSEII2526.Web.API
 @inject AppForSEII2526APIClient apiclient
-@inject ILogger<CreatePedido> logger
+@inject ILogger<AppForSEII2526APIClient> logger
 @inject CompraBocadilloStateContainercs compraState
 <h3>Create Pedido</h3>
 
@@ -163,21 +163,11 @@
                             messageError = string.Join("(*) ", messageError, string.Join(" (*) ", errors));
                     }
                 }
-catch (ApiException apiexception)
+                catch (ApiException apiexception)
 {
-    if ((int)apiexception.StatusCode >= 200 && (int)apiexception.StatusCode < 300)
-    {
-        
-        Console.WriteLine($"Successful response caught as exception. StatusCode: {(int)apiexception.StatusCode}");
-        return;
-    }
-
-    
-    messageError = "Error while processing your request, please try again later!";
-    Console.WriteLine($"ApiException: {apiexception.Message}");
-    Console.WriteLine($"StackTrace: {apiexception.StackTrace}");
+    var responseBody = await apiexception.GetContentAsStringAsync();
+    messageError = $"Error en API: {responseBody}";
 }
-
 
 
 
