@@ -3,15 +3,15 @@ namespace AppForSEII2526.API.DTOs.BocadillosParaPedirDTOs
 {
     public class PedidoDetailDTO: CreatePedidoDTO
     {
-        public PedidoDetailDTO(string nombre, MetodoPago metodoPago,string apellido1,string? apellido2, DateTime fechaPedido, float precioTotal, List<ItemPedidoDTO> itemPedido):base(nombre,metodoPago,apellido1,apellido2,itemPedido)
+        public PedidoDetailDTO(int id, string nombre, MetodoPago metodoPago,string apellido1,string? apellido2, DateTime fechaPedido, float precioTotal, List<ItemPedidoDTO> itemPedido):base(nombre,metodoPago,apellido1,apellido2,itemPedido)
         {
-
+            this.id = id;
             FechaPedido = fechaPedido;
             PrecioTotal = precioTotal;
         }
 
         public DateTime FechaPedido { get; set; }
-
+        public int id { get; set; }
         public float PrecioTotal { get; set; }
 
         public override bool Equals(object? obj)
