@@ -9,7 +9,7 @@ namespace AppForSEII2526.API.DTOs.BocadillosParaPedirDTOs
             FechaPedido = fechaPedido;
             PrecioTotal = precioTotal;
         }
-        public int id;
+        public int id{ get; set; }
         public DateTime FechaPedido { get; set; }
 
         public float PrecioTotal { get; set; }
