@@ -6,11 +6,10 @@ namespace AppForSEII2526.API.DTOs.BocadillosParaPedirDTOs
     public class CreatePedidoDTO
     {
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor introduzca su nombre")]
-        [StringLength(50, MinimumLength = 3, ErrorMessage = "El nombre tiene que tener al menos 3 caracteres")]
+        
         public string Nombre { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Por favor introduzca el metodo de pago que desee")]
+        
 
         public MetodoPago MetodoPago { get; set; }
         
