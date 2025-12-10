@@ -8,6 +8,7 @@ using AppForSEII2526.Web.Data;
 using AppForSEII2526.Web;
 using AppForSEII2526.Web.API;
 using ApplicationUser = AppForSEII2526.Web.Data.ApplicationUser;
+using AppForSEII2526.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,7 @@ builder.Services.AddScoped<AppForSEII2526APIClient>(sp => new AppForSEII2526APIC
 
 builder.Services.AddScoped<ResenyaStateContainer>();
 
+builder.Services.AddScoped<MerchStateContainer>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
