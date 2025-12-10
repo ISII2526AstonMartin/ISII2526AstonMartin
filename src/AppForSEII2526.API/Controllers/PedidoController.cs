@@ -143,7 +143,11 @@ namespace AppForSEII2526.API.Controllers
                     item.PVP= bocadillo.PVP;
                 }
 
-
+                if(item.Cantidad <= 0)
+                {
+                    ModelState.AddModelError("Cantidad", $"Error! La cantidad es negativa");
+                    return ValidationProblem(ModelState);
+                }
 
                 if (item.Cantidad > bocadillo.Stock)
                 {
