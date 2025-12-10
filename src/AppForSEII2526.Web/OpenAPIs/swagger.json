@@ -665,17 +665,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ItemPedidoDTO"
+                  "$ref": "#/components/schemas/PedidoDetailDTO"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ItemPedidoDTO"
+                  "$ref": "#/components/schemas/PedidoDetailDTO"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ItemPedidoDTO"
+                  "$ref": "#/components/schemas/PedidoDetailDTO"
                 }
               }
             }
@@ -1235,16 +1235,11 @@
         "additionalProperties": false
       },
       "CreatePedidoDTO": {
-        "required": [
-          "metodoPago",
-          "nombre"
-        ],
         "type": "object",
         "properties": {
           "nombre": {
-            "maxLength": 50,
-            "minLength": 3,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "metodoPago": {
             "$ref": "#/components/schemas/MetodoPago"
@@ -1418,9 +1413,6 @@
         "additionalProperties": false
       },
       "ItemPedidoDTO": {
-        "required": [
-          "cantidad"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1506,16 +1498,11 @@
         "type": "string"
       },
       "PedidoDetailDTO": {
-        "required": [
-          "metodoPago",
-          "nombre"
-        ],
         "type": "object",
         "properties": {
           "nombre": {
-            "maxLength": 50,
-            "minLength": 3,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "metodoPago": {
             "$ref": "#/components/schemas/MetodoPago"
@@ -1534,6 +1521,10 @@
               "$ref": "#/components/schemas/ItemPedidoDTO"
             },
             "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
           },
           "fechaPedido": {
             "type": "string",
