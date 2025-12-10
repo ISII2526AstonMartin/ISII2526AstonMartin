@@ -1,61 +1,195 @@
-﻿<h3>SelectMerchParaComprar</h3>
-@page "/Merch/SelectMerchParaComprar"
+﻿@page "/Merch/SelectMerchParaComprar"
 
+@using AppForSEII2526.Web
 @using AppForSEII2526.Web.API
-@inject AppForSEII2526PIClient apiclient
-@inject ILogger<SelectMerchParaComprar> logger
-f
-<h3>Select Merch para comprar</h3>
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<SelectMerchForPurchase> logger
+@inject MerchStateContainer merchState
+@inject NavigationManager navigation
+@implements IDisposable
+
+<h3>Comprar Merchandising</h3>
+
 <div class="container-fluid">
-    <div class="row" hidden="@hideErrors">
-        <p>Errores</p>
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown">Errores: @errors</p>
     </div>
     <div class="row">
         <div class="col-8">
             <div class="row">
-                <p>Filtros</p>
                 <div class="col">
-                    <button type="button" class="btn btn-primary" @onclick=@SearchMerch id="searchMovies">Search movies</button>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="addon-tipo">Tipo</span>
+                        <input type="text" id="inputTipo" @bind=merchTipo class="form-control" placeholder="Tipo de producto" aria-label="Tipo" aria-describedby="addon-tipo">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="addon-precio">Precio Máximo</span>
+                        <input type="number" step="0.01" id="inputPrecio" @bind=precioMaximo class="form-control" placeholder="Precio Máximo" aria-label="Precio Máximo" aria-describedby="addon-precio">
+                    </div>
+                </div>
+
+                <div class="col">
+                    <button type="button" class="btn btn-primary" @onclick=@SearchMerch id="searchMerch">Buscar Productos</button>
                 </div>
             </div>
             <div class="row">
-                @if (merch == null)
+                @if (merchProducts == null)
                 {
-                    <p>Cargando merch....</p>
+                    <p>Cargando productos....</p>
                 }
                 else
                 {
-                    <p>number of merch @merch.Count</p>
+                    <div class="mh-100 table-responsive">
+                        <table class="table table-condensed table-hover" id="TableOfMerch">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Tipo</th>
+                                    <th>Stock</th>
+                                    <th>Agregar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var merch in merchProducts)
+                                {
+                                    var isDisabled = merch.Stock <= 0;
+                                    <tr id="MerchData_@merch.Nombre" class="@(isDisabled ? "table-secondary" : "")">
+                                        <td>@merch.Nombre @(isDisabled ? "(SIN STOCK)" : "")</td>
+                                        <td>@merch.Precio.ToString("0.00")€</td>
+                                        <td>@merch.Tipo.Nombre</td>
+                                        <td>@merch.Stock</td>
+                                        <td>
+                                            <button class="btn btn-outline-secondary" id="merchToAdd_@merch.Nombre"
+                                                    @onclick="@(() => AddMerch(merch))" disabled="@isDisabled">
+                                                Añadir
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
 
                 }
             </div>
         </div>
-        <div class="col-2">
-            <p>Carrito de merch</p>
+
+        <div class="col-4" hidden="@hideMerchCart">
+            <div class="row">
+                <h3>Carrito de la compra</h3>
+                <p>Total: **@merchState.TotalPrice.ToString("0.00")€**</p>
+            </div>
+            @foreach (ItemMerchDTO item in merchState.CreateDTO.Items)
+            {
+                <div class="row mb-1">
+                    <div class="col-10">
+                        <button type="button" class="btn btn-light" id="removeMerch_@item.Nombre" @onclick="@(() => RemoveMerchItem(item))">
+                            x @item.Nombre - @(item.Pvp* item.Cantidad).ToString("0.00")€
+                        </button>
+                    </div>
+                </div>
+            }
+            <div class="row mt-3">
+                <button type="button" class="btn btn-primary" id="comprarMerchButton" @onclick=@ProcederCompra
+                        disabled="@(!merchState.HasItems())">
+                    Comprar Merch
+                </button>
+            </div>
         </div>
 
     </div>
 
 </div>
+
 @code {
-    private ICollection<MerchDTO> merch;
+    private ICollection<MerchDTO>? merchProducts;
     private bool hideErrors { get { return errors.Length == 0; } }
     private string errors = "";
-    private string movieTitle { get; set; }
-    private string movieGenre { get; set; }
+    private string? merchTipo { get; set; }
+    private float? precioMaximo { get; set; }
 
-    public async void SearchMerch()
+    private bool hideMerchCart = true;
+
+    // Clase local para la inyección de ILogger
+    private class SelectMerchForPurchase { }
+
+    // Propiedad para el carrito, más idiomática de Blazor
+    private bool hideCarrito { get { return !merchState.HasItems(); } }
+
+
+    private void UpdateCartVisibility()
     {
+        hideMerchCart = !merchState.HasItems();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Suscripción a los eventos del StateContainer para refrescar la vista automáticamente
+        merchState.OnChange += StateHasChanged;
+        merchState.OnChange += UpdateCartVisibility;
+
+        UpdateCartVisibility();
+        // Carga inicial de productos
+        await SearchMerch();
+    }
+
+    public void Dispose()
+    {
+        // Desuscribirse para evitar fugas de memoria
+        merchState.OnChange -= StateHasChanged;
+        merchState.OnChange -= UpdateCartVisibility;
+    }
+
+
+    private void AddMerch(MerchDTO merch)
+    {
+        if (merch.Stock > 0)
+        {
+            merchState.AddMerchToCart(merch);
+        }
+        else
+        {
+            errors = $"Error: No hay stock disponible para {merch.Nombre}.";
+        }
+    }
+
+    private void RemoveMerchItem(ItemMerchDTO item)
+    {
+        merchState.RemoveMerchItemFromCart(item);
+    }
+
+    public async Task SearchMerch()
+    {
+        errors = string.Empty;
+        merchProducts = null; // Muestra "Cargando..."
+
         try
         {
-            merch = await apiclient.GetMoviesForRentingAsync(movieTitle, movieGenre, null, null);
-
+            // Llama al API para obtener productos (MerchController.GetProductos(tipo, precio))
+            merchProducts = await apiclient.GetProductosAsync(merchTipo, precioMaximo);
         }
         catch (ApiException ex)
         {
-            logger.LogError($"{DateTime.Now} Error: {ex}");
-            errors = "Error conectando con el sistema.";
+            logger.LogError(ex, $"{DateTime.Now} Error: {ex.Message}");
+
+            if (ex.Response != null && ex.Response.Contains("No hay Productos con esos filtros"))
+            {
+                errors = "No hay productos disponibles que coincidan con esos filtros.";
+                merchProducts = new List<MerchDTO>(); // Muestra una tabla vacía sin error.
+            }
+            else
+            {
+                errors = "Error al conectar con el sistema.";
+            }
         }
         StateHasChanged();
+    }
+
+    private void ProcederCompra()
+    {
+        navigation.NavigateTo("/Merch/CreateMerchDetails");
     }
 }
