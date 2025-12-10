@@ -34,8 +34,8 @@ namespace AppForSEII2526.UIT.UC_Rental
 
         private void InitialStepsForCompraBocadillos()
         {
-            
-            
+
+            _driver.Navigate().GoToUrl("https://localhost:7081/");
             selectBocadillosParaPedir_PO.WaitForBeingVisible(By.Id("CreateCompra"));
             
             _driver.FindElement(By.Id("CreateCompra")).Click();

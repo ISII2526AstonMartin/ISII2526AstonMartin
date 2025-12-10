@@ -8,7 +8,7 @@ namespace AppForSEII2526.UIT.UC_Rental
 {
     public class SelectBocadillosParaPedir_PO : PageObject
     {
-        By inputTitle = By.Id("tamanyo");
+        By inputTitle = By.Id("inputTitle");
         By inputTipoPan = By.Id("selectTipoPan");
         By buttonSearchBocadillos = By.Id("searchBocadillos");
         By tableOfBocadillos = By.Id("TableOfBocadillos");
