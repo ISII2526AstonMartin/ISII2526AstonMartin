@@ -82,7 +82,17 @@ namespace AppForSEII2526.UT.PedidoController_test
             );
 
 
+            var cantidadNegativa= new CreatePedidoDTO(
+                "Antonio",
+                MetodoPago.Tarjeta,
+                "Garcia de la Reina",
+                "Aguilar",
+                new List<ItemPedidoDTO>()
+                {
+                    new ItemPedidoDTO(2, "Vegetal", -1, 3.0f, "Integral")
+                }
 
+                );
 
             var cantidadInvalidad = new CreatePedidoDTO(
                 "Antonio",
@@ -144,6 +154,7 @@ namespace AppForSEII2526.UT.PedidoController_test
             return new List<object[]>
             {
                 new object[] { pedidoUsuarioNoRegistrado, "Error! Usuario no registrado" },
+                new object[]{cantidadNegativa, "Error! La cantidad es negativa" },
                 new object[] { cantidadInvalidad, "Error! La cantidad para el bocadillo es mayor que el stock" },
                 new object[] { pedidoMetodoPagoInvalido, "Error! Método de pago no válido. Usa: Tarjeta, Paypal o Gpay." },
                 new object[] { pedidoBocadilloInexistente, "Error! El bocadillo FalsoBocadillo no está disponible" },
@@ -213,7 +224,7 @@ namespace AppForSEII2526.UT.PedidoController_test
                 items
             );
 
-            var expectedpedidoDetailDTO = new PedidoDetailDTO(nombre, MetodoPago.Tarjeta, apellido1,"Aguilar", DateTime.Today, 6.0f, new List<ItemPedidoDTO>() {new ItemPedidoDTO(2,"Vegetal",2,3.0f,"Integral" )});
+            var expectedpedidoDetailDTO = new PedidoDetailDTO(1, nombre, MetodoPago.Tarjeta, apellido1,"Aguilar", DateTime.Today, 6.0f, new List<ItemPedidoDTO>() {new ItemPedidoDTO(2,"Vegetal",2,3.0f,"Integral" )});
 
             var result = await controller.CreatePedido(pedidoDTO);
 

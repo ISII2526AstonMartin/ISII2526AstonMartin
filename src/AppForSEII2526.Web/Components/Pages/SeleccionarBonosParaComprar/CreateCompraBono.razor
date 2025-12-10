@@ -135,31 +135,7 @@
 
                 catch (ApiException apiexception)
                 {
-                    var error = apiexception.ToString();
-                    if (error.Contains("El nombre no está definido"))
-                    {
-                        messageError = "El nombre no está definido";
-                    }else if (error.Contains("El apellido no está definido"))
-                    {
-                        messageError = "El apellido no está definido";
-                    }else if (error.Contains("Metodo de pago no valido"))
-                    {
-                        messageError = "Metodo de pago no valido";
-                    }else if (error.Contains("Cliente no registrado"))
-                    {
-                        messageError = "Cliente no registrado";
-                    }
-                    else if (error.Contains("Bono no existe"))
-                    {
-                        messageError = "Bono no existe";
-                    }else if(error.Contains("No se puede tener cantidad 0 en un bono"))
-                    {
-                        messageError = "No se puede tener cantidad 0 en un bono";
-                    }
-                    else
-                    {
-                        messageError = "Error while processing your request, please try again later!";
-                    }
+                    messageError = "Error while processing your request, please try again later!";   
                 }
             }
         }
