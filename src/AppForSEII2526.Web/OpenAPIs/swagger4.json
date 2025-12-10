@@ -1522,13 +1522,13 @@
             },
             "nullable": true
           },
-          "fechaPedido": {
-            "type": "string",
-            "format": "date-time"
-          },
           "id": {
             "type": "integer",
             "format": "int32"
+          },
+          "fechaPedido": {
+            "type": "string",
+            "format": "date-time"
           },
           "precioTotal": {
             "type": "number",

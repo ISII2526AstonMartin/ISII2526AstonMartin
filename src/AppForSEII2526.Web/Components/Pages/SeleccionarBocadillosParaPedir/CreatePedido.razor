@@ -31,13 +31,13 @@
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
-                <InputText @bind-Value="compra.Apellido1" class="form-control" id="Apellido" />
+                <InputText @bind-Value="compra.Apellido1" class="form-control" id="Apellido1" />
                 <label for="PrimerApellido">Primer Apellido </label>
             </div>
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
-                <InputText @bind-Value="compra.Apellido2" class="form-control" id="Apellido" /> 
+                <InputText @bind-Value="compra.Apellido2" class="form-control" id="Apellido2" /> 
                 <label for="SegundoApellido">Segundo Apellido</label>
             </div>
         </div>
@@ -153,13 +153,15 @@
         {
             // Process the data introduced by the user if they are valid
 
+            
+
             if (compra.ItemPedido.Count > 0)
             {
                 try
                 {
                     var comprado = await apiclient.CreatePedidoAsync(compra);
                     compraState.CompraProcessed();
-                    navigation.NavigateTo($"/rental/detailrental/?RentalID={comprado.Id}"); //Navegacion del Details
+                    navigation.NavigateTo($"/SeleccionarBocadillosParaPedir/DetailPedido/?CompraID={comprado.Id}"); //Navegacion del Details
                 }
                 catch (ApiException<ValidationProblemDetails> apiexceptionvalidation)
                 {
@@ -178,6 +180,9 @@
                     messageError = "Error while processing your request, please try again later!";
 
                 }
+
+
+
 
 
             }
