@@ -31,13 +31,13 @@ namespace AppForSEII2526.API.Controllers
                 (nombre == null || bb.NombreBono.Contains(nombre)) &&
                 (nombretipo == null || bb.Tipo.NombreTipo.Contains(nombretipo)))
                 .Select(bb =>
-                new BonoBocadillosDTO(bb.BonoID, bb.CantidadDisponible, bb.NBocadillos, bb.NombreBono, bb.PVP, bb.Tipo.NombreTipo)
+                new BonoBocadillosDTO(bb.BonoID, bb.NBocadillos, bb.NombreBono, bb.PVP, bb.Tipo.NombreTipo)
                 )
                 .ToListAsync();
 
             if (bonobocadillos.Count() == 0)
             {
-                return NotFound("No hay bocadillos con esos filtros");
+                return NotFound("No hay bonos con esos filtros");
             }
 
             return Ok(bonobocadillos);

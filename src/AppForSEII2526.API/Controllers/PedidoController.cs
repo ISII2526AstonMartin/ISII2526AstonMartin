@@ -40,6 +40,7 @@ namespace AppForSEII2526.API.Controllers
                 .ThenInclude(cb => cb.Bocadillo)
                 .ThenInclude(b => b.TipoPan)
                 .Select(c=> new PedidoDetailDTO(
+                    c.CompraID,
                     c.usuario.Nombre,
                     c.MetodoPago,
                     c.usuario.Apellido1,
@@ -77,7 +78,7 @@ namespace AppForSEII2526.API.Controllers
 
             [HttpPost]
         [Route("[action]")]
-        [ProducesResponseType(typeof(ItemPedidoDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(PedidoDetailDTO), (int)HttpStatusCode.Created)]
         //[ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
 
@@ -117,6 +118,8 @@ namespace AppForSEII2526.API.Controllers
 
             foreach(var item in pedidoParaCrear.ItemPedido)
             {
+
+
                 if(item.TipoPan == "semilla")
                 {
                     ModelState.AddModelError("Bocadillo", "Error!, no nos quedan panes de tipo semillas para realizar tu pedido");
@@ -124,19 +127,35 @@ namespace AppForSEII2526.API.Controllers
                 }
               
 
+
+             
                 var bocadillo= bocadillos.FirstOrDefault(p=> p.Nombre == item.NombreBocadillo);
                 if (bocadillo == null)
                 {
                     ModelState.AddModelError("Bocadillo", $"Error! El bocadillo {item.NombreBocadillo} no está disponible");
                     return ValidationProblem(ModelState);
                 }
+
                 
                 else
                 {
                     compra.CompraBocadillos.Add(new CompraBocadillo(bocadillo.Id, compra,compra.CompraID, item.Cantidad, bocadillo.PVP,item.TipoPan, bocadillo.Nombre));
                     item.PVP= bocadillo.PVP;
                 }
-                
+
+                if(item.Cantidad <= 0)
+                {
+                    ModelState.AddModelError("Cantidad", $"Error! La cantidad es negativa");
+                    return ValidationProblem(ModelState);
+                }
+
+                if (item.Cantidad > bocadillo.Stock)
+                {
+                    ModelState.AddModelError("Cantidad", $"Error! La cantidad para el bocadillo es mayor que el stock");
+                    return ValidationProblem(ModelState);
+                }
+
+
             }
 
             compra.PrecioTotal = compra.CompraBocadillos.Sum(cb => cb.Precio * cb.Cantidad);
@@ -168,6 +187,7 @@ namespace AppForSEII2526.API.Controllers
 
 
             var PedidoDetailsDTO = new PedidoDetailDTO(
+                compra.CompraID,
                 usuario.Nombre,
                 compra.MetodoPago,
                 usuario.Apellido1,

@@ -1,0 +1,98 @@
+﻿@page "/Resenyas/DetailResenya"
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+
+<h3>Detalles de la Reseña</h3>
+
+@if (resenya == null)
+{
+    <p>@error</p>
+}
+else
+{
+
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>Nombre de Usuario</th>
+            <td id="NombreUsuario">@resenya.NombreUsuario</td>
+        </tr>
+        <tr>
+            <th>Titulo</th>
+            <td id="Titulo">@resenya.Titulo</td>
+        </tr>
+        <tr>
+            <th>Descripcion</th>
+            <td id="Descripcion">@resenya.Descripcion</td>
+        </tr>
+        <tr>
+            <th>Valoracion General</th>
+            <td id="ValoracionGeneral"> @resenya.Valoracion_General</td>
+        </tr>
+
+        <tr>
+            <th>Fecha de Publicacion</th>
+            <td id="FechaPublicacion">@resenya.FechaPublicacion</td>
+        </tr>
+        
+    </table>
+
+
+    <h4>Bocadillos Reseñados</h4>
+
+    <table class="table" id="BocadillosResenyas">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Puntuacion</th>
+                <th scope="col">Tamaño</th>
+                <th scope="col">Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ItemResenyaDTO item in resenya.Items)
+            {
+                <tr id="ItemResenya_@item.BocadilloNombre">
+                    <td>@item.BocadilloNombre</td>
+                    <td>@item.Puntuacion</td>
+                    <td>@item.Tamanyo </td>
+                    <td>@item.Pvp</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+}
+
+ 
+
+
+@code {
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int ResenyaID { get; set; }
+
+    private DetailResenyaDTO resenya;
+    private string error = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+
+        try
+        {
+            resenya = await apiclient.GetResenyaAsync(ResenyaID);
+        }
+        catch (ApiException exception)
+        {
+            resenya = null;
+        }
+
+
+        if (resenya == null)
+        {
+            error = $"Error! No existe una resenya con id={ResenyaID}";
+        }
+    }
+}
