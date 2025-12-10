@@ -1,0 +1,105 @@
+﻿@page "/SeleccionarBocadillosParaPedir/DetailPedido"  
+
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+
+<h3>Detalle Compra</h3>
+
+@if (compra == null)
+{
+    <p>@error</p>
+}
+else
+{
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>Nombre and Apellidos</th>
+            <td id="NombreApellidos">@compra.Nombre @compra.Apellido1 @(compra.Apellido2 ?? "")</td>
+        </tr>
+        <tr>
+            <th>Metodo Pago</th>
+            <td id="MetodoPago">@compra.MetodoPago</td>
+        </tr>
+        <tr>
+            <th>Precio Total</th>
+            <td id="PrecioTotal">@compra.PrecioTotal</td>
+        </tr>
+        <tr>
+            <th>Fecha Pedido</th>
+            <td id="FechaPedido">@compra.FechaPedido.ToString("dd/MM/yyyy hh:mm:ss")</td>
+        </tr>
+
+    </table>
+
+
+
+
+
+
+
+    <h4>Bocadillo Comprado</h4>
+
+    <table class="table" id="BocadilloComprado">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Tipo Pan</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ItemPedidoDTO item in compra.ItemPedido)
+            {
+                <tr id="ItemPedido_@item.NombreBocadillo">
+                    <td>@item.NombreBocadillo</td>
+                    <td>@item.TipoPan</td>
+                    <td>@item.Pvp €</td>
+                    <td>@item.Cantidad</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            @*colspan is used to state that TWO columns are collapsed*@
+        <th scope="row" colspan="2" class="text-end">Precio Total</th>
+        <td id="PrecioTotal">@compra.PrecioTotal €</td>
+        </tfoot>
+
+    </table>
+
+}
+
+
+
+
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int CompraID { get; set; }
+    private PedidoDetailDTO compra;
+    private string error = "";
+
+
+      protected override async Task OnInitializedAsync() {
+
+        
+
+        try {
+            compra = await apiclient.GetPedidosAsync(CompraID);
+        }
+        catch (ApiException exception) {
+            compra = null;
+        }
+        
+        if (compra == null)
+        {
+            error = $"Error! You are not authorized to see this rental or there is not a rental with id={CompraID}";
+        }
+
+
+    }
+
+    
+
+}
