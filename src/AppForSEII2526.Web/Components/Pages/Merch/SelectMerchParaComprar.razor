@@ -87,7 +87,7 @@
                 <div class="row mb-1">
                     <div class="col-10">
                         <button type="button" class="btn btn-light" id="removeMerch_@item.Nombre" @onclick="@(() => RemoveMerchItem(item))">
-                            x @item.Nombre - @(item.Pvp* item.Cantidad).ToString("0.00")€
+                            x @item.Nombre - @((item.Pvp* item.Cantidad).ToString("0.00"))€
                         </button>
                     </div>
                 </div>
@@ -190,6 +190,6 @@
 
     private void ProcederCompra()
     {
-        navigation.NavigateTo("/Merch/CreateMerchDetails");
+        navigation.NavigateTo("/Merch/CreateMerch");
     }
 }
