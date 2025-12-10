@@ -1,0 +1,233 @@
+﻿@page "/Merch/CreateMerch"
+
+@using AppForSEII2526.Web
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<CreateMerchDetails> logger
+@inject MerchStateContainer merchState
+@inject NavigationManager navigation
+@implements IDisposable
+
+<h3>Comprar Merchandising - Introducir Datos</h3>
+
+@* rental is the object that will be edited thanks to the form *@
+<EditForm Model="@merchState.CreateDTO" OnValidSubmit="ProcessPurchase" Context="editContext">
+    <div class="row">
+        <DataAnnotationsValidator />
+        @* Muestra la Validación Sumario de Blazor (errores del DTO) *@
+        <ValidationSummary class="row alert alert-danger" />
+    </div>
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        @* Muestra errores personalizados o de API no parseados por ValidationSummary *@
+        <p id="ErrorsShown">Errores: @messageError</p>
+    </div>
+
+    @if (!merchState.HasItems())
+    {
+        <div class="alert alert-info">
+            <p>El carrito está vacío. Necesitas añadir productos para continuar.</p>
+            <button class="btn btn-secondary" @onclick="GoToMerchSelection">Volver a la selección</button>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-6 border-end">
+                <h4>1. Datos de Cliente, Envío y Pago</h4>
+
+                <div class="row g-3">
+                    <div class="col-md">
+                        <div class="form-floating mb-3">
+                            @* Nombre de Usuario (Login) *@
+                            <InputText @bind-Value="merchState.CreateDTO.NombreUsuario" class="form-control" id="NombreUsuario" />
+                            <label for="NombreUsuario">Nombre de Usuario (Login) <span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="form-floating mb-3">
+                            @* Primer Apellido *@
+                            <InputText @bind-Value="merchState.CreateDTO.Apellido1" class="form-control" id="Apellido1" />
+                            <label for="Apellido1">Primer Apellido <span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="form-floating mb-3">
+                            @* Segundo Apellido (Opcional) *@
+                            <InputText @bind-Value="merchState.CreateDTO.Apellido2" class="form-control" id="Apellido2" />
+                            <label for="Apellido2">Segundo Apellido (Opcional)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-2">
+                    <div class="col-md-9">
+                        <div class="form-floating mb-3">
+                            @* Dirección de Envío (Obligatoria) *@
+                            <InputText @bind-Value="merchState.CreateDTO.DireccionEnvio" class="form-control" id="DireccionEnvio" />
+                            <label for="DireccionEnvio">Dirección de Envío <span class="text-danger">*</span></label>
+                            <div class="form-text text-danger">Debe contener la palabra "Calle".</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating">
+                            @* Método de Pago (Obligatorio) *@
+                            <InputSelect class="form-select" @bind-Value="@merchState.CreateDTO.MetodoPago" id="MetodoPago">
+                                @foreach (MetodoPago metodo in Enum.GetValues(typeof(MetodoPago)))
+                                {
+                                    <option value="@metodo">@metodo.ToString()</option>
+                                }
+                            </InputSelect>
+                            <label for="MetodoPago">Método de Pago <span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-3">
+                    @* Botón de Compra (Paso 6: El cliente selecciona Comprar) *@
+                    <button class="btn btn-success btn-lg" type="submit" id="finalizarCompra">
+                        Pagar y Comprar (@merchState.TotalPrice.ToString("0.00")€)
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <h4>2. Artículos Seleccionados</h4>
+                <p>
+                    <b>Precio Total:</b> @merchState.TotalPrice.ToString("0.00") €
+                    @* Flujo Alternativo 5: Modificar productos seleccionados *@
+                    <button class="btn btn-outline-primary" type="button" @onclick="GoToMerchSelection" id="ModifyMerch">
+                        Modificar Productos
+                    </button>
+                </p>
+
+                <div class="mh-100 table-responsive">
+                    <table class="table table-condensed table-hover" id="TableOfMerchItems">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Precio Unitario</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in merchState.CreateDTO.Items)
+                            {
+                                <tr id="MerchItem_@item.Nombre">
+                                    <td>@item.Nombre</td>
+                                    <td>@(item.Pvp.ToString("0.00"))€</td>
+                                    @* Pedir indicar la cantidad que se va a comprar (Paso 5) *@
+                                    <td style="width: 120px;">
+                                        <InputNumber @bind-Value="item.Cantidad" @onchange="@(e => UpdateQuantity(item, e.Value))"
+                                                     class="form-control form-control-sm" min="1" />
+                                    </td>
+                                    <td>@((item.Pvp* item.Cantidad).ToString("0.00"))€</td>
+                                    <td>
+                                        @* Flujo Alternativo 3: Quitar item *@
+                                        <button class="btn btn-danger btn-sm" @onclick="() => RemoveMerchItem(item)" title="Eliminar producto">
+                                            <span class="oi oi-trash" aria-hidden="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</EditForm>
+
+
+@code {
+    private string messageError = "";
+    private bool hideErrors { get { return messageError.Length == 0; } }
+
+    // Clase local para la inyección de ILogger
+    private class CreateMerchDetails { }
+
+    protected override void OnInitialized()
+    {
+        merchState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        merchState.OnChange -= StateHasChanged;
+    }
+
+    // Navegación para modificar los productos (Flujo Alternativo 5)
+    private void GoToMerchSelection()
+    {
+        navigation.NavigateTo("/Merch/SelectMerchParaComprar");
+    }
+
+    // Lógica para actualizar la cantidad del Item
+    private void UpdateQuantity(ItemMerchDTO item, object? value)
+    {
+        if (value is string stringValue && int.TryParse(stringValue, out int newQuantity))
+        {
+            merchState.UpdateItemQuantity(item, newQuantity);
+        }
+        StateHasChanged();
+    }
+
+    // Lógica para eliminar un Item del carrito (Flujo Alternativo 3)
+    private void RemoveMerchItem(ItemMerchDTO item)
+    {
+        merchState.RemoveMerchItemFromCart(item);
+    }
+
+    // Método que se ejecuta al enviar el formulario (Paso 6)
+    private async void ProcessPurchase()
+    {
+        messageError = string.Empty;
+
+        if (!merchState.HasItems())
+        {
+            messageError = "El carrito está vacío. No se puede procesar la compra.";
+            return;
+        }
+
+        try
+        {
+            await apiclient.CreateMerchAsync(merchState.CreateDTO);
+
+            // Compra exitosa (Paso 7)
+            merchState.MerchProcessed();
+
+            // Navegar a la página de detalle/ticket recién creado (usando parámetro de consulta)
+            navigation.NavigateTo($"/Merch/DetailMerch");
+        }
+        // Manejo detallado de errores de validación (similar a tu referencia)
+        catch (ApiException<ValidationProblemDetails> apiexceptionvalidation)
+        {
+            if (apiexceptionvalidation.Result != null && apiexceptionvalidation.Result.Errors.Values != null)
+            {
+                messageError = "";
+                // Concatenar todos los errores del ValidationProblemDetails
+                foreach (var errors in apiexceptionvalidation.Result.Errors.Values)
+                    messageError = string.Join("(*) ", messageError, string.Join(" (*) ", errors));
+            }
+            else
+            {
+                messageError = "Error de validación desconocido. Revise los campos marcados.";
+            }
+        }
+        // Capturar errores genéricos (e.g., error de usuario no encontrado, error de "Calle" faltante)
+        catch (ApiException apiexception)
+        {
+            if (apiexception.Response != null && (apiexception.Response.Contains("Error!") || apiexception.Response.Contains("Conflict")))
+            {
+                // Extraer el mensaje de error del controlador
+                messageError = apiexception.Response.Replace("\"", "").Trim();
+            }
+            else
+            {
+                messageError = "Error al procesar su solicitud, por favor intente de nuevo más tarde.";
+            }
+        }
+        StateHasChanged();
+    }
+}
