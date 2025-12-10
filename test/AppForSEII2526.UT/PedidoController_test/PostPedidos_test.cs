@@ -213,7 +213,7 @@ namespace AppForSEII2526.UT.PedidoController_test
                 items
             );
 
-            var expectedpedidoDetailDTO = new PedidoDetailDTO(nombre, MetodoPago.Tarjeta, apellido1,"Aguilar", DateTime.Today, 6.0f, new List<ItemPedidoDTO>() {new ItemPedidoDTO(2,"Vegetal",2,3.0f,"Integral" )});
+            var expectedpedidoDetailDTO = new PedidoDetailDTO(1, nombre, MetodoPago.Tarjeta, apellido1,"Aguilar", DateTime.Today, 6.0f, new List<ItemPedidoDTO>() {new ItemPedidoDTO(2,"Vegetal",2,3.0f,"Integral" )});
 
             var result = await controller.CreatePedido(pedidoDTO);
 

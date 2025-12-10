@@ -40,6 +40,7 @@ namespace AppForSEII2526.API.Controllers
                 .ThenInclude(cb => cb.Bocadillo)
                 .ThenInclude(b => b.TipoPan)
                 .Select(c=> new PedidoDetailDTO(
+                    c.CompraID,
                     c.usuario.Nombre,
                     c.MetodoPago,
                     c.usuario.Apellido1,
@@ -77,7 +78,7 @@ namespace AppForSEII2526.API.Controllers
 
             [HttpPost]
         [Route("[action]")]
-        [ProducesResponseType(typeof(ItemPedidoDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(PedidoDetailDTO), (int)HttpStatusCode.Created)]
         //[ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
 
@@ -182,6 +183,7 @@ namespace AppForSEII2526.API.Controllers
 
 
             var PedidoDetailsDTO = new PedidoDetailDTO(
+                compra.CompraID,
                 usuario.Nombre,
                 compra.MetodoPago,
                 usuario.Apellido1,
