@@ -1,13 +1,11 @@
 ﻿@page "/SeleccionarBonosParaComprar/SelectBonos"
 
-@*@using Microsoft.AspNetCore.Authorization*@
 @using AppForSEII2526.Web.API
 @inject AppForSEII2526APIClient apiclient
 @inject ILogger<AppForSEII2526APIClient> logger
 @inject CompraBonosStateContainer cbsc
 @inject NavigationManager navigation
 
-@*@attribute [Authorize]*@
 <h3>Select Bonos</h3>
 <div class="container-fluid">
     <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
@@ -131,18 +129,6 @@
             logger.LogError($"{DateTime.Now} Error: {ex}");
             errors = "No hay bonos con esos filtros";
             bonos.Clear();
-            /*
-            if (ex.ToString().Contains("No hay bonos con esos filtros"))
-            {
-                errors = "No hay bonos con esos filtros";
-                bonos.Clear();
-                }
-            else
-            {
-                errors = "Error while connecting to the system";
-                }
-            */
-
     }
         StateHasChanged();
     }
@@ -162,10 +148,9 @@
         catch (ApiException ex)
         {
             if (tiposBocadillosNames == null) tiposBocadillosNames = new List<string>() { "Todos", };
-            logger.LogError("Error! There was an error while connecting to the GetGenresAsync service");
+            logger.LogError("Error! There was an error while connecting to the GetTiposBocadillosAsync service");
         }
 
         SearchBonos();
-        //return base.OnInitializedAsync();
     }
 }

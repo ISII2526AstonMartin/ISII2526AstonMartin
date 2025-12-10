@@ -120,7 +120,7 @@
                 try
                 {
                     var comprao = await apiclient.CreateCompraAsync(compra4create);
-                    
+
                     navigation.NavigateTo($"/SeleccionarBonosParaComprar/CompraBonoDetails/?Id={comprao.Id}");
                 }
                 catch (ApiException<ValidationProblemDetails> apiexceptionvalidation)
@@ -135,8 +135,31 @@
 
                 catch (ApiException apiexception)
                 {
-                    //messageError = apiexception.ToString();
-                    messageError = "Error while processing your request, please try again later!";
+                    var error = apiexception.ToString();
+                    if (error.Contains("El nombre no está definido"))
+                    {
+                        messageError = "El nombre no está definido";
+                    }else if (error.Contains("El apellido no está definido"))
+                    {
+                        messageError = "El apellido no está definido";
+                    }else if (error.Contains("Metodo de pago no valido"))
+                    {
+                        messageError = "Metodo de pago no valido";
+                    }else if (error.Contains("Cliente no registrado"))
+                    {
+                        messageError = "Cliente no registrado";
+                    }
+                    else if (error.Contains("Bono no existe"))
+                    {
+                        messageError = "Bono no existe";
+                    }else if(error.Contains("No se puede tener cantidad 0 en un bono"))
+                    {
+                        messageError = "No se puede tener cantidad 0 en un bono";
+                    }
+                    else
+                    {
+                        messageError = "Error while processing your request, please try again later!";
+                    }
                 }
             }
         }
@@ -146,10 +169,5 @@
         compra4create.NombreCliente = compra4create.NombreCliente == null ? "" : compra4create.NombreCliente;
         compra4create.Apellido1 = compra4create.Apellido1 == null ? "" : compra4create.Apellido1;
         compra4create.Apellido2 = compra4create.Apellido2 == null ? "" : compra4create.Apellido2;
-        /*
-        compra4create.NombreCliente = "Daniel";
-        compra4create.Apellido1 = "Martinez";
-        compra4create.Apellido2 = "Bautista";
-        */
     }
 }
