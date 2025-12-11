@@ -20,7 +20,7 @@ namespace AppForSEII2526.UIT.UC_Rental
         private const string nombreBocadillo2 = "Serrano";
         private const string tipoPan2 = "Integral";
         private const string precio2 = "5";
-        private const string tamanyo2 = "Normal";
+        private const string tamanyo2 = "Pequeño";
 
 
 
@@ -34,11 +34,26 @@ namespace AppForSEII2526.UIT.UC_Rental
 
         private void InitialStepsForCompraBocadillos()
         {
-
             _driver.Navigate().GoToUrl("https://localhost:7081/");
             selectBocadillosParaPedir_PO.WaitForBeingVisible(By.Id("CreateCompra"));
-            
-            _driver.FindElement(By.Id("CreateCompra")).Click();
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(driver =>
+            {
+                try
+                {
+                    var element = driver.FindElement(By.Id("CreateCompra"));
+                    return element != null && element.Displayed && element.Enabled;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return false;
+                }
+            });
+
+            // Localiza el botón justo antes de hacer clic para evitar stale element
+            var createCompraButton = _driver.FindElement(By.Id("CreateCompra"));
+            createCompraButton.Click();
         }
 
 
@@ -46,14 +61,14 @@ namespace AppForSEII2526.UIT.UC_Rental
 
         [Theory]
         [InlineData(nombreBocadillo1, tipoPan1, precio1, tamanyo1, "Normal", "")]
-        [InlineData(nombreBocadillo2, tipoPan2, precio2, tamanyo2, "", "Normal")]
+        [InlineData(nombreBocadillo2, tipoPan2, precio2, tamanyo2, "", "Integral")]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC2_AF1_UC2_4_5_6_filtering(string nombreBocadillo, string tipoPan, string precio, string tamanyo,
             string filterTamanyo, string filterTipoPan)
         {
             //Arrange
              InitialStepsForCompraBocadillos();
-             var expectedBocadillos = new List<string[]> { new string[] { nombreBocadillo, tipoPan,precio, tamanyo }, };
+             var expectedBocadillos = new List<string[]> { new string[] { nombreBocadillo, tamanyo,tipoPan,precio }, };
 
             //Act
 

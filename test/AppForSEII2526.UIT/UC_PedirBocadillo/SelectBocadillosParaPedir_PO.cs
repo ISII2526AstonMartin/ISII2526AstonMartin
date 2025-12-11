@@ -8,7 +8,7 @@ namespace AppForSEII2526.UIT.UC_Rental
 {
     public class SelectBocadillosParaPedir_PO : PageObject
     {
-        By inputTitle = By.Id("inputTitle");
+        By inputTamanyo = By.Id("selectTamanyo");
         By inputTipoPan = By.Id("selectTipoPan");
         By buttonSearchBocadillos = By.Id("searchBocadillos");
         By tableOfBocadillos = By.Id("TableOfBocadillos");
@@ -20,8 +20,8 @@ namespace AppForSEII2526.UIT.UC_Rental
         public void SearchBocadillos(string tamanyo, string tipoPan)
         {
             //wait for the webelement to be clickable
-            WaitForBeingClickable(inputTitle);
-            _driver.FindElement(inputTitle).SendKeys(tamanyo);
+            WaitForBeingClickable(inputTamanyo);
+            _driver.FindElement(inputTamanyo).SendKeys(tamanyo);
            
 
 
@@ -29,8 +29,12 @@ namespace AppForSEII2526.UIT.UC_Rental
             SelectElement selectElement = new SelectElement(_driver.FindElement(inputTipoPan));
             selectElement.SelectByText(tipoPan);
 
+            if (tamanyo == "") tamanyo = "All";
+            selectElement = new SelectElement(_driver.FindElement(inputTamanyo));
+            selectElement.SelectByText(tamanyo);
 
-            _driver.FindElement(buttonSearchBocadillos).Click();
+           var createCompraButton=  _driver.FindElement(buttonSearchBocadillos);
+                createCompraButton.Click();
         }
 
 
