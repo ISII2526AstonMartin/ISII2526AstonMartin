@@ -34,16 +34,17 @@ namespace AppForSEII2526.UIT.UC_CrearResenya
 
         private void InitialStepsForCrearResenya()
         {
+            _driver.Navigate().GoToUrl("https://localhost:7081/");
             SelectBocadillosForResenya_PO.WaitForBeingVisible(By.Id("CreateResenya"));
             //we click on the menu
-            _driver.FindElement(By.Id("CreateRental")).Click();
+            _driver.FindElement(By.Id("CreateResenya")).Click();
         }
 
 
 
         [Theory]
         [InlineData(bocadilloNombre1, bocadilloTamanyo1, bocadilloTipoPan1, bocadilloPrecio1, "Serrano", "")]
-        [InlineData(bocadilloNombre2, bocadilloTamanyo2, bocadilloTipoPan2, bocadilloPrecio1, "", "2")]
+        [InlineData(bocadilloNombre2, bocadilloTamanyo2, bocadilloTipoPan2, bocadilloPrecio2, "", "2")]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC2_FiltrarBocadillos(string nombre, string tamanyo, string tipoPan, string pvp,
             string filterNombre, string filterPrecio)
