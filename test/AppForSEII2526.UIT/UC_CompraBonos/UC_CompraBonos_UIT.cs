@@ -15,6 +15,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
     {
         private SelectBonosParaComprar_PO selectbonos_PO;
         private CreateCompraBono_PO comprabonos_PO;
+        private CompraBonoDetails_PO comprabonodetail_PO;
         private const int bonoid = 1;
         private const string nombre1 = "Bono1";
         private const string tipo1 = "Vegano";
@@ -26,6 +27,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
             
             selectbonos_PO = new SelectBonosParaComprar_PO(_driver, _output);
             comprabonos_PO = new CreateCompraBono_PO(_driver, _output);
+            comprabonodetail_PO= new CompraBonoDetails_PO(_driver, _output);
         }
         private void InitialStepsForComprarBonos()
         {
@@ -68,6 +70,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         public void CU3_FB_1_2_3_4_5_6_7() //Esc_1, UC3_1
         {
             InitialStepsForComprarBonos();
+            DateTime fechahoy = DateTime.Today;
             var expectedBonos = new List<string[]>
             {
                 new string[]
@@ -101,18 +104,41 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
                 },
             };
 
-            selectbonos_PO.BuscarBonos("", "");
+            var expectedtablebonos = new List<string[]>
+            {
+                new string[]
+                {
+                    "Bono1", "Vegano", "15 €", "1"
+                },
+                new string[]
+                {
+                    "Bono2", "Vegetariano", "11 €", "1"
+                },
+                new string[]
+                {
+                    "Bono3", "Sin Gluten", "10 €", "1"
+                }
+            };
 
+
+            //Pagina Select
+            selectbonos_PO.BuscarBonos("", "");
             Assert.True(selectbonos_PO.CheckListOfBonos(expectedBonos));
             selectbonos_PO.seleccionarBonos("Bono1");
             selectbonos_PO.seleccionarBonos("Bono2");
             selectbonos_PO.seleccionarBonos("Bono3");
             Assert.True(selectbonos_PO.buttonCompraAvailable());
             selectbonos_PO.seleccionarBotonCompra();
+
+            //Pagina de compra
             Assert.True(comprabonos_PO.CheckListOfBonos(expectedBonosOnCompra));
             comprabonos_PO.rellenarDatosCompra("Daniel", "Martinez", "Bautista", "Tarjeta");
             Assert.True(comprabonos_PO.checkPrecio("36"));
             comprabonos_PO.seleccionarBotonCompra();
+
+            //Pagina de details
+            Assert.True(comprabonodetail_PO.CheckListOfDatos("Daniel Martinez Bautista", fechahoy.ToString("dd/MM/yyyy hh:mm:ss"), "Tarjeta", "36"));
+            Assert.True(comprabonodetail_PO.CheckListOfBonos(expectedtablebonos));
         }
 
         [Theory]
@@ -235,7 +261,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU3_FA5_1_2_3_4_5_CantidadCero() //Esc_7 CU3_14
+        public void CU3_FA5_1_2_3_4_5() //Esc_7 CU3_14
         {
           
 
