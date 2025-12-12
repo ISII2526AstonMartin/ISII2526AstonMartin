@@ -19,6 +19,7 @@ namespace AppForSEII2526.UIT.UC_Rental
         }
         public void SearchBocadillos(string tamanyo, string tipoPan)
         {
+            WaitForBeingVisibleIgnoringExeptionTypes(inputTamanyo);
             //wait for the webelement to be clickable
             WaitForBeingClickable(inputTamanyo);
             _driver.FindElement(inputTamanyo).SendKeys(tamanyo);

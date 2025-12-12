@@ -51,11 +51,23 @@ namespace AppForSEII2526.UIT.UC_Rental
                 }
             });
 
-            // Localiza el botón justo antes de hacer clic para evitar stale element
-            var createCompraButton = _driver.FindElement(By.Id("CreateCompra"));
-            createCompraButton.Click();
+            // Reintenta el click si ocurre un StaleElementReferenceException
+            int retries = 3;
+            while (retries-- > 0)
+            {
+                try
+                {
+                    var createCompraButton = _driver.FindElement(By.Id("CreateCompra"));
+                    createCompraButton.Click();
+                    break;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    if (retries == 0) throw;
+                    Thread.Sleep(200); // Espera breve antes de reintentar
+                }
+            }
         }
-
 
 
 
