@@ -53,6 +53,13 @@ namespace AppForSEII2526.UIT.UC_Rental
             _driver.FindElement(By.Id("movieToRent_" + nombreBocadillo)).Click();
         }
 
+        public void seleccionarBotonCompra()
+        {
+            WaitForBeingVisible(buttonComprarBocadillos);
+            WaitForBeingClickable(buttonComprarBocadillos);
+            _driver.FindElement(buttonComprarBocadillos).Click();
+        }
+
         public void RemoveBocadilloParaComprar(string nombreBocadillo)
         {
             WaitForBeingClickable(By.Id("removeMovie_" + nombreBocadillo));
