@@ -832,45 +832,6 @@
         }
       }
     },
-    "/GetTamanyos": {
-      "get": {
-        "tags": [
-          "Tamanyo"
-        ],
-        "operationId": "GetTamanyos",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-        }
-      }
-    },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/GetTiposBocadillos": {
       "get": {
         "tags": [
@@ -1274,10 +1235,6 @@
         "additionalProperties": false
       },
       "CreatePedidoDTO": {
-        "required": [
-          "metodoPago",
-          "nombre"
-        ],
         "type": "object",
         "properties": {
           "nombre": {
@@ -1456,9 +1413,6 @@
         "additionalProperties": false
       },
       "ItemPedidoDTO": {
-        "required": [
-          "cantidad"
-        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1544,10 +1498,6 @@
         "type": "string"
       },
       "PedidoDetailDTO": {
-        "required": [
-          "metodoPago",
-          "nombre"
-        ],
         "type": "object",
         "properties": {
           "nombre": {
