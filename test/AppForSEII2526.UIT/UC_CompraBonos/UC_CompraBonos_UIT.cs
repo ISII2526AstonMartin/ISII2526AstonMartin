@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AppForSEII2526.UIT.UC_CompraBonos
 {
@@ -64,7 +65,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU3_FB() //Esc_1, UC3_1
+        public void CU3_FB_1_2_3_4_5_6_7() //Esc_1, UC3_1
         {
             InitialStepsForComprarBonos();
             var expectedBonos = new List<string[]>
@@ -84,6 +85,22 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
 
             };
 
+            var expectedBonosOnCompra = new List<string[]>
+            {
+                new string[]
+                {
+                    "Bono1", "Vegano", "15"
+                },
+                new string[]
+                {
+                    "Bono2", "Vegetariano", "11"
+                },
+                new string[]
+                {
+                    "Bono3", "Sin Gluten", "10"
+                },
+            };
+
             selectbonos_PO.BuscarBonos("", "");
 
             Assert.True(selectbonos_PO.CheckListOfBonos(expectedBonos));
@@ -92,6 +109,10 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
             selectbonos_PO.seleccionarBonos("Bono3");
             Assert.True(selectbonos_PO.buttonCompraAvailable());
             selectbonos_PO.seleccionarBotonCompra();
+            Assert.True(comprabonos_PO.CheckListOfBonos(expectedBonosOnCompra));
+            comprabonos_PO.rellenarDatosCompra("Daniel", "Martinez", "Bautista", "Tarjeta");
+            Assert.True(comprabonos_PO.checkPrecio("36"));
+            comprabonos_PO.seleccionarBotonCompra();
         }
 
         [Theory]
@@ -156,16 +177,95 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         [Trait("LevelTesting", "Funcional Testing")]
         public void CU3_FA3_1_2_3_4() //Esc_5, UC3_9
         {
+            var expectedBonosOnCompra = new List<string[]>
+            {
+                new string[]
+                {
+                    "Bono1", "Vegano", "15"
+                }
+            };
             InitialStepsForComprarBonos();
             selectbonos_PO.BuscarBonos("", "");
             selectbonos_PO.seleccionarBonos("Bono1");
             selectbonos_PO.seleccionarBonos("Bono2");
             selectbonos_PO.seleccionarBonos("Bono3");
+            selectbonos_PO.seleccionarBotonCompra();
+            comprabonos_PO.seleccionarBotonVolver();
             selectbonos_PO.eliminarBono("Bono2");
             selectbonos_PO.eliminarBono("Bono3");
             Assert.True(selectbonos_PO.buttonCompraAvailable());
             selectbonos_PO.seleccionarBotonCompra();
+            Assert.True(comprabonos_PO.CheckListOfBonos(expectedBonosOnCompra));
+            Assert.True(comprabonos_PO.checkPrecio("15"));
         }
-        
+
+        [Theory]
+        [InlineData("", "Martinez", "Bautista", "Tarjeta")] //UC3_10
+        [InlineData("Daniel", "", "Bautista", "Tarjeta")] //UC3_11
+        [InlineData("Andres", "Iniesta", "Lujan", "Tarjeta")] //UC3_13
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU3_FA4_1_2_3_4_5_6(string nombre, string ap1, string ap2, string mp) //Esc_6
+        {
+            InitialStepsForComprarBonos();
+            selectbonos_PO.BuscarBonos("", "");   
+            selectbonos_PO.seleccionarBonos("Bono1");
+            selectbonos_PO.seleccionarBonos("Bono2");
+            selectbonos_PO.seleccionarBonos("Bono3");
+            selectbonos_PO.seleccionarBotonCompra();
+            comprabonos_PO.rellenarDatosCompra(nombre, ap1, ap2, mp);
+            comprabonos_PO.seleccionarBotonCompra();
+            Assert.True(comprabonos_PO.checkErrorMessage("Errors: Error while processing your request, please try again later!"));
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU3_FA4_1_2_3_4_5_6_CantidadCero() //Esc_6 CU3_12
+        {
+            InitialStepsForComprarBonos();
+            selectbonos_PO.BuscarBonos("", "");
+            selectbonos_PO.seleccionarBonos("Bono1");
+            selectbonos_PO.seleccionarBonos("Bono2");
+            selectbonos_PO.seleccionarBonos("Bono3");
+            selectbonos_PO.seleccionarBotonCompra();
+            comprabonos_PO.rellenarDatosCompra("Daniel", "Martinez", "Bautista", "Tarjeta");
+            comprabonos_PO.modificarCantidadBono("1", "0");
+            comprabonos_PO.seleccionarBotonCompra();
+            Assert.True(comprabonos_PO.checkErrorMessage("Errors: Error while processing your request, please try again later!"));
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU3_FA5_1_2_3_4_5_CantidadCero() //Esc_7 CU3_14
+        {
+          
+
+            var expectedBonosOnCompra = new List<string[]>
+            {
+                new string[]
+                {
+                    "Bono1", "Vegano", "15"
+                },
+                new string[]
+                {
+                    "Bono2", "Vegetariano", "11"
+                },
+                new string[]
+                {
+                    "Bono3", "Sin Gluten", "10"
+                },
+            };
+            InitialStepsForComprarBonos();
+            selectbonos_PO.BuscarBonos("", "");
+            selectbonos_PO.seleccionarBonos("Bono1");
+            selectbonos_PO.seleccionarBonos("Bono2");
+            selectbonos_PO.seleccionarBonos("Bono3");
+            selectbonos_PO.seleccionarBotonCompra();
+            Assert.True(comprabonos_PO.CheckListOfBonos(expectedBonosOnCompra));
+            comprabonos_PO.rellenarDatosCompra("Daniel", "Martinez", "Bautista", "Tarjeta");
+            comprabonos_PO.seleccionarBotonVolver();
+            selectbonos_PO.seleccionarBotonCompra();
+            Assert.True(comprabonos_PO.checkDatosUsuario("Daniel", "Martinez", "Bautista","Tarjeta"));
+            Assert.True(comprabonos_PO.CheckListOfBonos(expectedBonosOnCompra));
+        }
     }
 }

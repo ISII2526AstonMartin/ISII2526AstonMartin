@@ -62,19 +62,6 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         public bool buttonCompraAvailable()
         {
             return _driver.FindElement(compraButton).Displayed == true;
-            /*
-            try
-            {
-                WaitForBeingVisible(compraButton);
-                //var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(2));
-                //wait.Until(ExpectedConditions.ElementIsVisible(compraButton));
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
-            */
         }
         public bool checkErrorMessage(string error)
         {
