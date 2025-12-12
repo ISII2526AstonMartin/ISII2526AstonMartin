@@ -79,7 +79,7 @@ namespace AppForSEII2526.UIT.UC_Rental
         [InlineData(nombreBocadillo1, tipoPan1, precio1, tamanyo1, "Normal", "")]
         [InlineData(nombreBocadillo2, tipoPan2, precio2, tamanyo2, "", "Integral")]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void UC2_AF1_UC2_4_5_6_filtering(string nombreBocadillo, string tipoPan, string precio, string tamanyo,
+        public void TC1_AF2_TC1_3_4filtering(string nombreBocadillo, string tipoPan, string precio, string tamanyo,
             string filterTamanyo, string filterTipoPan)
         {
             //Arrange
@@ -101,7 +101,7 @@ namespace AppForSEII2526.UIT.UC_Rental
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
 
-        public void UC2_AF1_UC2_11_CompraNotAvailable()
+        public void TC1_AF1_TC1_2_CompraNotAvailable() //No hay bocadillos seleccionados
         {
             //Arrange
             InitialStepsForCompraBocadillos();
@@ -125,7 +125,7 @@ namespace AppForSEII2526.UIT.UC_Rental
         [InlineData("Julio", "Tarrega", "Peinado", "Tarjeta")] //Usuario Inexistente
         [Trait("LevelTesting", "Funcional Testing")]
 
-        public void CU3_FA4_1_2_3_4_5_6(string nombre, string apellido1, string apellido2, string metodopago) //Esc_6
+        public void TC1_FA3_2_3_4_5_6_7(string nombre, string apellido1, string apellido2, string metodopago) //Esc_6
         {
             InitialStepsForCompraBocadillos();
             selectBocadillosParaPedir_PO.SearchBocadillos("", "");
@@ -142,7 +142,7 @@ namespace AppForSEII2526.UIT.UC_Rental
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU3_FA4_1_2_3_4_5_6_CantidadCero() //Cantidad 0
+        public void TC1_FA3_2_3_4_5_6_7_8() //Cantidad 0
         {
             InitialStepsForCompraBocadillos();
             selectBocadillosParaPedir_PO.SearchBocadillos("", "");
