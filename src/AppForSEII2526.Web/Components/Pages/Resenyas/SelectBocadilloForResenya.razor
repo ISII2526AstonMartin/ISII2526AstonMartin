@@ -138,6 +138,17 @@
     protected override async Task OnInitializedAsync()
     {
         SearchBocadillos();
+
+       
+        if (resenya.Items.Count > 0)
+        {
+            hideResenyaCart = false;
+        }
+        else
+        {
+            hideResenyaCart = true;
+        }
+
         base.OnInitializedAsync();
     }
 

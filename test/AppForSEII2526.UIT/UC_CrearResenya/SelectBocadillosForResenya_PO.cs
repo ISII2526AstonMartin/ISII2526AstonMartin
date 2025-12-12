@@ -63,10 +63,37 @@ namespace AppForSEII2526.UIT.UC_Resenyas
 
         public bool ResenyaNotAvailable()
         {
-            //the button is not Displayed=hidden
 
             return _driver.FindElement(buttonCrearResenya).Displayed == false;
         }
+
+
+        public bool EstaEnLaPaginaBusqueda()
+        {
+            try
+            {
+                WaitForBeingVisible(inputNombre);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool EstaEnElCarrito(string bocadilloNombre)
+        {
+            try
+            {
+                By removeBtn = By.Id("removeBocadillo_" + bocadilloNombre);
+                return _driver.FindElement(removeBtn).Displayed;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
 
 
     }
