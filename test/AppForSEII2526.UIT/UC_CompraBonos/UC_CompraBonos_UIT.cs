@@ -12,6 +12,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
     public class UC_CompraBonos_UIT : UC_UIT
     {
         private SelectBonosParaComprar_PO selectbonos_PO;
+        private CreateCompraBono_PO comprabonos_PO;
         private const int bonoid = 1;
         private const string nombre1 = "Bono1";
         private const string tipo1 = "Vegano";
@@ -22,36 +23,17 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         {
             
             selectbonos_PO = new SelectBonosParaComprar_PO(_driver, _output);
+            comprabonos_PO = new CreateCompraBono_PO(_driver, _output);
         }
         private void InitialStepsForComprarBonos()
         {
             selectbonos_PO.WaitForBeingVisible(By.Id("CreateCompraBonos"));
             _driver.FindElement(By.Id("CreateCompraBonos")).Click();
         }
-        [Theory]
-        [InlineData(nombre1, tipo1, bonoprice1, nbocadillos1, "Bono1", "")]
-        [InlineData(nombre1, tipo1, bonoprice1, nbocadillos1, "", "Vegano")]
-        [InlineData(nombre1, tipo1, bonoprice1, nbocadillos1, "Bono1", "Vegano")]
-        [Trait("LevelTesting", "Funcional Testing")]
-        public void CuBonos_AF1_2_3_4_5_FILTROS(string nombrebono, string tipoboca, string precio, string num, string filtronombre, string filtrotipo)
-        {
-            InitialStepsForComprarBonos();
-            var expectedBonos = new List<string[]>
-            {
-                new string[]
-                {
-                    nombrebono,tipoboca, num, precio
-                }
-            };
-
-            selectbonos_PO.BuscarBonos(filtronombre, filtrotipo);
-
-            Assert.True(selectbonos_PO.CheckListOfBonos(expectedBonos));
-        }
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CuBonos_AF1_2_3_4_5_NOFILTROS()
+        public void CU3_FB() //Esc_1
         {
             InitialStepsForComprarBonos();
             var expectedBonos = new List<string[]>
@@ -74,16 +56,67 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
             selectbonos_PO.BuscarBonos("", "");
 
             Assert.True(selectbonos_PO.CheckListOfBonos(expectedBonos));
+            selectbonos_PO.seleccionarBonos("Bono1");
+            selectbonos_PO.seleccionarBonos("Bono2");
+            selectbonos_PO.seleccionarBonos("Bono3");
+            Assert.True(selectbonos_PO.buttonCompraAvailable());
+            selectbonos_PO.seleccionarBotonCompra();
         }
+
         [Theory]
         [InlineData("BonoNoExiste", "")]
         [InlineData("", "TipoNoExiste")]
+        [InlineData("BonoNoExiste", "TipoNoExiste")]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CuBonos_AF0(string filtronombre, string filtrotipo)
+        public void CU3_FA0_1_2(string filtronombre, string filtrotipo) //Esc_3
         {
             InitialStepsForComprarBonos();
-            var expectedBonos = new List< string[] >{ };
-            Assert.False(selectbonos_PO.CheckListOfBonos(expectedBonos));
+            var expectedBonos = new List<string[]> { };
+        }
+
+        [Theory]
+        [InlineData(nombre1, tipo1, bonoprice1, nbocadillos1, "Bono1", "")]
+        [InlineData(nombre1, tipo1, bonoprice1, nbocadillos1, "", "Vegano")]
+        [InlineData(nombre1, tipo1, bonoprice1, nbocadillos1, "Bono1", "Vegano")]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU3_FA1_1_2_3(string nombrebono, string tipoboca, string precio, string num, string filtronombre, string filtrotipo) //Esc_2
+        {
+            InitialStepsForComprarBonos();
+            var expectedBonos = new List<string[]>
+            {
+                new string[]
+                {
+                    nombrebono,tipoboca, num, precio
+                }
+            };
+
+            selectbonos_PO.BuscarBonos(filtronombre, filtrotipo);
+
+            Assert.True(selectbonos_PO.CheckListOfBonos(expectedBonos));
+        }
+
+        
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU3_FA2_1_2_3() //Esc_4
+        {
+            InitialStepsForComprarBonos();
+            Assert.False(selectbonos_PO.buttonCompraAvailable());
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU3_FA3_1_2_3_4() //Esc_5
+        {
+            InitialStepsForComprarBonos();
+            selectbonos_PO.BuscarBonos("", "");
+            selectbonos_PO.seleccionarBonos("Bono1");
+            selectbonos_PO.seleccionarBonos("Bono2");
+            selectbonos_PO.seleccionarBonos("Bono3");
+            selectbonos_PO.eliminarBono("Bono2");
+            selectbonos_PO.eliminarBono("Bono3");
+            Assert.True(selectbonos_PO.buttonCompraAvailable());
         }
     }
 }

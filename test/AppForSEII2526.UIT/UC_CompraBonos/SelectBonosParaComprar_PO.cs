@@ -1,9 +1,10 @@
-﻿using System;
+﻿using OpenQA.Selenium.Support.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenQA.Selenium.Support.UI;
+using System.Xml.Linq;
 
 namespace AppForSEII2526.UIT.UC_CompraBonos
 {
@@ -11,8 +12,9 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
     {
         By inputnombre = By.Id("inputTitle");
         By inputTipo = By.Id("selectTipoBocadillo");
-        By compraButton = By.Id("searchBonos");
+        By buscaButton = By.Id("searchBonos");
         By tablaofBonos = By.Id("TableOfBonos");
+        By compraButton = By.Id("compraButton");
 
         public SelectBonosParaComprar_PO(IWebDriver driver, ITestOutputHelper output) :base(driver, output)
         {
@@ -26,12 +28,44 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
             WaitForBeingClickable(inputTipo);
             SelectElement se = new SelectElement(_driver.FindElement(inputTipo));
             se.SelectByText(tipo);
+            _driver.FindElement(buscaButton).Click();
+        }
+        public void seleccionarBonos(string nombre)
+        {
+            By buttonBocadillo = By.Id("BonoToBuy_"+nombre);
+            WaitForBeingClickable(buttonBocadillo);
+            _driver.FindElement(buttonBocadillo).Click();
+        }
+        public void seleccionarBotonCompra()
+        {
+            WaitForBeingClickable(compraButton);
             _driver.FindElement(compraButton).Click();
+        }
+
+        public void eliminarBono(string nombre)
+        {
+            By buttonBocadilloRemove = By.Id("removeBono_" + nombre);
+            WaitForBeingClickable(buttonBocadilloRemove);
+            _driver.FindElement(buttonBocadilloRemove).Click();
         }
         
         public bool CheckListOfBonos(List<string[]> expectedBonos)
         {
             return CheckBodyTable(expectedBonos, tablaofBonos);
+        }
+
+        public bool buttonCompraAvailable()
+        {
+            try
+            {
+                var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(2));
+                wait.Until(ExpectedConditions.ElementIsVisible(compraButton));
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
         }
     }
 }
