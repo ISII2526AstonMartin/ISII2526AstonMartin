@@ -96,13 +96,17 @@ namespace AppForSEII2526.API.Controllers
 
             foreach (var item in dto.compraItems)
             {
+                if (item.cantidad <= 0)
+                {
+                    return BadRequest("No se puede tener cantidad 0 o menor en un bono");
+                }
                 var bono = bonos.FirstOrDefault(b => b.NombreBono == item.nombreBono);
                 if (bono == null)
                 {
                     return BadRequest("Bono no existe");
-                }else if (bono.CantidadDisponible==0)
+                }else if (bono.CantidadDisponible<=0)
                 {
-                    return BadRequest("No se puede tener cantidad 0 en un bono"); 
+                    return BadRequest("No se puede tener cantidad 0 o menor en un bono"); 
                 }
 
                 else

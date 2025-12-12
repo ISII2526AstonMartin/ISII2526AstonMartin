@@ -14,7 +14,7 @@ namespace AppForSEII2526.UIT.UC_CrearResenya
     {
         private SelectBocadillosForResenya_PO SelectBocadillosForResenya_PO;
         private const string bocadilloNombre1 = "Serrano";
-        private const string bocadilloTamanyo1 = "Normal";
+        private const string bocadilloTamanyo1 = "Pequeño";
         private const string bocadilloTipoPan1 = "Integral";
         private const string bocadilloPrecio1 = "5";
 

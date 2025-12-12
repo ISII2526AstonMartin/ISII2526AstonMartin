@@ -44,7 +44,7 @@ namespace AppForMovies.UIT.Shared {
             }
             //Added to make _Driver wait when an element is not found.
             //It will wait for a maximum of 50 seconds.
-
+            Initial_step_opening_the_web_page();
             //maximize the window browser
             _driver.Manage().Window.Maximize();
         }

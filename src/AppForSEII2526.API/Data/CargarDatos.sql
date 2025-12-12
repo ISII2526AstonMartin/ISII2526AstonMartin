@@ -16,10 +16,9 @@ SET IDENTITY_INSERT [dbo].[TipoPan] OFF
 -- Habilitar IDENTITY_INSERT para Bocadillo
 SET IDENTITY_INSERT [dbo].[Bocadillo] ON
 
-INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (1, N'Serrano', 5, 10, 1, 1)
+INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (1, N'Serrano', 5, 10, 1, 0)
 INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (2, N'Bacon', 2, 3, 2, 0)
 INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (3, N'BaconQueso', 3, 4, 3, 1)
-INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (4, N'Atun', 4, 2, 1, 0)
 
 -- Deshabilitar IDENTITY_INSERT para Bocadillo
 SET IDENTITY_INSERT [dbo].[Bocadillo] OFF

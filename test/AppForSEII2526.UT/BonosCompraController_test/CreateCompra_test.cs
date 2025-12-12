@@ -83,7 +83,7 @@ namespace AppForSEII2526.UT.BonosCompraController_test
                 new object[]{ new CompraBonoForCreateDTO("Lionel Andres", "Messi", "Cuccittini", MetodoPago.Tarjeta, new List<CompraBonoItemDTO>()), "Cliente no registrado" },
                 new object[]{ nuevo , "Bono no existe" },
                 new object[]{ eldemenorquetres , "Error!, El precio del bono debe ser mayor que 3" },
-                new object[]{ eldelbonoagotado, "No se puede tener cantidad 0 en un bono"}
+                new object[]{ eldelbonoagotado, "No se puede tener cantidad 0 o menor en un bono" }
             };
             
             return allTests;

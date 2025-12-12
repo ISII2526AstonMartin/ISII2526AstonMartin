@@ -1,13 +1,11 @@
 ﻿@page "/SeleccionarBonosParaComprar/SelectBonos"
 
-@using Microsoft.AspNetCore.Authorization
 @using AppForSEII2526.Web.API
 @inject AppForSEII2526APIClient apiclient
 @inject ILogger<AppForSEII2526APIClient> logger
 @inject CompraBonosStateContainer cbsc
 @inject NavigationManager navigation
 
-@*@attribute [Authorize]*@
 <h3>Select Bonos</h3>
 <div class="container-fluid">
     <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
@@ -99,23 +97,25 @@
     private string errors = "";
     private string nombreBono { get; set; }
     private string tipoBocadillo { get; set; }
-    private bool hidenRentingCart { get { return CompraBono.CompraItems.Count == 0; } }
+    private bool hiddenRentingCart { get { return CompraBono.CompraItems.Count == 0; } }
     private CompraBonoForCreateDTO CompraBono => cbsc.CreateDTO;
-    private bool hiddenRentingCart = true;
+    //private bool hiddenRentingCart = true;
 
     private void AddBono(BonoBocadillosDTO bono)
     {
         cbsc.AddBonoToCompra(bono);
-        hiddenRentingCart = false;
+        //hiddenRentingCart = false;
     }
 
     private void RemoveCompraBonoItem(CompraBonoItemDTO item)
     {
         cbsc.RemoveCompraBonoItem(item);
+        /*
         if (CompraBono.CompraItems.Count == 0)
         {
             hiddenRentingCart = true;
         }
+        */
     }
 
     public async void SearchBonos()
@@ -129,39 +129,30 @@
         catch (ApiException ex)
         {
             logger.LogError($"{DateTime.Now} Error: {ex}");
-            if (ex.ToString().Contains("No hay bonos con esos filtros"))
-            {
-                errors = "No hay bonos con esos filtros";
-                bonos.Clear();
-            }
-            else
-            {
-                errors = "Error while connecting to the system";
-            }
-            
-        }
+            errors = "No hay bonos con esos filtros";
+            bonos.Clear();
+    }
         StateHasChanged();
     }
 
     private void ComprarBonos()
     {
-        navigation.NavigateTo("/SeleccionarBonosParaComprar/CompraBonoDetails");
+        navigation.NavigateTo("/SeleccionarBonosParaComprar/CreateCompraBono");
     }
 
     protected override async Task OnInitializedAsync()
     {
-
         try
         {
+            
             tiposBocadillosNames = await apiclient.GetTiposBocadillosAsync(null);
         }
         catch (ApiException ex)
         {
-            if (tiposBocadillosNames == null) tiposBocadillosNames = new List<string>() { "All", };
-            logger.LogError("Error! There was an error while connecting to the GetGenresAsync service");
+            if (tiposBocadillosNames == null) tiposBocadillosNames = new List<string>() { "Todos", };
+            logger.LogError("Error! There was an error while connecting to the GetTiposBocadillosAsync service");
         }
 
         SearchBonos();
-        //return base.OnInitializedAsync();
     }
 }
