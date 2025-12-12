@@ -79,6 +79,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         public bool checkErrorMessage(string error)
         {
             By errorContainer = By.Id("ErrorsShown");
+            WaitForBeingVisible(errorContainer);
             IWebElement container= _driver.FindElement(errorContainer);
             string actualmessage = container.Text;
             return actualmessage.Contains(error);
