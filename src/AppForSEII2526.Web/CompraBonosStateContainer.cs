@@ -12,7 +12,7 @@ namespace AppForSEII2526.Web
         {
             get
             {
-                return Convert.ToDecimal(CreateDTO.CompraItems.Sum(ci=>ci.Pvp));
+                return Convert.ToDecimal(CreateDTO.CompraItems.Sum(ci=>ci.Pvp*ci.Cantidad));
             }
         }
         public event Action? OnChange;
@@ -26,6 +26,7 @@ namespace AppForSEII2526.Web
                     Id = bono.Id,
                     Pvp= bono.Pvp,
                     NBocadillos= bono.NBocadillos,
+                    TipoBocadillo=bono.TipoBocadillo,
                     NombreBono= bono.NombreBono,
                     Cantidad=1
                 });
@@ -43,7 +44,10 @@ namespace AppForSEII2526.Web
         public void CompraProcessed()
         {
             //we have finished the rental process so we create a new object without data
-            CreateDTO = new CompraBonoForCreateDTO();
+            CreateDTO = new CompraBonoForCreateDTO() {
+                CompraItems = new List<CompraBonoItemDTO>()
+            }
+                ;
         }
     }
 }

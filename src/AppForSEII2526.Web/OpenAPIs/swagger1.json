@@ -847,9 +847,9 @@
                   "type": "array",
                   "items": {
                     "type": "string"
-                  }
-                }
-              },
+        }
+      }
+    },
               "application/json": {
                 "schema": {
                   "type": "array",
@@ -1274,6 +1274,10 @@
         "additionalProperties": false
       },
       "CreatePedidoDTO": {
+        "required": [
+          "metodoPago",
+          "nombre"
+        ],
         "type": "object",
         "properties": {
           "nombre": {
@@ -1452,6 +1456,9 @@
         "additionalProperties": false
       },
       "ItemPedidoDTO": {
+        "required": [
+          "cantidad"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1537,6 +1544,10 @@
         "type": "string"
       },
       "PedidoDetailDTO": {
+        "required": [
+          "metodoPago",
+          "nombre"
+        ],
         "type": "object",
         "properties": {
           "nombre": {

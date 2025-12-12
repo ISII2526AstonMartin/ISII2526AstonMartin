@@ -100,9 +100,9 @@ namespace AppForSEII2526.API.Controllers
                 if (bono == null)
                 {
                     return BadRequest("Bono no existe");
-                }else if (bono.CantidadDisponible==0)
+                }else if (bono.CantidadDisponible<=0)
                 {
-                    return BadRequest("No se puede tener cantidad 0 en un bono"); 
+                    return BadRequest("No se puede tener cantidad 0 o menor en un bono"); 
                 }
 
                 else
