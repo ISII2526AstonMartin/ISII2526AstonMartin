@@ -1,9 +1,10 @@
 ﻿using AppForMovies.UIT.Shared;
+using AppForSEII2526.UIT.UC_Rental;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,7 +29,37 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         private void InitialStepsForComprarBonos()
         {
             selectbonos_PO.WaitForBeingVisible(By.Id("CreateCompraBonos"));
-            _driver.FindElement(By.Id("CreateCompraBonos")).Click();
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(driver =>
+            {
+                try
+                {
+                    var element = driver.FindElement(By.Id("CreateCompraBonos"));
+                    return element != null && element.Displayed && element.Enabled;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return false;
+                }
+            });
+
+            // Reintenta el click si ocurre un StaleElementReferenceException
+            int retries = 3;
+            while (retries-- > 0)
+            {
+                try
+                {
+                    var createCompraButton = _driver.FindElement(By.Id("CreateCompraBonos"));
+                    createCompraButton.Click();
+                    break;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    if (retries == 0) throw;
+                    Thread.Sleep(200); // Espera breve antes de reintentar
+                }
+            }
         }
 
         [Fact]
@@ -117,7 +148,6 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         public void CU3_FA2_1_2_3() //Esc_4, UC3_8
         {
             InitialStepsForComprarBonos();
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
             
             Assert.False(selectbonos_PO.buttonCompraAvailable());
         }

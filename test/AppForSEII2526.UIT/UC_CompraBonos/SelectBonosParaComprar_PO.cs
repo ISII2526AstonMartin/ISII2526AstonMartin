@@ -34,12 +34,14 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         public void seleccionarBonos(string nombre)
         {
             By buttonBocadillo = By.Id("BonoToBuy_"+nombre);
+            WaitForBeingVisible(buttonBocadillo);
             WaitForBeingClickable(buttonBocadillo);
             _driver.FindElement(buttonBocadillo).Click();
         }
 
         public void seleccionarBotonCompra()
         {
+            WaitForBeingVisible(compraButton);
             WaitForBeingClickable(compraButton);
             _driver.FindElement(compraButton).Click();
         }
@@ -47,6 +49,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         public void eliminarBono(string nombre)
         {
             By buttonBocadilloRemove = By.Id("removeBono_" + nombre);
+            WaitForBeingVisible(buttonBocadilloRemove);
             WaitForBeingClickable(buttonBocadilloRemove);
             _driver.FindElement(buttonBocadilloRemove).Click();
         }
@@ -58,16 +61,20 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
 
         public bool buttonCompraAvailable()
         {
+            return _driver.FindElement(compraButton).Displayed == true;
+            /*
             try
             {
-                var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(2));
-                wait.Until(ExpectedConditions.ElementIsVisible(compraButton));
+                WaitForBeingVisible(compraButton);
+                //var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(2));
+                //wait.Until(ExpectedConditions.ElementIsVisible(compraButton));
                 return true;
             }
             catch 
             {
                 return false;
             }
+            */
         }
         public bool checkErrorMessage(string error)
         {
