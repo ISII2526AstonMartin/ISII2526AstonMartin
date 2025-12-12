@@ -24,7 +24,13 @@
                 <div class="col">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Tamaño</span>
-                        <input type="text" id="inputTitle" @bind=tamanyo class="form-control" placeholder="Tamaño" aria-label="Tamaño" aria-describedby="basic-addon1">
+                        <select class="form-select" aria-label="Default select" @bind="tamanyoSelected" id="selectTamanyo">
+                            <option value="All" selected>All</option>
+                            @foreach (string tamanyoName in tamanyoNames)
+                            {
+                                <option value="@tamanyoName" id="tamanyoSelected_@tamanyoName">@tamanyoName</option>
+                            }
+                        </select>
                     </div>
                 </div>
                 <div class="col">
@@ -109,24 +115,28 @@
     private ICollection<BocadillosDTO> bocadillos;
     private bool hideErrors { get { return errors.Length == 0; } }
     private string errors = "";
-    private Tamanyo tamanyo { get; set; }
+    private Tamanyo? tamanyo { get; set; }
     private string tipoPan { get; set; }
-
-
     private string TipoPanSelected;
+    private string tamanyoSelected;
     private ICollection<string>? tipoPanNames = new List<string>();
+    private ICollection<string>? tamanyoNames = new List<string>();
+
 
 
     private bool hideRentingCart { get { return compra.ItemPedido.Count == 0; } }
 
     public async void SearchBocadillos()
     {
-        
+
 
 
 
         try
         {
+            tamanyo = tamanyoSelected == "All" || string.IsNullOrEmpty(tamanyoSelected)
+        ? null
+        : Enum.Parse<Tamanyo>(tamanyoSelected);
 
             tipoPan = TipoPanSelected == "All" ? null : TipoPanSelected;
             bocadillos = await apiclient.GetBocadillosParaPedirAsync(tamanyo, tipoPan);
@@ -171,10 +181,12 @@
 
         try
         {
+            tamanyoNames = Enum.GetNames(typeof(Tamanyo)).Cast<string>().ToList();
             tipoPanNames = await apiclient.GetTipoPanesAsync(null);
         }
         catch (ApiException ex)
         {
+            if (tamanyoNames == null) tamanyoNames = Enum.GetNames(typeof(Tamanyo)).Cast<string>().ToList();
             if (tipoPanNames == null) tipoPanNames = new List<string>() { "All", };
             logger.LogError("Error! There was an error while connecting to the GetGenresAsync service");
         }
