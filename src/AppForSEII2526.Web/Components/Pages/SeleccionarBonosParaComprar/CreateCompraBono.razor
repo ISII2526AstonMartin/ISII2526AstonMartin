@@ -31,7 +31,7 @@
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
-                <InputText @bind-Value="compra4create.Apellido2" class="form-control" id="Surname" />
+                <InputText @bind-Value="compra4create.Apellido2" class="form-control" id="Surname2" />
                 <label for="ap2">Apellido 2 </label>
             </div>
         </div>
@@ -55,7 +55,7 @@
     <p>
 
 
-        <b>Total:</b> @cbsc.TotalPrice €
+        <b id="precioTotalID">Total: @cbsc.TotalPrice €</b>
         <button class="btn btn-outline-primary" type="submit" @onclick="ModifyBonos" id="ModifyMovies">Modificar Bonos</button>
 
 

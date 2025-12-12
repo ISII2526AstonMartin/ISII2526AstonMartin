@@ -97,23 +97,25 @@
     private string errors = "";
     private string nombreBono { get; set; }
     private string tipoBocadillo { get; set; }
-    private bool hidenRentingCart { get { return CompraBono.CompraItems.Count == 0; } }
+    private bool hiddenRentingCart { get { return CompraBono.CompraItems.Count == 0; } }
     private CompraBonoForCreateDTO CompraBono => cbsc.CreateDTO;
-    private bool hiddenRentingCart = true;
+    //private bool hiddenRentingCart = true;
 
     private void AddBono(BonoBocadillosDTO bono)
     {
         cbsc.AddBonoToCompra(bono);
-        hiddenRentingCart = false;
+        //hiddenRentingCart = false;
     }
 
     private void RemoveCompraBonoItem(CompraBonoItemDTO item)
     {
         cbsc.RemoveCompraBonoItem(item);
+        /*
         if (CompraBono.CompraItems.Count == 0)
         {
             hiddenRentingCart = true;
         }
+        */
     }
 
     public async void SearchBonos()
