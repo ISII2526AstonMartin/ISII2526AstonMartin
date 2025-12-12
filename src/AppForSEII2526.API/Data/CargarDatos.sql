@@ -1,6 +1,9 @@
 ﻿
 
 INSERT INTO [dbo].[AspNetUsers] ([Id], [Nombre], [Apellido1], [Apellido2], [NombreUsuario], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'4', N'Rafael', N'Martinez', N'Muñoz', N'rafamartinez', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1, NULL, 1, 1)
+INSERT INTO [dbo].[AspNetUsers] ([Id], [Nombre], [Apellido1], [Apellido2], [NombreUsuario], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'1', N'Daniel', N'Martinez', N'Bautista', N'danielmartinez', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1, NULL, 1, 1)
+INSERT INTO [dbo].[AspNetUsers] ([Id], [Nombre], [Apellido1], [Apellido2], [NombreUsuario], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'2', N'Antonio', N'Garcia De La Reina', N'Aguilar', N'antoniogarciadelareina', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1, NULL, 1, 1)
+INSERT INTO [dbo].[AspNetUsers] ([Id], [Nombre], [Apellido1], [Apellido2], [NombreUsuario], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'3', N'Angel', N'Lopez', N'Hortelano', N'angellopez', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1, NULL, 1, 1)
 
 
 -- Habilitar IDENTITY_INSERT para TipoPan
