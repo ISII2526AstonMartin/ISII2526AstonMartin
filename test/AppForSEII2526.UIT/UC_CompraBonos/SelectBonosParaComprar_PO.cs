@@ -60,7 +60,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         {
             try
             {
-                var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
+                var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(2));
                 wait.Until(ExpectedConditions.ElementIsVisible(compraButton));
                 return true;
             }
@@ -68,6 +68,13 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
             {
                 return false;
             }
+        }
+        public bool checkErrorMessage(string error)
+        {
+            By errorContainer = By.Id("ErrorsShown");
+            IWebElement container= _driver.FindElement(errorContainer);
+            string actualmessage = container.Text;
+            return actualmessage.Contains(error);
         }
     }
 }

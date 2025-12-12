@@ -106,7 +106,8 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
             var expectedBonos = new List<string[]>{};
 
             selectbonos_PO.BuscarBonos(filtronombre, filtrotipo);
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(2));
+            Assert.True(selectbonos_PO.checkErrorMessage("Errors: No hay bonos con esos filtros"));
             Assert.True(selectbonos_PO.CheckListOfBonos(expectedBonos));
         }
 
@@ -116,6 +117,8 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
         public void CU3_FA2_1_2_3() //Esc_4, UC3_8
         {
             InitialStepsForComprarBonos();
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
+            
             Assert.False(selectbonos_PO.buttonCompraAvailable());
         }
 
@@ -132,7 +135,7 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
             selectbonos_PO.eliminarBono("Bono3");
             Assert.True(selectbonos_PO.buttonCompraAvailable());
             selectbonos_PO.seleccionarBotonCompra();
-
         }
+        
     }
 }
