@@ -106,7 +106,7 @@ namespace AppForSEII2526.UT.BonosController_test
 
             //act
 
-            var result = await controller.GetBonos("EsteBonoNoExiste", null);
+            var result = await controller.GetBonos(name, type);
 
             //assert
 

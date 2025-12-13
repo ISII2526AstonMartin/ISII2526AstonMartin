@@ -6,7 +6,6 @@
 @inject ILogger<SelectMerchForPurchase> logger
 @inject MerchStateContainer merchState
 @inject NavigationManager navigation
-@implements IDisposable
 
 <h3>Comprar Merchandising</h3>
 
@@ -72,14 +71,13 @@
                             </tbody>
                         </table>
                     </div>
-
                 }
             </div>
         </div>
 
         <div class="col-4" hidden="@hideMerchCart">
             <div class="row">
-                <h3>Carrito de la compra</h3>
+                <h3>Carrito (@merchState.DistinctItemCount())</h3>
                 <p>Total: **@merchState.TotalPrice.ToString("0.00")€**</p>
             </div>
             @foreach (ItemMerchDTO item in merchState.CreateDTO.Items)
@@ -87,7 +85,7 @@
                 <div class="row mb-1">
                     <div class="col-10">
                         <button type="button" class="btn btn-light" id="removeMerch_@item.Nombre" @onclick="@(() => RemoveMerchItem(item))">
-                            x @item.Nombre - @((item.Pvp* item.Cantidad).ToString("0.00"))€
+                            x @item.Nombre - @((item.Pvp * item.Cantidad).ToString("0.00"))€
                         </button>
                     </div>
                 </div>
@@ -99,9 +97,7 @@
                 </button>
             </div>
         </div>
-
     </div>
-
 </div>
 
 @code {
@@ -113,12 +109,7 @@
 
     private bool hideMerchCart = true;
 
-    // Clase local para la inyección de ILogger
     private class SelectMerchForPurchase { }
-
-    // Propiedad para el carrito, más idiomática de Blazor
-    private bool hideCarrito { get { return !merchState.HasItems(); } }
-
 
     private void UpdateCartVisibility()
     {
@@ -127,18 +118,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Suscripción a los eventos del StateContainer para refrescar la vista automáticamente
         merchState.OnChange += StateHasChanged;
         merchState.OnChange += UpdateCartVisibility;
-
         UpdateCartVisibility();
-        // Carga inicial de productos
         await SearchMerch();
     }
 
     public void Dispose()
     {
-        // Desuscribirse para evitar fugas de memoria
         merchState.OnChange -= StateHasChanged;
         merchState.OnChange -= UpdateCartVisibility;
     }
@@ -164,11 +151,10 @@
     public async Task SearchMerch()
     {
         errors = string.Empty;
-        merchProducts = null; // Muestra "Cargando..."
+        merchProducts = null;
 
         try
         {
-            // Llama al API para obtener productos (MerchController.GetProductos(tipo, precio))
             merchProducts = await apiclient.GetProductosAsync(merchTipo, precioMaximo);
         }
         catch (ApiException ex)
@@ -178,7 +164,7 @@
             if (ex.Response != null && ex.Response.Contains("No hay Productos con esos filtros"))
             {
                 errors = "No hay productos disponibles que coincidan con esos filtros.";
-                merchProducts = new List<MerchDTO>(); // Muestra una tabla vacía sin error.
+                merchProducts = new List<MerchDTO>();
             }
             else
             {
@@ -190,6 +176,7 @@
 
     private void ProcederCompra()
     {
+        // Navega al formulario de detalles de la compra (Paso 5)
         navigation.NavigateTo("/Merch/CreateMerch");
     }
 }

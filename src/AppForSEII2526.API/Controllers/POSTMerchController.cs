@@ -79,6 +79,7 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(DetailMerchDTO), StatusCodes.Status201Created)]
         public async Task<ActionResult> CreateMerch(CreateMerchDTO createMerch)
         {
             // Validar que el objeto recibido no sea nulo
