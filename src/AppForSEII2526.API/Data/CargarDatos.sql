@@ -1,6 +1,8 @@
 ﻿
 
-INSERT INTO [dbo].[AspNetUsers] ([Id], [Nombre], [Apellido1], [Apellido2], [NombreUsuario], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'4', N'Rafael', N'Martinez', N'Muñoz', N'rafamartinez', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1, NULL, 1, 1)
+INSERT INTO [dbo].[AspNetUsers] ([Id], [Nombre], [Apellido1], [Apellido2], [NombreUsuario], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'1', N'Rafael', N'Martinez', N'Muñoz', N'rafamartinez', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1, NULL, 1, 1)
+INSERT INTO [dbo].[AspNetUsers] ([Id], [Nombre], [Apellido1], [Apellido2], [NombreUsuario], [UserName], [NormalizedUserName], [Email], [NormalizedEmail], [EmailConfirmed], [PasswordHash], [SecurityStamp], [ConcurrencyStamp], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled], [LockoutEnd], [LockoutEnabled], [AccessFailedCount]) VALUES (N'2', N'Antonio', N'Garcia de la Reina', N'Aguilar', N'antoniogarcia', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, 1, 1, NULL, 1, 1)
+
 
 
 -- Habilitar IDENTITY_INSERT para TipoPan
@@ -16,10 +18,9 @@ SET IDENTITY_INSERT [dbo].[TipoPan] OFF
 -- Habilitar IDENTITY_INSERT para Bocadillo
 SET IDENTITY_INSERT [dbo].[Bocadillo] ON
 
-INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (1, N'Serrano', 5, 10, 1, 1)
+INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (1, N'Serrano', 5, 10, 1, 0)
 INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (2, N'Bacon', 2, 3, 2, 0)
 INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (3, N'BaconQueso', 3, 4, 3, 1)
-INSERT INTO [dbo].[Bocadillo] ([Id], [Nombre], [PVP], [Stock], [TipoPanId], [Tamanyo]) VALUES (4, N'Atun', 4, 2, 1, 0)
 
 -- Deshabilitar IDENTITY_INSERT para Bocadillo
 SET IDENTITY_INSERT [dbo].[Bocadillo] OFF
