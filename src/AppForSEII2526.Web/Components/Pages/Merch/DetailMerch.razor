@@ -1,0 +1,131 @@
+﻿@page "/Merch/DetailMerch"
+
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject NavigationManager navigation
+
+<h3>Detalle y Ticket de Compra de Merchandising</h3>
+
+@if (DetalleCompraDTO == null)
+{
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <p class="alert alert-danger">@error</p>
+    }
+    else
+    {
+        <p>Cargando detalles...</p>
+    }
+}
+else
+{
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h4>Ticket de Compra #@DetalleCompraDTO.CompraID</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-borderless table-sm">
+                <tr>
+                    <th>Nombre y Apellidos</th>
+                    <td id="NameSurname">
+                        @DetalleCompraDTO.NombreUsuario
+                        @DetalleCompraDTO.Apellido1
+                        @(DetalleCompraDTO.Apellido2 ?? "")
+                    </td>
+                </tr>
+                <tr>
+                    <th>Dirección de Envío</th>
+                    <td id="DeliveryAddress">@DetalleCompraDTO.DireccionEnvio</td>
+                </tr>
+                <tr>
+                    <th>Método de Pago</th>
+                    <td id="PaymentMethod">@DetalleCompraDTO.MetodoPago</td>
+                </tr>
+                <tr>
+                    <th>Fecha de Compra</th>
+                    <td id="PurchaseDate">@DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                </tr>
+            </table>
+
+            <hr />
+
+            <h4>Artículos Comprados</h4>
+            <table class="table" id="MerchCompradoTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Precio Unitario</th>
+                        <th scope="col">Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ItemMerchDTO item in DetalleCompraDTO.Items)
+                    {
+                        <tr id="MerchItem_@item.Nombre">
+                            <td>@item.Nombre</td>
+                            <td>@item.TipoProducto</td>
+                            <td>@item.Pvp.ToString("0.00") €</td>
+                            <td>@item.Cantidad</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    @* colspan ajustado a 3 columnas para alinear con la estructura *@
+                <th scope="row" colspan="3" class="text-end">Precio Total</th>
+                <td id="TotalPrice">@DetalleCompraDTO.PrecioFinal.ToString("0.00") €</td>
+                </tfoot>
+            </table>
+        </div>
+        <div class="card-footer text-end">
+            <button class="btn btn-secondary" @onclick="GoToStore">
+                Volver a la Tienda
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int CompraId { get; set; }
+
+    private DetailMerchDTO? DetalleCompraDTO;
+    private string error = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        error = "";
+        DetalleCompraDTO = null;
+
+        if (CompraId <= 0)
+        {
+            error = "Error: ID de compra no proporcionado o no válido.";
+            return;
+        }
+
+        try
+        {
+            // Llamada al API generada por NSwag/Swagger
+            DetalleCompraDTO = await apiclient.GetMerchDetailAsync(CompraId);
+        }
+        catch (ApiException exception)
+        {
+            DetalleCompraDTO = null;
+            // Manejo de errores simplificado como en los ejemplos de tus compañeros
+            if (exception.StatusCode == 404)
+            {
+                error = $"Error: No se encontró la compra con ID={CompraId}.";
+            }
+            else
+            {
+                error = $"Error al conectar con el sistema. Código: {exception.StatusCode}";
+            }
+        }
+    }
+
+    private void GoToStore()
+    {
+        navigation.NavigateTo("/Merch/SelectMerchParaComprar");
+    }
+}
