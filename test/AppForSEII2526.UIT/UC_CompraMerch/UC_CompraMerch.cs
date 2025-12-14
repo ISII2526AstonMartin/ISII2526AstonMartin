@@ -14,16 +14,13 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
     {
         private SelectMerchParaComprar_PO _selectMerchPO;
         private CreateCompraMerch_PO _createMerchPO;
+        private DetailMerch_PO _detailMerchPO;
 
         // Datos GET
         private const string merchNombre1 = "Camiseta";
-        private const string merchPrecio1 = "8,00€";
+        // IMPORTANTE: Formato "8,00 €" para coincidir con tu HTML
+        private const string merchPrecio1 = "8,00 €";
         private const string merchTipo1 = "Camiseta";
-        private const string merchStock1 = "48";
-        private const string merchNombre2 = "Gorra";
-        private const string merchPrecio2 = "4,00€";
-        private const string merchTipo2 = "Gorra";
-        private const string merchStock2 = "10";
 
         // Datos POST
         private const string userValido = "rafamartinez";
@@ -36,6 +33,7 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
         {
             _selectMerchPO = new SelectMerchParaComprar_PO(_driver, _output);
             _createMerchPO = new CreateCompraMerch_PO(_driver, _output);
+            _detailMerchPO = new DetailMerch_PO(_driver, _output);
         }
 
         private void InitialStepsForMerch()
@@ -52,11 +50,10 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
             _selectMerchPO.ClickComprarMerch();
         }
 
-        // --- TESTS GET ---
-
+        // --- TESTS EXISTENTES (Sin cambios) ---
         [Theory]
-        [InlineData("Camiseta", "", merchNombre1, merchPrecio1, merchTipo1, merchStock1)]
-        [InlineData("Gorra", "6", merchNombre2, merchPrecio2, merchTipo2, merchStock2)]
+        [InlineData("Camiseta", "", "Camiseta", "8,00€", "Camiseta", "48")]
+        [InlineData("Gorra", "6", "Gorra", "4,00€", "Gorra", "10")]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC_FiltrarMerch_Test(string fTipo, string fPrecio, string eNom, string ePre, string eTip, string eSto)
         {
@@ -72,23 +69,44 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
         {
             InitialStepsForMerch();
             _selectMerchPO.SearchMerch("", "");
-            _selectMerchPO.AddMerchToCart(merchNombre1);
+            _selectMerchPO.AddMerchToCart("Camiseta");
             Thread.Sleep(500);
-            _selectMerchPO.RemoveMerchFromCart(merchNombre1);
+            _selectMerchPO.RemoveMerchFromCart("Camiseta");
             Assert.True(_selectMerchPO.IsBuyButtonDisabled());
         }
 
-        // --- TESTS POST ---
+        // --- TESTS NUEVOS DEL DETAILS ---
 
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC_RealizarCompra_Exitosa_Test()
         {
+            // 1. Comprar
             Precondicion_LlegarAlFormulario();
             _createMerchPO.rellenarDatosParaCompra(userValido, ap1Valido, "", dirValida, pagoValido);
             _createMerchPO.seleccionarBotonCompra();
 
-            Assert.True(_createMerchPO.IsTicketDisplayed());
+            // 2. Verificar Ticket
+
+            // A) Tabla: Orden según tu HTML -> Nombre | Tipo | Precio | Cantidad
+            var productoEsperado = new List<string[]>
+            {
+                new string[] { merchNombre1, merchTipo1, merchPrecio1, "1" }
+            };
+            Assert.True(_detailMerchPO.CheckListOfProductos(productoEsperado));
+
+            // B) Cabecera: Verificar datos usuario y total
+            string nombreCompleto = userValido + " " + ap1Valido;
+            string fechaHoy = DateTime.Today.ToString("dd/MM/yyyy");
+            string precioTotal = "8,00 €";
+
+            Assert.True(_detailMerchPO.CheckTicketDetails(
+                nombreCompleto,
+                dirValida,
+                fechaHoy,
+                pagoValido,
+                precioTotal
+            ));
         }
 
         [Fact]
@@ -96,17 +114,25 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
         public void UC_RealizarCompra_Fallida_DireccionMal_Test()
         {
             Precondicion_LlegarAlFormulario();
-
-            // 1. Rellenamos con dirección mala (sin "Calle")
             _createMerchPO.rellenarDatosParaCompra(userValido, ap1Valido, "", dirInvalida, pagoValido);
-
-            // 2. Intentamos comprar
             _createMerchPO.seleccionarBotonCompra();
 
-            // 3. Verificamos el mensaje de error.
-            // CAMBIO: Buscamos "válida" en lugar de "Calle", porque tu Controller devuelve:
-            // "Error!, por favor introduce una dirección de envío válida"
             Assert.True(_createMerchPO.checkErrorMessage("válida"));
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC_VolverAlListado_DesdeTicket_Test()
+        {
+            Precondicion_LlegarAlFormulario();
+            _createMerchPO.rellenarDatosParaCompra(userValido, ap1Valido, "", dirValida, pagoValido);
+            _createMerchPO.seleccionarBotonCompra();
+
+            // Pulsar "Volver a la Tienda"
+            _detailMerchPO.ClickVolver();
+
+            // Verificar que estamos en la búsqueda (necesita IsSearchInputVisible en el PO)
+            Assert.True(_selectMerchPO.IsSearchInputVisible());
         }
     }
 }

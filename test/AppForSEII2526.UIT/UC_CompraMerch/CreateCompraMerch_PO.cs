@@ -97,7 +97,7 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
             // 2. Definimos todos los posibles sitios donde sale el error
             var posiblesLugares = new List<By>
             {
-                By.Id("ErrorsShown"),             // Tu caja personalizada
+                By.Id("ErrorsShown"),             // caja personalizada
                 By.ClassName("validation-message"), // Mensajes debajo del input (Blazor estándar)
                 By.CssSelector(".alert-danger"),    // Alertas genéricas
                 By.ClassName("text-danger")         // Textos rojos genéricos
@@ -113,11 +113,11 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
                         // Si el elemento es visible y contiene el texto (ignorando mayúsculas)
                         if (el.Displayed && el.Text.IndexOf(error, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            return true; // ¡Encontrado!
+                            return true; 
                         }
                     }
                 }
-                catch { /* Ignorar si no encuentra ese tipo de elemento */ }
+                catch { /* Ignorar si no encuentra ese tipo de elemento. */ }
             }
 
             return false;
