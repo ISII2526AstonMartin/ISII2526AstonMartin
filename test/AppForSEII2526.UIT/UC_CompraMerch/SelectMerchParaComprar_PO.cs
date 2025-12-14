@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading; // Necesario para Thread.Sleep
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using AppForSEII2526.UIT.Shared;
@@ -24,15 +23,12 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
 
         public void SearchMerch(string tipo, string precioMax)
         {
-            // Intentamos hasta 3 veces por si la página se está refrescando
+            // Reintentos para evitar errores si la página se refresca sola
             for (int i = 0; i < 3; i++)
             {
                 try
                 {
-                    // 1. Esperamos a que sea clickable
                     WaitForBeingClickable(_inputTipo);
-
-                    // 2. Interactuamos
                     var tipoElement = _driver.FindElement(_inputTipo);
                     tipoElement.Clear();
                     tipoElement.SendKeys(tipo);
@@ -45,25 +41,18 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
                     }
 
                     _driver.FindElement(_btnBuscar).Click();
-
-                    // Si llegamos aquí sin error, salimos del bucle
-                    break;
+                    break; // Si funciona, salimos
                 }
                 catch (StaleElementReferenceException)
                 {
-                    // Si ocurre el error, esperamos un poco y el bucle (i) lo intentará de nuevo
-                    _output.WriteLine($"Intento {i + 1}: Elemento obsoleto, reintentando...");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(1000); // Reintentamos
                 }
             }
-
-            // Espera final para que la tabla se refresque tras el click en buscar
-            Thread.Sleep(500);
+            Thread.Sleep(500); // Espera para que la tabla cargue
         }
 
         public void AddMerchToCart(string merchName)
         {
-            // También protegemos este método
             try
             {
                 By btnAdd = By.Id($"merchToAdd_{merchName}");
@@ -72,9 +61,9 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
             }
             catch (StaleElementReferenceException)
             {
-                Thread.Sleep(500); // Esperamos a que se asiente
+                Thread.Sleep(500);
                 By btnAdd = By.Id($"merchToAdd_{merchName}");
-                _driver.FindElement(btnAdd).Click(); // Reintentamos
+                _driver.FindElement(btnAdd).Click();
             }
         }
 
@@ -90,19 +79,6 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
             return CheckBodyTable(expectedMerch, _tablaMerch);
         }
 
-        public bool CheckMessageError(string errorMessage)
-        {
-            try
-            {
-                IWebElement errorElement = _driver.FindElement(_errorShown);
-                return errorElement.Text.Contains(errorMessage);
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
-        }
-
         public bool IsBuyButtonDisabled()
         {
             try
@@ -114,6 +90,13 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
             {
                 return true;
             }
+        }
+
+        public void ClickComprarMerch()
+        {
+            WaitForBeingClickable(_btnComprar);
+            _driver.FindElement(_btnComprar).Click();
+            Thread.Sleep(1000); // Espera para navegar al formulario
         }
     }
 }
