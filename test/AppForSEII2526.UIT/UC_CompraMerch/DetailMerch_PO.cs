@@ -7,7 +7,7 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
 {
     public class DetailMerch_PO : PageObject
     {
-        // 1. Selectores EXACTOS de tu HTML (DetailMerch.razor)
+        // 1. Selectores EXACTOS (DetailMerch.razor)
         By tablaProductos = By.Id("MerchCompradoTable");
         By nameSurname = By.Id("NameSurname");
         By direccion = By.Id("DeliveryAddress"); // ID corregido
@@ -15,7 +15,7 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
         By fechaHtml = By.Id("PurchaseDate");    // ID corregido
         By total = By.Id("TotalPrice");
 
-        // El botón no tiene ID en tu HTML, usamos XPath por texto
+        // El botón no tiene ID en mi html, uso XPath por texto
         By backButton = By.XPath("//button[contains(text(),'Volver a la Tienda')]");
 
         public DetailMerch_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
