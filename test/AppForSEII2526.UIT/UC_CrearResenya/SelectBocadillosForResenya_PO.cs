@@ -63,6 +63,7 @@ namespace AppForSEII2526.UIT.UC_Resenyas
 
         public bool ResenyaNotAvailable()
         {
+            //the button is not Displayed=hidden
 
             return _driver.FindElement(buttonCrearResenya).Displayed == false;
         }

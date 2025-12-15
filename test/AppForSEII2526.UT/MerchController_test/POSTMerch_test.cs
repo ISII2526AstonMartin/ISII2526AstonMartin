@@ -16,26 +16,17 @@ namespace AppForSEII2526.UT.MerchController_test
 {
     public class POSTMerch_test : AppForMovies4SqliteUT
     {
-        // Constantes para datos de prueba reutilizables
-        private const string _nombreUsuario = "juan";
-        private const string _apellido1 = "Perez";
-        private const string _apellido2 = "Muñoz";
-        private const string _direccionEnvio = "Calle Gran Vía 123, Madrid";
-
         public POSTMerch_test()
         {
-            // Limpiar la base de datos de pruebas para empezar desde un estado conocido
             _context.Database.EnsureDeleted();
             _context.Database.EnsureCreated();
 
-            // Crear tipos de producto para las pruebas
             var tipoRopa = new TipoProducto("Ropa", 1, new List<Producto>());
             var tipoAccesorio = new TipoProducto("Accesorios", 2, new List<Producto>());
 
             _context.TiposProductos.AddRange(tipoRopa, tipoAccesorio);
             _context.SaveChanges();
 
-            // Crear productos de prueba con datos realistas
             var camiseta = new Producto(
                 "Camiseta UCLM",
                 1,
@@ -57,7 +48,6 @@ namespace AppForSEII2526.UT.MerchController_test
             _context.Productos.AddRange(camiseta, gorra);
             _context.SaveChanges();
 
-            // Crear usuarios de prueba para simular clientes del sistema
             var usuarios = new List<ApplicationUser>
             {
                 new ApplicationUser {
@@ -116,13 +106,21 @@ namespace AppForSEII2526.UT.MerchController_test
                 MetodoPago.Tarjeta,
                 new List<ItemMerchDTO> { new ItemMerchDTO("Camiseta UCLM", 8, "Ropa", 0) }
             );
-            // Nueva prueba para las BadRequest de dirección de envio inválida (Ponemos "C/" que seria incorrecto ya que deberia ser "Calle")
+
             var merchDireccionInvalida = new CreateMerchDTO(
                 "juan", "Perez", "Muñoz",
                 "C/ Rosario",
                 MetodoPago.Tarjeta,
-                new List<ItemMerchDTO> { new ItemMerchDTO("Camiseta UCLM", 8, "Ropa", 1)}
-                );
+                new List<ItemMerchDTO> { new ItemMerchDTO("Camiseta UCLM", 8, "Ropa", 1) }
+            );
+
+            // Caso para validar que el Backend rechaza métodos de pago no definidos en el Enum (ej: 999)
+            var merchPagoInvalido = new CreateMerchDTO(
+                "juan", "Perez", "Muñoz",
+                "Calle Correcta 123",
+                (MetodoPago)999,
+                new List<ItemMerchDTO> { new ItemMerchDTO("Camiseta UCLM", 8, "Ropa", 1) }
+            );
 
             return new List<object[]>
             {
@@ -130,8 +128,8 @@ namespace AppForSEII2526.UT.MerchController_test
                 new object[] { merchUsuarioNoExiste, "Error: Usuario o apellido no registrados." },
                 new object[] { merchProductoNoExiste, "Producto 'ProductoFantasma' no encontrado." },
                 new object[] { merchCantidadInvalida, "Cantidad inválida para 'Camiseta UCLM'." },
-                //Nuevo objeto para la nueva prueba de badRequest.
-                new object[] {merchDireccionInvalida, "Error!, por favor introduce una dirección de envío válida"}
+                new object[] { merchDireccionInvalida, "Error!, por favor introduce una dirección de envío válida"},
+                new object[] { merchPagoInvalido, "Error: Método de pago no válido o no soportado." }
             };
         }
 
@@ -161,18 +159,15 @@ namespace AppForSEII2526.UT.MerchController_test
             var logger = new Mock<ILogger<POSTMerchController>>().Object;
             var controller = new POSTMerchController(_context, logger);
 
-            // Obtener un producto existente de la base de datos para la compra
             var producto = await _context.Productos
                 .Include(p => p.Tipo_Producto)
                 .FirstAsync();
 
-            // Crear la lista de items para la compra
             var items = new List<ItemMerchDTO>
             {
                 new ItemMerchDTO(producto.Nombre, producto.PVP, producto.Tipo_Producto?.Nombre ?? "Ropa", 2)
             };
 
-            // Crear el DTO de entrada con los datos de la compra
             var merchDTO = new CreateMerchDTO(
                 "juan",
                 "Perez",
@@ -182,15 +177,11 @@ namespace AppForSEII2526.UT.MerchController_test
                 items
             );
 
-            // Ejecucion: llamar al metodo del controlador para crear la compra
             var result = await controller.CreateMerch(merchDTO);
 
-            // Verificacion: asegurar que se devuelve un resultado Created
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             var actualDetail = Assert.IsType<DetailMerchDTO>(createdResult.Value);
 
-            // Crear el DetailMerchDTO esperado con todos los datos que deberia tener
-            // Incluyendo el ID y fecha reales que devolvio el controlador
             var expectedDetail = new DetailMerchDTO(
                 "juan",
                 "Perez",
@@ -198,13 +189,11 @@ namespace AppForSEII2526.UT.MerchController_test
                 "Calle Gran Vía 123, Madrid",
                 MetodoPago.Tarjeta,
                 items,
-                1, // Usar el ID real generado
-                DateTime.Today, // Usar la fecha real generada
-                producto.PVP * 2 // Precio final calculado
+                1,
+                DateTime.Today,
+                producto.PVP * 2
             );
 
-            // Comparacion directa usando Assert.Equal
-            // Esto verifica que todos los campos coinciden, incluyendo ID y fecha
             Assert.Equal(expectedDetail, actualDetail);
         }
     }

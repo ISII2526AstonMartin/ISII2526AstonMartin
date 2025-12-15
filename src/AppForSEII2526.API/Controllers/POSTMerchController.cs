@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
+using System; // Necesario para Enum.IsDefined
 
 namespace AppForSEII2526.API.Controllers
 {
@@ -22,19 +23,17 @@ namespace AppForSEII2526.API.Controllers
 
         // GET: Obtiene el detalle de una compra específica por ID
         [HttpGet]
-        [Route("[action]")] // Cambiado: se quitó el {id} de la ruta
+        [Route("[action]")]
         [ProducesResponseType(typeof(DetailMerchDTO), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult> GetMerchDetail(int id) // El id viene como parámetro de query
+        public async Task<ActionResult> GetMerchDetail(int id)
         {
-            // Verificar si la tabla de Compras existe en la base de datos
             if (_context.Compras == null)
             {
                 _logger.LogError("Error: La tabla de Compras no existe en la base de datos.");
                 return NotFound();
             }
 
-            // Buscar la compra con el ID proporcionado, incluyendo las relaciones necesarias
             var compra = await _context.Compras
                 .Where(c => c.CompraID == id)
                 .Include(c => c.Usuario)
@@ -43,14 +42,12 @@ namespace AppForSEII2526.API.Controllers
                         .ThenInclude(p => p.Tipo_Producto)
                 .FirstOrDefaultAsync();
 
-            // Si no se encuentra la compra, retornar NotFound
             if (compra == null)
             {
                 _logger.LogError($"Error: La compra con ID {id} no existe.");
                 return NotFound();
             }
 
-            // Mapear los productos de la compra a ItemMerchDTO
             var items = compra.Productos_Compras.Select(pc => new ItemMerchDTO(
                 pc.Producto.Nombre,
                 pc.PVP,
@@ -58,7 +55,6 @@ namespace AppForSEII2526.API.Controllers
                 pc.Cantidad
             )).ToList();
 
-            // Crear el DTO de detalle con toda la información de la compra
             var detalle = new DetailMerchDTO(
                 compra.Usuario.NombreUsuario,
                 compra.Usuario.Apellido1,
@@ -79,6 +75,7 @@ namespace AppForSEII2526.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(DetailMerchDTO), StatusCodes.Status201Created)]
         public async Task<ActionResult> CreateMerch(CreateMerchDTO createMerch)
         {
             // Validar que el objeto recibido no sea nulo
@@ -92,11 +89,18 @@ namespace AppForSEII2526.API.Controllers
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            // Validar que la direccion de envio no es nula y no contiene la palabra "Calle" //EXAMEN
+            // Validar que la direccion de envio no es nula y contiene la palabra "Calle"
             if (createMerch.DireccionEnvio == null || !createMerch.DireccionEnvio.Contains("Calle"))
             {
-                // Devolvemos un bad request.
                 ModelState.AddModelError("CreateMerch", "Error!, por favor introduce una dirección de envío válida");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+            // Validar que el método de pago es uno de los definidos en el sistema
+            // Esto protege contra valores numéricos fuera de rango (ej: 999) inyectados en la API
+            if (!Enum.IsDefined(typeof(MetodoPago), createMerch.MetodoPago))
+            {
+                ModelState.AddModelError("CreateMerch", "Error: Método de pago no válido o no soportado.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
@@ -106,39 +110,31 @@ namespace AppForSEII2526.API.Controllers
                     au.UserName == createMerch.NombreUsuario &&
                     au.Apellido1 == createMerch.Apellido1);
 
-            // Si el usuario no existe, retornar error
             if (user == null)
             {
                 ModelState.AddModelError("CreateMerch", "Error: Usuario o apellido no registrados.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            // Obtener los nombres de los productos para buscar en la base de datos
             var nombres = createMerch.Items.Select(i => i.Nombre).ToList();
 
-            // Buscar los productos en la base de datos
             var productosEnBd = await _context.Productos
                 .Include(p => p.Tipo_Producto)
                 .Where(p => nombres.Contains(p.Nombre))
                 .ToListAsync();
 
-            // Crear una nueva compra con ID único
-
             var compra = new Compra_Producto(user, createMerch.DireccionEnvio, DateTime.Today, createMerch.MetodoPago, new List<Producto_Compra>());
 
             float precioFinal = 0f;
 
-            // Procesar cada item de la compra
             foreach (var item in createMerch.Items)
             {
-                // Validar que la cantidad sea válida
                 if (item.Cantidad <= 0)
                 {
                     ModelState.AddModelError("CreateMerch", $"Cantidad inválida para '{item.Nombre}'.");
                     continue;
                 }
 
-                // Buscar el producto en la lista de productos de la base de datos
                 var producto = productosEnBd.FirstOrDefault(p => p.Nombre == item.Nombre);
                 if (producto == null)
                 {
@@ -146,7 +142,6 @@ namespace AppForSEII2526.API.Controllers
                     continue;
                 }
 
-                // Crear la relación Producto_Compra
                 var productoCompra = new Producto_Compra
                 {
                     Cantidad = item.Cantidad,
@@ -157,38 +152,30 @@ namespace AppForSEII2526.API.Controllers
                     CompraID = compra.CompraID
                 };
 
-                // Agregar el producto a la compra y calcular el precio
                 compra.Productos_Compras.Add(productoCompra);
                 precioFinal += producto.PVP * item.Cantidad;
             }
 
-            // Si hay errores de validación, retornar BadRequest
             if (ModelState.ErrorCount > 0)
                 return BadRequest(new ValidationProblemDetails(ModelState));
 
-            // Validar que al menos un producto fue agregado a la compra
             if (!compra.Productos_Compras.Any())
                 return BadRequest("Ninguno de los productos indicados existe.");
 
-            // Asignar el precio final calculado a la compra
             compra.PrecioFinal = precioFinal;
 
-            // Agregar la compra al contexto
             _context.Compras.Add(compra);
 
             try
             {
-                // Guardar los cambios en la base de datos
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                // Log del error y retornar Conflict si hay problemas al guardar
                 _logger.LogError(ex, "Error al guardar la compra.");
                 return Conflict("Error al guardar la compra: " + ex.Message);
             }
 
-            // Crear el DTO de respuesta con los detalles de la compra creada
             var merchDetail = new DetailMerchDTO(
                 createMerch.NombreUsuario!,
                 createMerch.Apellido1,
@@ -197,11 +184,10 @@ namespace AppForSEII2526.API.Controllers
                 createMerch.MetodoPago,
                 createMerch.Items,
                 compra.CompraID,
-                DateTime.Today, // Cambiado: DateTime.Now por DateTime.Today
+                DateTime.Today,
                 compra.PrecioFinal
             );
 
-            // Retornar respuesta Created con referencia al endpoint GetMerchDetail
             return CreatedAtAction("GetMerchDetail", new { id = compra.CompraID }, merchDetail);
         }
     }

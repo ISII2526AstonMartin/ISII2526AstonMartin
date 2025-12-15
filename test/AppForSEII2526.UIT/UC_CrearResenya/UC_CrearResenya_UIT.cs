@@ -34,6 +34,8 @@ namespace AppForSEII2526.UIT.UC_CrearResenya
             CreateResenya_PO = new CreateResenya_PO(_driver, _output);
             ResenyaDetail_PO = new ResenyaDetail_PO(_driver, _output);
 
+
+
         }
 
         private void InitialStepsForCrearResenya()
