@@ -103,7 +103,7 @@
                                 <InputNumber @bind-Value="item.Cantidad" @onchange="@(e => UpdateQuantity(item, e.Value))"
                                              class="form-control" min="1" />
                             </td>
-                            <td>@(item.Pvp* item.Cantidad).ToString("0.00")€</td>
+                            <td>@((item.Pvp * item.Cantidad).ToString("0.00")) €</td>
                             <td>
                                 <button class="btn btn-danger btn-sm" type="button" @onclick="() => RemoveMerchItem(item)">
                                     <span class="oi oi-trash" aria-hidden="true">Eliminar</span>
