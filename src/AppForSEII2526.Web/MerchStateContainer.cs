@@ -4,13 +4,11 @@ namespace AppForSEII2526.Web
 {
     public class MerchStateContainer
     {
-        // Similar a CompraBonoForCreateDTO, usamos CreateMerchDTO directamente
         public CreateMerchDTO CreateDTO { get; set; } = new CreateMerchDTO()
         {
             Items = new List<ItemMerchDTO>()
         };
 
-        // Propiedad para calcular el Precio Total del carrito
         public float TotalPrice
         {
             get
@@ -22,7 +20,6 @@ namespace AppForSEII2526.Web
         public event Action? OnChange;
         private void NotifyStateChanged() => OnChange?.Invoke();
 
-        // Añadir Producto al Carrito (similar a AddBonoToCompra)
         public void AddMerchToCart(MerchDTO merch)
         {
             if (!CreateDTO.Items.Any(item => item.Nombre == merch.Nombre))
@@ -38,7 +35,6 @@ namespace AppForSEII2526.Web
             }
         }
 
-        // Actualizar cantidad de un item (nueva funcionalidad)
         public void UpdateItemQuantity(ItemMerchDTO item, int nuevaCantidad)
         {
             if (nuevaCantidad > 0)
@@ -53,21 +49,18 @@ namespace AppForSEII2526.Web
             NotifyStateChanged();
         }
 
-        // Eliminar item del carrito (similar a RemoveCompraBonoItem)
         public void RemoveMerchItemFromCart(ItemMerchDTO item)
         {
             CreateDTO.Items.Remove(item);
             NotifyStateChanged();
         }
 
-        // Vaciar carrito (similar a ClearRentingCart)
         public void ClearMerchCart()
         {
             CreateDTO.Items.Clear();
             NotifyStateChanged();
         }
 
-        // Proceso finalizado (similar a CompraProcessed)
         public void MerchProcessed()
         {
             // Creamos un nuevo objeto sin datos

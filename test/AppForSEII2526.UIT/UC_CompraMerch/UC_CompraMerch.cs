@@ -18,7 +18,6 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
 
         // Datos GET
         private const string merchNombre1 = "Camiseta";
-        // IMPORTANTE: Formato "8,00 €" para coincidir con tu HTML
         private const string merchPrecio1 = "8,00 €";
         private const string merchTipo1 = "Camiseta";
 
@@ -74,7 +73,27 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
             _selectMerchPO.RemoveMerchFromCart("Camiseta");
             Assert.True(_selectMerchPO.IsBuyButtonDisabled());
         }
+        //TEST DEL EXAMEN
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC_MODIFICACION_EXAMEN_Test()
+        {
+            InitialStepsForMerch();
+            _selectMerchPO.AddMerchToCart("Camiseta");
+            _selectMerchPO.SearchMerch("", "5");
+            _selectMerchPO.AddMerchToCart("Gorra");
+            _selectMerchPO.RemoveMerchFromCart("Camiseta");
+            _selectMerchPO.ClickComprarMerch();
+            Assert.True(_selectMerchPO.IsBuyButtonDisabled());
+            _createMerchPO.rellenarDatosParaCompra(userValido, ap1Valido, "", dirValida, pagoValido);
+            _createMerchPO.seleccionarBotonCompra();
+            var productoEsperado = new List<string[]>
+            {
+                new string[] { "Gorra", "Gorra", "4,00 €", "1" }
+            };
+            Assert.True(_detailMerchPO.CheckListOfProductos(productoEsperado));
 
+        }
         // --- TESTS NUEVOS DEL DETAILS ---
 
         [Fact]
@@ -88,7 +107,6 @@ namespace AppForSEII2526.UIT.UC_CompraMerch
 
             // 2. Verificar Ticket
 
-            // A) Tabla: Orden según tu HTML -> Nombre | Tipo | Precio | Cantidad
             var productoEsperado = new List<string[]>
             {
                 new string[] { merchNombre1, merchTipo1, merchPrecio1, "1" }
