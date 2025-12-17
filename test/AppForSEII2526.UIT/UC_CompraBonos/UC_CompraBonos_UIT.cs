@@ -293,5 +293,73 @@ namespace AppForSEII2526.UIT.UC_CompraBonos
             Assert.True(comprabonos_PO.checkDatosUsuario("Daniel", "Martinez", "Bautista","Tarjeta"));
             Assert.True(comprabonos_PO.CheckListOfBonos(expectedBonosOnCompra));
         }
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU3_PruebaExamen()
+        {
+            DateTime hoy = DateTime.Today;
+            var expectedBonos1 = new List<string[]> //Bonos que deben haber en select sin haber filtrado (todos)
+            {
+                new string[]
+                {
+                    "Bono1", "Vegano", "6", "15"
+                },
+                new string[]
+                {
+                    "Bono2", "Vegetariano", "2","11"
+                },
+                new string[]
+                {
+                    "Bono3", "Sin Gluten", "6","10"
+                },
+
+            };
+
+            var expectedBonos2 = new List<string[]> //Bonos que deben haber en select tras haber filtrado
+            {
+                new string[]
+                {
+                    "Bono2", "Vegetariano", "2","11"
+                }
+
+            };
+
+            var expectedBonosOnCompra = new List<string[]> //Bonos que deben haber en compra
+            {
+                new string[]
+                {
+                    "Bono2", "Vegetariano", "11"
+                }
+            };
+
+            var expectedtablebonosfinal = new List<string[]> //Bonos que deben haber en la factura (details)
+            {
+                new string[]
+                {
+                    "Bono2", "Vegetariano", "11 €", "1"
+                }
+            };
+
+            InitialStepsForComprarBonos();
+            Assert.True(selectbonos_PO.CheckListOfBonos(expectedBonos1));
+            selectbonos_PO.seleccionarBonos("Bono1"); //Añade un bocadillo
+            selectbonos_PO.BuscarBonos("Bono2", ""); //Filtra por nombre
+            Assert.True(selectbonos_PO.CheckListOfBonos(expectedBonos2)); 
+            selectbonos_PO.seleccionarBonos("Bono2"); //Añade un nuevo bocadillo (distinto al anterior)
+            selectbonos_PO.eliminarBono("Bono1"); //Elimina el primer bocadillo
+
+            //Continua con el proceso de compra de forma correcta
+            selectbonos_PO.seleccionarBotonCompra();
+            comprabonos_PO.CheckListOfBonos(expectedBonosOnCompra);
+            comprabonos_PO.rellenarDatosCompra("Daniel", "Martinez", "Bautista", "Tarjeta");
+            Assert.True(comprabonos_PO.checkDatosUsuario("Daniel", "Martinez", "Bautista", "Tarjeta"));
+            comprabonos_PO.seleccionarBotonCompra();
+
+            //como resultado se debe haber creado la compra del bono del bocadillo
+            Assert.True(comprabonodetail_PO.CheckListOfDatos("Daniel Martinez Bautista", hoy.ToString("dd/MM/yyyy hh:mm:ss"), "Tarjeta", "11"));
+            Assert.True(comprabonodetail_PO.CheckListOfBonos(expectedtablebonosfinal));
+
+        }
     }
 }
