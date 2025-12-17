@@ -2,6 +2,7 @@
 using AppForMovies.UIT.Shared;
 using AppForSEII2526.UIT.Shared;
 using AppForSEII2526.UIT.UC_Resenyas;
+using OpenQA.Selenium.BiDi.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -228,6 +229,47 @@ namespace AppForSEII2526.UIT.UC_CrearResenya
          
             Assert.True(mensajeNativo.Contains("1"),
                 $"Se esperaba un error de validación HTML5 indicando el mínimo de 1. Mensaje recibido: '{mensajeNativo}'");
+        }
+
+
+
+
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC2_Examen_CrearResenya_Correcta()
+        {
+            InitialStepsForCrearResenya();
+            string usuario = "";
+            string titulo = "Sugerencia para cenar";
+            string descripcion = "Estaba todo muy rico";
+            string valGeneral = "5";
+            string puntuacionBocata = "9";
+
+            SelectBocadillosForResenya_PO.AddMovieToRentingCart(bocadilloNombre1);
+
+
+            SelectBocadillosForResenya_PO.SearchBocadillos("", "3");
+
+            SelectBocadillosForResenya_PO.AddMovieToRentingCart(bocadilloNombre2);
+
+            SelectBocadillosForResenya_PO.RemoveMovieFromRentingCart(bocadilloNombre1);
+
+
+            CreateResenya_PO.ClickIrACrearResenya();
+
+            CreateResenya_PO.RellenarFormulario(usuario, titulo, descripcion, valGeneral);
+
+            CreateResenya_PO.PuntuarBocadillo(bocadilloNombre2, "9");
+
+            CreateResenya_PO.PulsarCrearResenyas();
+            CreateResenya_PO.ConfirmarDialogo();
+
+            Assert.True(ResenyaDetail_PO.VerifyResenyaData(titulo, descripcion, "Cinco"),
+                "Los datos en la vista de Detalle no coinciden con lo creado.");
+
+            Assert.True(ResenyaDetail_PO.VerifyBocadilloPuntuado(bocadilloNombre2, puntuacionBocata),
+                $"El bocadillo {bocadilloNombre2} no aparece correctamente puntuado en el detalle.");
         }
 
     }
